@@ -20,8 +20,14 @@ const useFormatters = () => {
 
   const formatDate = useCallback((data) => {
     if (!data) return '';
-    return new Date(data).toLocaleDateString('pt-BR');
+    const date = new Date(data);
+    // Extrai dia, mês, ano usando UTC para evitar deslocamento por fuso horário
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = date.getUTCFullYear();
+    return `${day}/${month}/${year}`;
   }, []);
+
 
   const formatCurrency = useCallback((valor) => {
     if (valor === null || valor === undefined) return 'R$ 0,00';
