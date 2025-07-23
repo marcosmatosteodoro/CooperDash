@@ -21,10 +21,6 @@ const CooperadoView = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
-    console.log('status', status)
-  }, [status]);
-
-  useEffect(() => {
     setLayoutData(prev => ({
       ...prev,
       breadcrumbs: [
