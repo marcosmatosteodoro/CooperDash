@@ -2,11 +2,13 @@ import { useEffect, useContext, useState, useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchCooperados, deleteCooperado } from '../../store/slices/cooperadosSlice';
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { LayoutContext } from '../../context/LayoutContext';
 import LoadingSpinner from '../../components/LoadingSpinner';
 import ErrorAlert from '../../components/ErrorAlert';
 import useFormatters from '../../hooks/useFormatters';
 import { texto } from '../../data/texts';
+
 
 const CooperadosList = () => {
   const dispatch = useDispatch();
@@ -38,9 +40,21 @@ const CooperadosList = () => {
   }, [setLayoutData]);
 
   const handleDelete = (id) => {
-    if (window.confirm('Tem certeza que deseja excluir este cooperado?')) {
-      dispatch(deleteCooperado(id));
-    }
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: 'Deseja realmente excluir este cooperado?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteCooperado(id));
+        Swal.fire('Excluído!', 'O cooperado foi excluído.', 'success');
+      }
+    });
   };
 
   useEffect(() => {

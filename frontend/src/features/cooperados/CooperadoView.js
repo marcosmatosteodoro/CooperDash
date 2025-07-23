@@ -1,7 +1,8 @@
 import React, { useEffect, useContext } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchCooperado } from '../../store/slices/cooperadosSlice';
-import { useParams, Link } from 'react-router-dom';
+import { fetchCooperado, deleteCooperado } from '../../store/slices/cooperadosSlice';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { LayoutContext } from '../../context/LayoutContext';
 import useFormatters from '../../hooks/useFormatters';
 import LoadingSpinner from '../../components/LoadingSpinner';
@@ -11,6 +12,7 @@ import { texto } from '../../data/texts';
 
 const CooperadoView = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const dispatch = useDispatch();
   const { current, status, error } = useSelector(state => state.cooperados);
   const { setLayoutData } = useContext(LayoutContext);
@@ -35,13 +37,40 @@ const CooperadoView = () => {
           <Link className="btn btn-primary" to={`/cooperados/${id}/editar`}>
             <i className="bi bi-pencil-square me-2"></i>Editar
           </Link>
+          <button 
+            onClick={() => handleDelete(current.id)}
+            className="btn btn-danger"
+          >
+            <i className="bi bi-trash me-2"></i>Excluir
+          </button>
           <Link className="btn btn-outline-secondary" to="/cooperados">
-            <i className="bi bi-arrow-left me-2"></i>Voltar para Lista
+            <i className="bi bi-arrow-left me-2"></i>Voltar
           </Link>
         </div>
       )
     }));
   }, [setLayoutData, current, id]);
+
+  const handleDelete = (id) => {
+    Swal.fire({
+      title: 'Tem certeza?',
+      text: 'Deseja realmente excluir este cooperado?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sim, excluir!',
+      cancelButtonText: 'Cancelar',
+    }).then( async (result) => {
+      if (result.isConfirmed) {
+        dispatch(deleteCooperado(id));
+        Swal.fire('Excluído!', 'O cooperado foi excluído.', 'success')
+          .then(() => {
+            navigate('/cooperados/');
+          });
+      }
+    });
+  };
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;
