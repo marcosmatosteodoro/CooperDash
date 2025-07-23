@@ -39,10 +39,17 @@ export const updateCooperado = createAsyncThunk(
       const response = await CooperadosService.update(id, data);
       return response.data;
     } catch (error) {
-      if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
+      if (error.response) {
+        const payload = error.response.data || {};
+        return rejectWithValue({
+          message: payload.message || 'Erro na atualização',
+          errors: payload.errors || null
+        });
       }
-      return rejectWithValue({ message: error.message });
+      return rejectWithValue({
+        message: error.message || 'Erro desconhecido',
+        errors: null
+      });
     }
   }
 );
@@ -124,12 +131,10 @@ const cooperadosSlice = createSlice({
         (action) => action.type.endsWith('/rejected'),
         (state, action) => {
           state.status = 'failed';
-          state.error = action.payload?.message || action.error.message;
+          state.error = action.payload?.message || action.error.message || 'Erro desconhecido';
           
-          // Captura os erros específicos de campos
           if (action.payload?.errors) {
             state.fieldErrors = action.payload.errors;
-            state.error = action.payload.message;
           } else {
             state.fieldErrors = null;
           }

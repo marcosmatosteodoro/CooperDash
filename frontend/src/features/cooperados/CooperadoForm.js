@@ -230,13 +230,11 @@ const CooperadoForm = () => {
                 onChange={handleChange}
                 required
               />
-              {(fieldErrors?.nome) && (
-                <div className="invalid-feedback">
-                  {[...fieldErrors.nome].map((error, index) => (
-                    <div key={index}>{error}</div>
-                  ))}
-                </div>
-              )}
+              <div className="invalid-feedback">
+                {[...(fieldErrors?.nome || []), ...(errors.nome ? [errors.nome] : [])].map((error, index) => (
+                  <div key={index}>{error}</div>
+                ))}
+              </div>
             </div>
 
             {/* Tipo Pessoa */}
@@ -269,13 +267,11 @@ const CooperadoForm = () => {
                 maxLength={formData.tipo_pessoa === 'FISICA' ? 14 : 18}
                 placeholder={formData.tipo_pessoa === 'FISICA' ? 'xxx.xxx.xxx-xx' : 'xx.xxx.xxx/xxxx-xx'}
               />
-              {(fieldErrors?.documento || errors.documento) && (
-                <div className="invalid-feedback">
-                  {[...fieldErrors?.documento, errors.documento].map((error, index) => (
-                    <div key={index}>{error}</div>
-                  ))}
-                </div>
-              )}
+              <div className="invalid-feedback">
+                {[...(fieldErrors?.documento || []), ...(errors.documento ? [errors.documento] : [])].map((error, index) => (
+                  <div key={index}>{error}</div>
+                ))}
+              </div>
             </div>
 
             {/* Data */}
@@ -290,13 +286,11 @@ const CooperadoForm = () => {
                 required
                 max={new Date().toISOString().split('T')[0]}
               />
-              {(fieldErrors?.data || errors.data) && (
-                <div className="invalid-feedback">
-                  {[...fieldErrors?.data, errors.data].map((error, index) => (
-                    <div key={index}>{error}</div>
-                  ))}
-                </div>
-              )}
+              <div className="invalid-feedback">
+                {[...(fieldErrors?.data || []), ...(errors.data ? [errors.data] : [])].map((error, index) => (
+                  <div key={index}>{error}</div>
+                ))}
+              </div>
             </div>
 
             {/* Valor */}
@@ -314,13 +308,11 @@ const CooperadoForm = () => {
                   min="0"
                   step="0.01"
                 />
-                {(fieldErrors?.valor || errors.valor) && (
-                  <div className="invalid-feedback">
-                    {[...fieldErrors?.valor, errors.valor].map((error, index) => (
-                      <div key={index}>{error}</div>
-                    ))}
-                  </div>
-                )}
+                <div className="invalid-feedback">
+                  {[...(fieldErrors?.valor || []), ...(errors.valor ? [errors.valor] : [])].map((error, index) => (
+                    <div key={index}>{error}</div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -352,13 +344,11 @@ const CooperadoForm = () => {
                   minLength="8"
                   maxLength="15"
                 />
-                {(fieldErrors?.telefone || errors.telefone || fieldErrors?.codigo_pais) && (
                 <div className="invalid-feedback">
-                    {[...fieldErrors?.telefone, ...fieldErrors?.codigo_pais, errors.telefone].map((error, index) => (
-                      <div key={index}>{error}</div>
-                    ))}
-                  </div>
-                )}
+                  {[...(fieldErrors?.telefone || []), ...(fieldErrors?.codigo_pais || []), ...(errors.telefone ? [errors.telefone] : [])].map((error, index) => (
+                    <div key={index}>{error}</div>
+                  ))}
+                </div>
               </div>
             </div>
 
@@ -373,13 +363,11 @@ const CooperadoForm = () => {
                 placeholder="nome@email.com"
                 onChange={handleChange}
               />
-              {(fieldErrors?.email || errors.email) && (
-                <div className="invalid-feedback">
-                  {[...fieldErrors?.email, errors.email].map((error, index) => (
-                    <div key={index}>{error}</div>
-                  ))}
-                </div>
-              )}
+              <div className="invalid-feedback">
+                {[...(fieldErrors?.email || []), ...(errors.email ? [errors.email] : [])].map((error, index) => (
+                  <div key={index}>{error}</div>
+                ))}
+              </div>
             </div>
 
             {/* Botões */}
