@@ -6,6 +6,7 @@ import { LayoutContext } from '../../context/LayoutContext';
 import useFormatters from '../../hooks/useFormatters';
 import { countryCodes } from '../../data/countryCodes';
 import LoadingSpinner from '../../components/LoadingSpinner';
+import NotFoundPage from '../../components/NotFoundPage';
 import { texto } from '../../data/texts';
 
 const CooperadoForm = () => {
@@ -212,7 +213,8 @@ const CooperadoForm = () => {
     }
   };
 
-  if (status === 'loading') return <LoadingSpinner />;
+  if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
+  if (isEdit && !current ) return <NotFoundPage message="Cooperado não encontrado" />;
 
   return (
     <div className="card shadow-sm">

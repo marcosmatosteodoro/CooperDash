@@ -21,6 +21,10 @@ const CooperadoView = () => {
   }, [dispatch, id]);
 
   useEffect(() => {
+    console.log('status', status)
+  }, [status]);
+
+  useEffect(() => {
     setLayoutData(prev => ({
       ...prev,
       breadcrumbs: [
@@ -43,9 +47,9 @@ const CooperadoView = () => {
     }));
   }, [setLayoutData, current, id]);
 
-  if (status === 'loading') return <LoadingSpinner />;
-  if (error) return <ErrorAlert message={error} />;
+  if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;
+  if (error) return <ErrorAlert message={error} />;
 
   return (
     <div className="card shadow-sm">

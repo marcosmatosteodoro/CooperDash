@@ -7,6 +7,7 @@ import Layout from './Layout';
 import CooperadosList from './features/cooperados/CooperadosList';
 import CooperadoView from './features/cooperados/CooperadoView';
 import CooperadoForm from './features/cooperados/CooperadoForm';
+import NotFoundPage from './components/NotFoundPage';
 import './App.css';
 
 function App() {
@@ -21,7 +22,9 @@ function App() {
               <Route path="/cooperados/novo" element={<CooperadoForm />} />
               <Route path="/cooperados/:id" element={<CooperadoView />} />
               <Route path="/cooperados/:id/editar" element={<CooperadoForm />} />
+              <Route path="*" element={<NotFoundPage message="Página não encontrada" />} />
             </Route>
+            <Route path="*" element={<NotFoundPage message="Página não encontrada" />} />
           </Routes>
         </Router>
       </LayoutProvider>
