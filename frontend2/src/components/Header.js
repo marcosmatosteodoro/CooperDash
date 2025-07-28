@@ -15,7 +15,7 @@ const Header = () => {
 
   useEffect(() => {
     setMounted(true);
-    
+
     const handleScroll = () => {
       if (headerRef.current) {
         if (window.scrollY > 50) {
@@ -35,7 +35,6 @@ const Header = () => {
       <header ref={headerRef} className="main-header navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
         <div className="container-fluid">
           <Link className="navbar-brand" href="/">
-            {/* Espaço reservado com as mesmas dimensões */}
             <div style={{ width: 100, height: 50 }} />
           </Link>
         </div>
