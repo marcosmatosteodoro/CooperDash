@@ -1,15 +1,21 @@
-import { useState, useEffect, useContext, useRef } from 'react';
-import { Link } from 'react-router-dom';
-import { LayoutContext } from '../context/LayoutContext';
-import whiteLogo from "../assets/images/logo_zallpy_white.png"
-import blackLogo from "../assets/images/logo_zallpy_black.png"
+'use client'
+
+import { useState, useEffect, useRef } from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { useLayout } from '@/providers/LayoutProvider'
+import whiteLogo from "@/assets/images/logo_zallpy_white.png"
+import blackLogo from "@/assets/images/logo_zallpy_black.png"
 
 const Header = () => {
-  const { layoutData, toggleTheme } = useContext(LayoutContext);
+  const { toggleTheme, layoutData } = useLayout()
   const [showDropdown, setShowDropdown] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const headerRef = useRef(null);
 
   useEffect(() => {
+    setMounted(true);
+
     const handleScroll = () => {
       if (headerRef.current) {
         if (window.scrollY > 50) {
@@ -24,15 +30,29 @@ const Header = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  if (!mounted) {
+    return (
+      <header ref={headerRef} className="main-header navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
+        <div className="container-fluid">
+          <Link className="navbar-brand" href="/">
+            <div style={{ width: 100, height: 50 }} />
+          </Link>
+        </div>
+      </header>
+    );
+  }
 
   return (
     <header ref={headerRef} className="main-header navbar navbar-expand-lg navbar-light fixed-top shadow-sm">
       <div className="container-fluid">
-        <Link className="navbar-brand" to="/">
-          <img 
+        <Link className="navbar-brand" href="/">
+          <Image
             src={layoutData.theme === 'dark' ? whiteLogo : blackLogo}
-            alt="Logo do Projeto" 
-            height="50"
+            alt="Logo do Projeto"
+            className="w-auto"
+            height={50}
+            width={100}
+            priority
           />
         </Link>
 
@@ -58,34 +78,34 @@ const Header = () => {
             <ul className={`dropdown-menu dropdown-menu-start ${showDropdown ? 'show' : ''}`}>
               <li><h6 className="dropdown-header">Conta</h6></li>
               <li>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" href="#">
                   <i className="bi bi-person me-2"></i> Perfil
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" href="#">
                   <i className="bi bi-gear me-2"></i> Configurações
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" href="#">
                   <i className="bi bi-shield-lock me-2"></i> Privacidade
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" href="#">
                   <i className="bi bi-bell me-2"></i> Notificações
                 </Link>
               </li>
               <li><hr className="dropdown-divider" /></li>
               <li><h6 className="dropdown-header">Ajuda</h6></li>
               <li>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" href="#">
                   <i className="bi bi-book me-2"></i> Guia de Ajuda
                 </Link>
               </li>
               <li>
-                <Link className="dropdown-item" to="#">
+                <Link className="dropdown-item" href="#">
                   <i className="bi bi-question-circle me-2"></i> Central de Ajuda
                 </Link>
               </li>
