@@ -2,11 +2,12 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/store';
 import { useDispatch } from 'react-redux';
+import { AsyncThunkAction } from '@reduxjs/toolkit';
 
 type UseDeleteWithConfirmationParams = {
   entityName: string;
   redirectTo?: string;
-  deleteAction: (id: string) => any;
+  deleteAction: (id: string) => AsyncThunkAction<string, string, object>;
 };
 
 export const useDeleteWithConfirmation = ({ entityName, redirectTo, deleteAction}: UseDeleteWithConfirmationParams) => {
@@ -26,7 +27,7 @@ export const useDeleteWithConfirmation = ({ entityName, redirectTo, deleteAction
     });
 
     if (result.isConfirmed) {
-      await dispatch(deleteAction(id));
+      await dispatch(deleteAction(id)).unwrap();
       await Swal.fire('Excluído!', `O ${entityName} foi excluído.`, 'success');
 
       if(redirectTo) {

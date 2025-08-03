@@ -37,7 +37,7 @@ export const fetchCooperado = createAsyncThunk<Cooperado, string>(
 
 export const createCooperado = createAsyncThunk<
   Cooperado,
-  Partial<Cooperado>,
+  Omit<Cooperado, 'id'>,
   { rejectValue: { message: string; errors?: Record<string, string[]> } }
 >(
   'cooperados/create',
