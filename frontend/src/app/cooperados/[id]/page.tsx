@@ -44,7 +44,7 @@ export default function Cooperador() {
             <i className="bi bi-pencil-square me-2"></i>Editar
           </Link>
           <button 
-            onClick={() => current?.id && handleDelete(parseInt(current.id))}
+            onClick={() => current?.id && handleDelete(current.id)}
             className="btn btn-danger"
           >
             <i className="bi bi-trash me-2"></i>Excluir

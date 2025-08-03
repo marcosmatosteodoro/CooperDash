@@ -74,7 +74,7 @@ export const updateCooperado = createAsyncThunk<
       }
       return rejectWithValue({
         message: error.message || 'Erro desconhecido',
-        errors: null,
+        errors: {},
       });
     }
   }
