@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ReduxProvider, LayoutProvider } from '@/providers/'
-import Header from '@/components/Header';
-import Content from '@/components/Content';
-import Footer from '@/components/Footer';
+import { Header, Footer, PageHeader } from '@/components';
 import "./globals.css";
 
 const geistSans = Geist({
@@ -35,9 +33,16 @@ export default function RootLayout({
           <LayoutProvider>
             <div id="main-content" className="d-flex flex-column min-vh-100">
               <Header />
-                <Content>
-                  {children}
-                </Content>
+              <main className="flex-grow-1 container py-4 mt-5 pt-5">
+                <PageHeader />
+
+                <div className="card shadow-sm">
+                  <div className="card-body">
+                    { children }
+                  </div>
+                </div>
+
+              </main>
               <Footer />
             </div>
           </LayoutProvider>
