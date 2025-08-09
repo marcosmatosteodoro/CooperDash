@@ -1,41 +1,59 @@
-FROM php:8.2-fpm
+# Etapa 1 - PHP + Composer
+FROM php:8.2-fpm AS php-base
 
-# Instalar dependências
 RUN apt-get update && apt-get install -y \
-    git \
-    curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    libpq-dev
+    git curl libpng-dev libonig-dev libxml2-dev zip unzip libpq-dev \
+    && docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
-# Limpar cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
-
-# Instalar extensões PHP
-RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
-
-# Instalar Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Definir diretório de trabalho
 WORKDIR /var/www
 
-# Copiar arquivos do projeto
 COPY . .
 
-# Instalar dependências do Laravel
-RUN composer install
-
-# Gerar chave da aplicação
+RUN composer install --no-dev --optimize-autoloader
 RUN cp .env.example .env && php artisan key:generate
 
-# Permissões
-RUN chown -R www-data:www-data /var/www/storage
-RUN chmod -R 775 /var/www/storage
+RUN chown -R www-data:www-data /var/www/storage && chmod -R 775 /var/www/storage
 
-# Expor porta 8000 e iniciar servidor
-EXPOSE 8000
-CMD php artisan serve --host=0.0.0.0 --port=8000
+
+
+# Etapa 2 - Node + Next.js build
+FROM node:20 AS next-build
+
+WORKDIR /app
+
+COPY frontend/package*.json ./
+RUN npm install --production=false
+
+COPY frontend/ .
+RUN npm run build
+
+
+
+# Etapa 3 - Nginx + PHP-FPM + Node
+FROM nginx:alpine AS production
+
+# Instalar PHP-FPM e Node
+RUN apk add --no-cache php82 php82-fpm php82-pdo_pgsql php82-mbstring php82-bcmath php82-gd php82-opcache php82-xml php82-tokenizer php82-json php82-session nodejs npm supervisor bash curl
+
+# Configurar diretórios
+WORKDIR /var/www
+
+# Copiar Laravel da etapa PHP
+COPY --from=php-base /var/www /var/www
+
+# Copiar Next.js build
+COPY --from=next-build /app/.next /var/www/frontend/.next
+COPY --from=next-build /app/node_modules /var/www/frontend/node_modules
+COPY --from=next-build /app/package*.json /var/www/frontend/
+
+# Configuração do Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Configuração do Supervisor (para rodar PHP-FPM e Next.js juntos)
+COPY supervisord.conf /etc/supervisord.conf
+
+EXPOSE 80
+
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisord.conf"]
