@@ -3,7 +3,7 @@
 import { Thead, TbodyContent, TbodyEmpty } from "./"
 import { TableInterface } from "./types"
 
-export const Table: React.FC<TableInterface> = ({headers, columns, data, actions, notFoundMessage, searchTerm, filterCleaner }) =>  {
+export const Table = <T, >({headers, columns, data, actions, notFoundMessage, searchTerm, filterCleaner }: TableInterface<T>) =>  {
   return (
     <section className="table-responsive">
       <table className="table table-hover rounded shadow-sm">
