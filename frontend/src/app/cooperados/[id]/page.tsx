@@ -19,7 +19,7 @@ export default function Cooperador() {
   const handleDelete = useDeleteWithConfirmation({
     entityName: 'cooperado',
     redirectTo: '/cooperados',
-    deleteAction: deleteCooperado,
+    deleteAction: (id: number) => deleteCooperado(id.toString()),
   });
   const { setLayoutData } = useLayout();
   const { formatDocument, formatDate, formatCurrency } = useFormatters();

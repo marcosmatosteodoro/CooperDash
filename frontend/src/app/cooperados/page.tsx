@@ -11,6 +11,7 @@ import { texto } from '@/data/textos';
 import { useLayout } from '@/providers/LayoutProvider'
 import { Table, LoadingSpinner, ErrorAlert, TableInterface } from '@/components'
 import { Cooperado, TipoPessoa } from '@/types/cooperado';
+import { parse } from 'path';
 
 type FilterType = 'TODOS' | TipoPessoa;
 
@@ -23,7 +24,7 @@ export default function Cooperadores() {
   const [tableHeader, setTableHeader] = useState<string[]>([]);
   const handleDelete = useDeleteWithConfirmation({
       entityName: 'cooperado',
-      deleteAction: deleteCooperado,
+      deleteAction: (id: number) => deleteCooperado(id.toString()),
     });
   const { formatDocument, formatDate, formatCurrency } = useFormatters();
 
@@ -129,7 +130,7 @@ export default function Cooperadores() {
         href: (ressource: Cooperado) => `/cooperados/${ressource.id}/editar`,
       },
       delete: {
-        onClick: (ressource: Cooperado) => handleDelete(ressource.id)
+        onClick: (ressource: Cooperado) => handleDelete(parseInt(ressource.id))
       },
     },
     notFoundMessage: 'Nenhum cooperado encontrado',
