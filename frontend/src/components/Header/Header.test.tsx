@@ -4,13 +4,13 @@ import { useLayout } from '../../providers/LayoutProvider';
 
 // Mock do Next.js
 jest.mock('next/link', () => {
-  const MockLink = ({ children, href }: any) => <a href={href}>{children}</a>;
+  const MockLink = ({ children, href }: React.PropsWithChildren<{ href: string }>) => <a href={href}>{children}</a>;
   MockLink.displayName = 'Link';
   return MockLink;
 });
 
 jest.mock('next/image', () => {
-  const MockImage = (props: any) => <img alt={props.alt} data-testid="project-logo" />;
+  const MockImage = (props: React.ImgHTMLAttributes<HTMLImageElement>) => <img alt={props.alt} data-testid="project-logo" />;
   MockImage.displayName = 'Image';
   return MockImage;
 });

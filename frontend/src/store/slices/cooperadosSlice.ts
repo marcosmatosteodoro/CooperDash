@@ -43,13 +43,23 @@ export const createCooperado = createAsyncThunk<
   'cooperados/create',
   async (data, { rejectWithValue }) => {
     try {
-      const response = await CooperadosService.create(data);
+      const response = await CooperadosService.create(data as Cooperado);
       return response.data;
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        typeof (error as { response?: unknown }).response === 'object' &&
+        (error as { response?: unknown }).response !== null
+      ) {
+        const response = (error as { response?: { data?: unknown } }).response;
+        if (response && typeof response === 'object' && 'data' in response) {
+          return rejectWithValue((response as { data: { message: string; errors?: Record<string, string[]> } }).data);
+        }
+        return rejectWithValue({ message: 'Erro desconhecido' });
       }
-      return rejectWithValue({ message: error.message });
+      return rejectWithValue({ message: error instanceof Error ? error.message : 'Erro desconhecido' });
     }
   }
 );
@@ -64,17 +74,27 @@ export const updateCooperado = createAsyncThunk<
     try {
       const response = await CooperadosService.update(id, data);
       return response.data;
-    } catch (error: any) {
-      if (error.response) {
-        const payload = error.response.data || {};
+    } catch (error: unknown) {
+      if (
+        typeof error === 'object' &&
+        error !== null &&
+        'response' in error &&
+        typeof (error as { response?: unknown }).response === 'object' &&
+        (error as { response?: unknown }).response !== null
+      ) {
+        const response = (error as { response?: { data?: unknown } }).response;
+        const payload =
+          response && typeof response === 'object' && 'data' in response
+            ? (response as { data?: { message?: string; errors?: Record<string, string[]> } }).data || {}
+            : {};
         return rejectWithValue({
           message: payload.message || 'Erro na atualização',
-          errors: payload.errors || null,
+          errors: payload.errors ?? undefined,
         });
       }
       return rejectWithValue({
-        message: error.message || 'Erro desconhecido',
-        errors: null,
+        message: error instanceof Error ? error.message : 'Erro desconhecido',
+        errors: undefined,
       });
     }
   }
@@ -151,7 +171,12 @@ const cooperadosSlice = createSlice({
 
       .addMatcher(
         (action) => action.type.endsWith('/rejected'),
-        (state, action: any) => {
+        (
+          state,
+          action: PayloadAction<
+            { message: string; errors?: Record<string, string[]> } | undefined
+          > & { error?: { message?: string } }
+        ) => {
           state.status = 'failed';
           state.error = action.payload?.message || action.error?.message || 'Erro desconhecido';
 

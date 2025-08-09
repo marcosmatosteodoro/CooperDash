@@ -6,7 +6,8 @@ import { useDispatch } from 'react-redux';
 type UseDeleteWithConfirmationParams = {
   entityName: string; // "cooperado", "usuário", etc.
   redirectTo?: string; // rota de redirecionamento após exclusão
-  deleteAction: (id: number) => any; // action do Redux
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  deleteAction: (id: number) => any; // action do Redux (thunk or action creator)
 };
 
 export const useDeleteWithConfirmation = ({
