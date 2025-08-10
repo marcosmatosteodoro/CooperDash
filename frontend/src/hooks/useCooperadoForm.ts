@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from 'react';
-import { FieldChangeEvent, FormProps } from '@/components/Form/types'
+import React, { useState } from 'react';
+import { FieldChangeEvent } from '@/components/Form/types'
 import { Cooperado } from '@/types/cooperado'
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch } from '@/store';
+import { useDispatch } from 'react-redux';
+import { AppDispatch } from '@/store';
 import { useRouter } from 'next/navigation'; 
-import { createCooperado, updateCooperado, fetchCooperado } from '@/store/slices/cooperadosSlice';
-import { ErrorAlert } from '@/components';
+import { createCooperado, updateCooperado } from '@/store/slices/cooperadosSlice';
 
 const useCooperadoForm = () => {
   const dispatch: AppDispatch = useDispatch();

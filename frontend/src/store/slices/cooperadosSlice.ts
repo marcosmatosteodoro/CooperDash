@@ -1,4 +1,4 @@
-import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import CooperadosService from '@/services/cooperadosService';
 import { Cooperado } from '@/types/cooperado';
 
@@ -8,6 +8,24 @@ interface CooperadoState {
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
   error: string | null;
   fieldErrors: Record<string, string[]> | null;
+}
+
+interface ApiError {
+  response?: {
+    data: {
+      message: string;
+      errors?: Record<string, string[]>;
+    };
+  };
+  message: string;
+}
+
+type RejectValue = {
+  error: SerializedError;
+  payload?: { 
+    message?: string; 
+    errors?: Record<string, string[]>
+  };
 }
 
 const initialState: CooperadoState = {
@@ -35,21 +53,19 @@ export const fetchCooperado = createAsyncThunk<Cooperado, string>(
   }
 );
 
-export const createCooperado = createAsyncThunk<
-  Cooperado,
-  Partial<Cooperado>,
-  { rejectValue: { message: string; errors?: Record<string, string[]> } }
->(
+export const createCooperado = createAsyncThunk<Cooperado, Omit<Cooperado, 'id'>, { rejectValue: { message: string; errors?: Record<string, string[]> } }>(
   'cooperados/create',
   async (data, { rejectWithValue }) => {
     try {
       const response = await CooperadosService.create(data);
       return response.data;
-    } catch (error: any) {
-      if (error.response && error.response.data) {
-        return rejectWithValue(error.response.data);
+    } catch (error: unknown) {
+      const err = error as ApiError;
+
+      if (err.response?.data) {
+        return rejectWithValue(err.response.data);
       }
-      return rejectWithValue({ message: error.message });
+      return rejectWithValue({ message: err.message });
     }
   }
 );
@@ -64,17 +80,19 @@ export const updateCooperado = createAsyncThunk<
     try {
       const response = await CooperadosService.update(id, data);
       return response.data;
-    } catch (error: any) {
-      if (error.response) {
-        const payload = error.response.data || {};
+    } catch (error: unknown) {
+      const err = error as ApiError;
+
+      if (err.response) {
+        const payload = err.response.data || {};
         return rejectWithValue({
           message: payload.message || 'Erro na atualização',
-          errors: payload.errors || null,
+          errors: payload.errors || {},
         });
       }
       return rejectWithValue({
-        message: error.message || 'Erro desconhecido',
-        errors: null,
+        message: err.message || 'Erro desconhecido',
+        errors: {},
       });
     }
   }
@@ -150,8 +168,8 @@ const cooperadosSlice = createSlice({
       })
 
       .addMatcher(
-        (action) => action.type.endsWith('/rejected'),
-        (state, action: any) => {
+        (action): action is RejectValue  => action.type.endsWith('/rejected'),
+        (state, action) => {
           state.status = 'failed';
           state.error = action.payload?.message || action.error?.message || 'Erro desconhecido';
 

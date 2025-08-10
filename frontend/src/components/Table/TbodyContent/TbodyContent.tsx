@@ -2,12 +2,12 @@ import Link from "next/link"
 import { TbodyContentInterface, ColumnType } from "../types"
 import { Td } from '../'
 
-export const TbodyContent: React.FC<TbodyContentInterface> = ({columns, data, actions}) =>  (
+export const TbodyContent = <T extends { id: string }>({columns, data, actions}: TbodyContentInterface<T>) =>  (
   data.map((ressource, index) => 
-    <tr key={ressource?.id || index}>
+    <tr key={ressource?.id}>
       <td>{index + 1}</td>
 
-      {columns.map((column: ColumnType, index) => 
+      {columns.map((column: ColumnType<T>, index) => 
         <Td key={index} column={column} ressource={ressource} />
       )}
 
@@ -36,3 +36,5 @@ export const TbodyContent: React.FC<TbodyContentInterface> = ({columns, data, ac
     </tr>
   )
 )
+
+

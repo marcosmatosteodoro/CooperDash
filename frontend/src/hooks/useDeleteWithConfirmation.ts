@@ -2,22 +2,19 @@ import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/store';
 import { useDispatch } from 'react-redux';
+import { AsyncThunkAction } from '@reduxjs/toolkit';
 
 type UseDeleteWithConfirmationParams = {
-  entityName: string; // "cooperado", "usuário", etc.
-  redirectTo?: string; // rota de redirecionamento após exclusão
-  deleteAction: (id: number) => any; // action do Redux
+  entityName: string;
+  redirectTo?: string;
+  deleteAction: (id: string) => AsyncThunkAction<string, string, object>;
 };
 
-export const useDeleteWithConfirmation = ({
-  entityName,
-  redirectTo,
-  deleteAction,
-}: UseDeleteWithConfirmationParams) => {
+export const useDeleteWithConfirmation = ({ entityName, redirectTo, deleteAction}: UseDeleteWithConfirmationParams) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
 
-  const handleDelete = async (id: number) => {
+  const handleDelete = async (id: string) => {
     const result = await Swal.fire({
       title: 'Tem certeza?',
       text: `Deseja realmente excluir este ${entityName}?`,
@@ -30,7 +27,7 @@ export const useDeleteWithConfirmation = ({
     });
 
     if (result.isConfirmed) {
-      await dispatch(deleteAction(id));
+      await dispatch(deleteAction(id)).unwrap();
       await Swal.fire('Excluído!', `O ${entityName} foi excluído.`, 'success');
 
       if(redirectTo) {

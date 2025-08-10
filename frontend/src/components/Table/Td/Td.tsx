@@ -1,12 +1,12 @@
 import Link from "next/link"
 import { TdInterface } from "../types"
 
-export const Td: React.FC<TdInterface> = ({column, ressource}) => {
+export const Td = <T,>({column, ressource}: TdInterface<T>) => {
   const {className, type, attribute, style, href, formatter} = column;
   const customClass = className ?? 'text-center'
   const isText = !type || type == 'text'
   const isLink = type === 'link' && href
-  let text = ressource[attribute];
+  let text = ressource[attribute] as string;
 
   if(formatter) {
     text = formatter(ressource)

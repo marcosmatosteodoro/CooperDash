@@ -1,59 +1,13 @@
-version: '3.8'
-
 services:
-  # Aplicação Laravel
   app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    container_name: unicred-app
+    build: .
+    container_name: laravel-next-app
     restart: unless-stopped
-    working_dir: /var/www
-    volumes:
-      - .:/var/www
     ports:
-      - "8000:8000"
-    depends_on:
-      - db
-    networks:
-      - unicred-network
-
-  # Banco de dados PostgreSQL
-  db:
-    image: postgres:13
-    container_name: unicred-db
-    restart: unless-stopped
+      - "8000:80"
+    volumes:
+      - .:/var/www/html
+      - ./storage:/var/www/html/storage
     environment:
-      POSTGRES_DB: unicred
-      POSTGRES_USER: unicred
-      POSTGRES_PASSWORD: secret
-    ports:
-      - "5432:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-    networks:
-      - unicred-network
-
-  # Frontend React
-  frontend:
-    build:
-      context: .
-      dockerfile: Dockerfile.frontend
-    container_name: unicred-frontend
-    restart: unless-stopped
-    working_dir: /app
-    volumes:
-      - ./frontend:/app
-    ports:
-      - "3000:3000"
-    depends_on:
-      - app
-    networks:
-      - unicred-network
-
-volumes:
-  postgres_data:
-
-networks:
-  unicred-network:
-    driver: bridge
+      APP_ENV: local
+      APP_DEBUG: "true"

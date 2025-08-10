@@ -2,7 +2,6 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { BreadcrumbItem } from './BreadcrumbItem';
 import '@testing-library/jest-dom';
-import { BreadcrumbItemInterface } from '../';
 
 // mock para breadcrumb básico
 const mockBreadcrumb = {
