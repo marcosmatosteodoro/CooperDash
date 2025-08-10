@@ -41,7 +41,7 @@ export default function EditarCooperador() {
     if (current) {
       setFormData(current);
     }
-  }, [current]);
+  }, [current, setFormData]);
 
   useEffect(() => {
     setLayoutData(prev => ({

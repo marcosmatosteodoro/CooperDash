@@ -10,6 +10,7 @@ jest.mock('next/link', () => {
 });
 
 jest.mock('next/image', () => {
+  // eslint-disable-next-line @next/next/no-img-element
   const MockImage = (props: {alt: string}) => <img alt={props.alt} data-testid="project-logo" />;
   MockImage.displayName = 'Image';
   return MockImage;

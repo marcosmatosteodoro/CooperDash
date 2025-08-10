@@ -19,7 +19,7 @@ export default function Cooperador() {
   const handleDelete = useDeleteWithConfirmation({
     entityName: 'cooperado',
     redirectTo: '/cooperados',
-    deleteAction: deleteCooperado,
+    deleteAction: (id: string) => deleteCooperado(id), 
   });
   const { setLayoutData } = useLayout();
   const { formatDocument, formatDate, formatCurrency } = useFormatters();
@@ -55,7 +55,7 @@ export default function Cooperador() {
         </div>
       )
     }));
-  }, [setLayoutData, current, id]);
+  }, [handleDelete, setLayoutData, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;

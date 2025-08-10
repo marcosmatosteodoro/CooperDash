@@ -23,7 +23,7 @@ export default function Cooperadores() {
   const [tableHeader, setTableHeader] = useState<string[]>([]);
   const handleDelete = useDeleteWithConfirmation({
       entityName: 'cooperado',
-      deleteAction: deleteCooperado,
+      deleteAction: (id: string) => deleteCooperado(id), 
     });
   const { formatDocument, formatDate, formatCurrency } = useFormatters();
 
