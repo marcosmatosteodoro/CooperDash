@@ -55,7 +55,7 @@ export default function Cooperador() {
         </div>
       )
     }));
-  }, [handleDelete, setLayoutData, current, id]);
+  }, [setLayoutData, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;
