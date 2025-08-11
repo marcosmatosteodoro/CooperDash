@@ -15,7 +15,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Novo front",
+  title: "Teste Unicred",
   description: "Teste Unicred",
 };
 
