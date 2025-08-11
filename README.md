@@ -66,14 +66,14 @@ Para criar as tabelas no banco de dados, execute:
 bash
 
 ```bash
-docker-compose exec app php artisan migrate
+docker exec -it laravel-backend php artisan migrate
 ```
 
 Se desejar popular o banco com dados de teste:
 bash
 
 ```plain
-docker-compose exec app php artisan db:seed
+docker exec -it laravel-backend php artisan db:seed
 ```
 
 ## Acessando a Aplicação
@@ -85,7 +85,7 @@ Os testes unitários foram desenvolvidos com PHPUnit. Para executá-los:
 bash
 
 ```bash
-docker-compose exec app php artisan test
+docker exec -it laravel-backend php artisan test
 ```
 
 ## Estrutura do Projeto
@@ -163,13 +163,13 @@ O sistema realiza as seguintes validações:
     *   Persistência da preferência
 ## Comandos Úteis
 **Backend:**
-*   Executar migrações: `docker-compose exec app php artisan migrate`
-*   Executar seeders: `docker-compose exec app php artisan db:seed`
-*   Executar testes: `docker-compose exec app php artisan test`
-*   Acessar shell no container: `docker-compose exec app bash`
+*   Executar migrações: `docker exec -it laravel-backend php artisan migrate`
+*   Executar seeders: `docker exec -it laravel-backend php artisan db:seed`
+*   Executar testes: `docker exec -it laravel-backend php artisan test`
+*   Acessar shell no container: `docker exec -it laravel-backend bash`
 **Frontend:**
-*   Instalar dependências: `docker-compose exec frontend npm install`
-*   Executar testes: `docker-compose exec frontend npm test`
+*   Instalar dependências: `docker exec -it next-frontend npm install`
+*   Executar testes: `docker exec -it next-frontend npm test`
 ## Considerações Finais
 Este projeto foi desenvolvido seguindo boas práticas de desenvolvimento, incluindo:
 *   Separação clara de camadas
@@ -178,3 +178,6 @@ Este projeto foi desenvolvido seguindo boas práticas de desenvolvimento, inclui
 *   Documentação completa
 *   Interface responsiva e acessível
 Qualquer dúvida ou problema, por favor abra uma issue no repositório.
+
+
+docker exec -it laravel-backend php artisan migrate

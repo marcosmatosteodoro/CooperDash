@@ -15,8 +15,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Novo front",
-  description: "Teste Unicred",
+  title: "Dashboard",
+  description: "Dashboard",
 };
 
 export default function RootLayout({
