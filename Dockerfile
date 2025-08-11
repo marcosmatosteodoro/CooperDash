@@ -49,10 +49,11 @@ WORKDIR /var/www/html
 COPY . .
 
 # Instala dependências do Laravel
-RUN composer install --no-dev --optimize-autoloader
+RUN composer install --optimize-autoloader
 
 # Permissões
-RUN chown -R nginx:nginx storage bootstrap/cache
+RUN chown -R nginx:nginx storage bootstrap/cache \
+    && chmod -R 775 storage bootstrap/cache
 
 EXPOSE 80
 
