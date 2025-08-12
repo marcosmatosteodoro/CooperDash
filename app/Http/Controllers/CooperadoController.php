@@ -10,9 +10,10 @@ class CooperadoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $cooperados = Cooperado::all();
+        $perPage = $request->query('per_page', 10);
+        $cooperados = Cooperado::paginate($perPage);
         return response()->json($cooperados, 200);
     }
 
@@ -101,12 +102,14 @@ class CooperadoController extends Controller
                 'q' => 'required|string|min:2'
             ]);
 
+            $perPage = $request->query('per_page', 10);
+
             $cooperados = Cooperado::where('nome', 'LIKE', "%{$validated['q']}%")
                 ->orWhere('documento', 'LIKE', "%{$validated['q']}%")
                 ->orWhere('telefone', 'LIKE', "%{$validated['q']}%")
                 ->orWhere('email', 'LIKE', "%{$validated['q']}%")
                 ->orderBy('nome', 'asc')
-                ->get();
+                ->paginate($perPage);
 
             return response()->json($cooperados, 200);
         } catch (\Illuminate\Validation\ValidationException $e) {

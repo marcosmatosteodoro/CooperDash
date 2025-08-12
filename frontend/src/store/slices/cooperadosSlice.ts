@@ -1,8 +1,10 @@
 import { createSlice, createAsyncThunk, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import CooperadosService from '@/services/cooperadosService';
+import { PaginatedResponse, PaginationParams } from '@/types/api';
 import { Cooperado } from '@/types/cooperado';
 
 interface CooperadoState {
+  pagination: PaginatedResponse<Cooperado>;
   list: Cooperado[];
   current: Cooperado | null;
   status: 'idle' | 'loading' | 'succeeded' | 'failed';
@@ -29,6 +31,7 @@ type RejectValue = {
 }
 
 const initialState: CooperadoState = {
+  pagination: {} as PaginatedResponse<Cooperado>,
   list: [],
   current: null,
   status: 'idle',
@@ -37,10 +40,10 @@ const initialState: CooperadoState = {
 };
 
 // Thunks
-export const fetchCooperados = createAsyncThunk<Cooperado[]>(
+export const fetchCooperados = createAsyncThunk<PaginatedResponse<Cooperado>, PaginationParams>(
   'cooperados/fetchAll',
-  async () => {
-    const response = await CooperadosService.getAll();
+  async (params) => {
+    const response = await CooperadosService.getAll(params);
     return response.data;
   }
 );
@@ -123,9 +126,10 @@ const cooperadosSlice = createSlice({
       .addCase(fetchCooperados.pending, (state) => {
         state.status = 'loading';
       })
-      .addCase(fetchCooperados.fulfilled, (state, action: PayloadAction<Cooperado[]>) => {
+      .addCase(fetchCooperados.fulfilled, (state, action: PayloadAction<PaginatedResponse<Cooperado>>) => {
+        state.pagination = action.payload;
         state.status = 'succeeded';
-        state.list = action.payload;
+        state.list = action.payload.data;
         state.error = null;
         state.fieldErrors = null;
       })
@@ -155,6 +159,7 @@ const cooperadosSlice = createSlice({
         if (index !== -1) {
           state.list[index] = action.payload;
         }
+        state.pagination.data = state.pagination.data.map(c => c.id === action.payload.id ? action.payload : c);
         state.current = action.payload;
         state.error = null;
         state.fieldErrors = null;
@@ -162,6 +167,7 @@ const cooperadosSlice = createSlice({
 
       .addCase(deleteCooperado.fulfilled, (state, action: PayloadAction<string>) => {
         state.list = state.list.filter((c) => c.id !== action.payload);
+        state.pagination.data = state.pagination.data.filter(c => c.id !== action.payload);
         state.current = null;
         state.error = null;
         state.fieldErrors = null;
