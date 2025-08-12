@@ -1,4 +1,6 @@
-export type Ressource = Record<string, string>
+import { PaginatedResponse } from "@/types/api"
+
+export type Ressource = { id: string } & Record<string, string>;
 export type Data = Ressource[];
 
 // Tipos básicos
@@ -14,12 +16,17 @@ export interface TableInterface<T> {
   headers: Headers;
   columns: ColumnType<T>[];
   data: T[];
+  pagination: PaginatedResponse<T>;
   actions: ActionsType<T>;
   notFoundMessage: NotFoundMessage;
   searchTerm: SearchTerm;
   filterCleaner: FilterCleaner;
+  paginationClickHandler: (link: string | null) => void;
 }
 
+export interface PaginationInterface extends Omit<PaginatedResponse<Ressource>, 'data'> {
+  paginationClickHandler: (link: string | null) => void;
+} 
 // Interfaces auxiliares
 export interface TheadInterface {
   headers: Headers;
@@ -30,6 +37,7 @@ export interface TbodyContentInterface<T> {
   columns: ColumnType<T>[];
   data: T[];
   actions: ActionsType<T>;
+  increase: number;
 }
 
 export interface TbodyEmptyInterface {

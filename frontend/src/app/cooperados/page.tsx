@@ -9,15 +9,17 @@ import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { texto } from '@/data/textos';
 import { useLayout } from '@/providers/LayoutProvider'
-import { Table, LoadingSpinner, ErrorAlert, TableInterface } from '@/components'
+import { Table, LoadingSpinner, ErrorAlert, ColumnType, ActionsType } from '@/components'
 import { Cooperado, TipoPessoa } from '@/types/cooperado';
+import { PaginationParams } from '@/types/api';
 
 type FilterType = 'TODOS' | TipoPessoa;
 
 export default function Cooperadores() {
   const dispatch: AppDispatch = useDispatch();
-  const { list, status, error } = useSelector((state: RootState) => state.cooperados);
+  const { list, pagination, status, error } = useSelector((state: RootState) => state.cooperados);
   const { setLayoutData } = useLayout();
+  const [params, setParams] = useState<PaginationParams>({ per_page: 5, page: 2, q: '' });
   const [filter, setFilter] = useState<FilterType>('TODOS');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [tableHeader, setTableHeader] = useState<string[]>([]);
@@ -28,10 +30,8 @@ export default function Cooperadores() {
   const { formatDocument, formatDate, formatCurrency } = useFormatters();
 
   useEffect(() => {
-    if (status === 'idle') {
-      dispatch(fetchCooperados());
-    }
-  }, [dispatch, status]);
+      dispatch(fetchCooperados(params));
+  }, [dispatch, params]);
 
   useEffect(() => {
     setLayoutData(prev => ({
@@ -83,58 +83,58 @@ export default function Cooperadores() {
     });
   }, [list, filter, searchTerm]);
   
-  const tableProps: TableInterface<Cooperado> = {
-    headers: tableHeader,
-    columns: [
-      {
-        attribute: 'nome', 
-        className: 'text-start', 
-        type: 'link' as const, 
-        href: (ressource: Cooperado) => `/cooperados/${ressource.id}`
-      },
-      {
-        attribute: 'tipo_pessoa', 
-        formatter: (ressource: Cooperado) => 
-          ressource.tipo_pessoa === 'FISICA' ? 'Física' : 'Jurídica'
-      },
-      {
-        attribute: 'documento', 
-        formatter: (ressource: Cooperado) => 
-          formatDocument(ressource.documento, ressource.tipo_pessoa)
-      },
-      {
-        attribute: 'data', 
-        formatter: (ressource: Cooperado) => formatDate(ressource.data)
-      },
-      {
-        attribute: 'valor', 
-        formatter: (ressource: Cooperado) => formatCurrency(ressource.valor)
-      },
-      {
-        attribute: 'telefone', 
-        formatter: (ressource: Cooperado) => 
-          `${ressource.codigo_pais} ${ressource.telefone}`
-      },
-      {
-        attribute: 'email', 
-        className: 'text-truncate', 
-        style: { maxWidth: '150px' }, 
-        type: 'link' as const, 
-        href: (ressource: Cooperado) => `mailto:${ressource.email}`
-      },
-    ],
-    data: filteredList,
-    actions: {
-      edit: {
-        href: (ressource: Cooperado) => `/cooperados/${ressource.id}/editar`,
-      },
-      delete: {
-        onClick: (ressource: Cooperado) => handleDelete(ressource.id)
-      },
+  const paginationClickHandler = (link: string | null) => {
+    if (!link) return;
+    const page = new URL(link).searchParams.get('page');
+    setParams({ ...params, page: page ? parseInt(page) : 1 })
+  }
+
+  const tableColumns: ColumnType<Cooperado>[] = [
+    {
+      attribute: 'nome', 
+      className: 'text-start', 
+      type: 'link' as const, 
+      href: (ressource: Cooperado) => `/cooperados/${ressource.id}`
     },
-    notFoundMessage: 'Nenhum cooperado encontrado',
-    searchTerm: !!searchTerm,
-    filterCleaner: () => setSearchTerm('')
+    {
+      attribute: 'tipo_pessoa', 
+      formatter: (ressource: Cooperado) => 
+        ressource.tipo_pessoa === 'FISICA' ? 'Física' : 'Jurídica'
+    },
+    {
+      attribute: 'documento', 
+      formatter: (ressource: Cooperado) => 
+        formatDocument(ressource.documento, ressource.tipo_pessoa)
+    },
+    {
+      attribute: 'data', 
+      formatter: (ressource: Cooperado) => formatDate(ressource.data)
+    },
+    {
+      attribute: 'valor', 
+      formatter: (ressource: Cooperado) => formatCurrency(ressource.valor)
+    },
+    {
+      attribute: 'telefone', 
+      formatter: (ressource: Cooperado) => 
+        `${ressource.codigo_pais} ${ressource.telefone}`
+    },
+    {
+      attribute: 'email', 
+      className: 'text-truncate', 
+      style: { maxWidth: '150px' }, 
+      type: 'link' as const, 
+      href: (ressource: Cooperado) => `mailto:${ressource.email}`
+    },
+  ]
+
+  const tableActions: ActionsType<Cooperado> = {
+    edit: {
+      href: (ressource: Cooperado) => `/cooperados/${ressource.id}/editar`,
+    },
+    delete: {
+      onClick: (ressource: Cooperado) => handleDelete(ressource.id)
+    },
   }
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
@@ -144,8 +144,26 @@ export default function Cooperadores() {
     <>
       {/* Filtros e Busca */}
       <section className="mb-4">
-        <div className="row align-items-center">
-          <div className="col-md-8 mb-3 mb-md-0">
+        <div className="row align-items-center g-3">
+          <div className="col-xl-3 col-md-4">
+            <div className="input-group">
+              {/* select de 5 10 20 50 100 */}
+              <select 
+                className="form-select" 
+                value={params.per_page} 
+                onChange={(e) => setParams({ ...params, per_page: parseInt(e.target.value) })}
+              >
+                {[5, 10, 20, 50, 100].map(value => (
+                  <option key={value} value={value}>
+                    {value}
+                  </option>
+                ))}
+              </select>
+              <span className="input-group-text">por página</span>
+            </div>
+          </div>
+
+          <div className="col-xl-9 col-md-8 mb-3 mb-md-0">
             <div className="input-group">
               <span className="input-group-text">
                 <i className="bi bi-search"></i>
@@ -160,6 +178,7 @@ export default function Cooperadores() {
               />
             </div>
           </div>
+
           <div className="col-md-4">
             <div className="d-flex flex-wrap align-items-center gap-3">
               {(['TODOS', 'FISICA', 'JURIDICA'] as FilterType[]).map((filterType) => (
@@ -183,7 +202,17 @@ export default function Cooperadores() {
       </section>
 
       {/* Tabela */}
-      <Table {...tableProps} />
+      <Table 
+        headers={tableHeader}
+        columns={tableColumns}
+        data={filteredList}
+        pagination={pagination}
+        actions={tableActions}
+        notFoundMessage='Nenhum cooperado encontrado'
+        searchTerm={!!searchTerm}
+        filterCleaner={() => setSearchTerm('')}
+        paginationClickHandler={paginationClickHandler}
+      />
     </>
   );
 }

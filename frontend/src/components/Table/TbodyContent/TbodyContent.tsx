@@ -2,10 +2,10 @@ import Link from "next/link"
 import { TbodyContentInterface, ColumnType } from "../types"
 import { Td } from '../'
 
-export const TbodyContent = <T extends { id: string }>({columns, data, actions}: TbodyContentInterface<T>) =>  (
+export const TbodyContent = <T extends { id: string }>({columns, data, actions, increase}: TbodyContentInterface<T>) =>  (
   data.map((ressource, index) => 
     <tr key={ressource?.id}>
-      <td>{index + 1}</td>
+      <td>{increase + index + 1}</td>
 
       {columns.map((column: ColumnType<T>, index) => 
         <Td key={index} column={column} ressource={ressource} />

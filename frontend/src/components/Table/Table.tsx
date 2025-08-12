@@ -1,9 +1,23 @@
 'use client'
 
-import { Thead, TbodyContent, TbodyEmpty } from "./"
+import { Thead, TbodyContent, TbodyEmpty, Pagination } from "./"
 import { TableInterface } from "./types"
 
-export const Table = <T extends { id: string },>({headers, columns, data, actions, notFoundMessage, searchTerm, filterCleaner }: TableInterface<T>) =>  {
+export const Table = <T extends { id: string },>({
+    headers, 
+    columns, 
+    data, 
+    actions, 
+    notFoundMessage, 
+    searchTerm, 
+    pagination,
+    filterCleaner,
+    paginationClickHandler
+  }: TableInterface<T>) =>  {
+
+
+  const increase = pagination.per_page * (pagination.current_page - 1);
+
   return (
     <section className="table-responsive">
       <table className="table table-hover rounded shadow-sm">
@@ -11,11 +25,17 @@ export const Table = <T extends { id: string },>({headers, columns, data, action
         
         <tbody>
           { data.length > 0
-            ? <TbodyContent columns={columns} data={data} actions={actions} />  
+            ? <TbodyContent columns={columns} data={data} actions={actions} increase={increase} />  
             : <TbodyEmpty notFoundMessage={notFoundMessage} searchTerm={searchTerm} filterCleaner={filterCleaner} />
           }
         </tbody>
       </table>
+
+      <Pagination 
+        {...pagination} 
+        paginationClickHandler={paginationClickHandler} 
+      />
+
     </section>
   );
 }

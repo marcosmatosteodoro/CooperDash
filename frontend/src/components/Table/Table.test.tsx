@@ -1,6 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Table } from './Table';
+import { PaginatedResponse } from '../../types/api';
 import { ColumnType, Ressource } from './types';
 
 // Mocks dos subcomponentes
@@ -13,30 +14,37 @@ jest.mock('./', () => ({
       </tr>
     </thead>
   ),
-  TbodyContent: ({ data }: { data: Ressource[] }) => (
+  TbodyContent: ({ data }: { data: { id: string; name?: string }[] }) => (
     <>
       {data.map((d, i) => 
         <tr key={i} data-testid="tbody-content">
-          <td>
-            {d.name}
-          </td>
+          <td>{d.name}</td>
         </tr>
       )}
     </>
   ),
   TbodyEmpty: ({ notFoundMessage }: { notFoundMessage: string }) => (
     <tr data-testid="tbody-empty">
-      <td>
-        {notFoundMessage}
-      </td>
+      <td>{notFoundMessage}</td>
     </tr>
-  )
+  ),
+  Pagination: ({ current_page }: { current_page: number }) => (
+    <div data-testid="pagination">Página {current_page}</div>
+  ),
 }));
 
 describe('Table component', () => {
-  const columns: ColumnType[] = [{ attribute: 'name' }];
+  const columns: ColumnType<Ressource>[] = [{ attribute: 'name' }];
   const headers = ['Nome'];
   const mockFilterCleaner = jest.fn();
+  const mockPaginationClickHandler = jest.fn();
+
+  const paginationMock = {
+    current_page: 1,
+    last_page: 1,
+    per_page: 10,
+    total: 1
+  } as PaginatedResponse<Ressource>;
 
   it('renders Thead and TbodyContent when data is present', () => {
     const data: Ressource[] = [{ id: '1', name: 'João' }];
@@ -50,6 +58,8 @@ describe('Table component', () => {
         notFoundMessage="Nada encontrado"
         searchTerm={false}
         filterCleaner={mockFilterCleaner}
+        pagination={paginationMock}
+        paginationClickHandler={mockPaginationClickHandler}
       />
     );
 
@@ -57,6 +67,7 @@ describe('Table component', () => {
     expect(screen.getByTestId('tbody-content')).toBeInTheDocument();
     expect(screen.queryByTestId('tbody-empty')).not.toBeInTheDocument();
     expect(screen.getByText('João')).toBeInTheDocument();
+    expect(screen.getByTestId('pagination')).toHaveTextContent('Página 1');
   });
 
   it('renders Thead and TbodyEmpty when data is empty', () => {
@@ -69,6 +80,8 @@ describe('Table component', () => {
         notFoundMessage="Nada encontrado"
         searchTerm={true}
         filterCleaner={mockFilterCleaner}
+        pagination={paginationMock}
+        paginationClickHandler={mockPaginationClickHandler}
       />
     );
 
@@ -76,5 +89,6 @@ describe('Table component', () => {
     expect(screen.queryByTestId('tbody-content')).not.toBeInTheDocument();
     expect(screen.getByTestId('tbody-empty')).toBeInTheDocument();
     expect(screen.getByText('Nada encontrado')).toBeInTheDocument();
+    expect(screen.getByTestId('pagination')).toHaveTextContent('Página 1');
   });
 });
