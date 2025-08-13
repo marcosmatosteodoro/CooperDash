@@ -15,7 +15,7 @@ class CooperadosSeeder extends Seeder
     {
         // Criar 10 cooperados pessoa física
         Cooperado::factory()
-            ->count(10)
+            ->count(25)
             ->create()
             ->each(function ($cooperado) {
                 // Garantir CPF válido
@@ -26,7 +26,7 @@ class CooperadosSeeder extends Seeder
         // Criar 10 cooperados pessoa jurídica
         Cooperado::factory()
             ->pessoaJuridica()
-            ->count(10)
+            ->count(25)
             ->create()
             ->each(function ($cooperado) {
                 // Garantir CNPJ válido
