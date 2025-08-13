@@ -11,3 +11,10 @@ export interface Cooperado {
 }
 
 export type TipoPessoa = 'FISICA' | 'JURIDICA';
+
+export type TipoPessoaOptions = 'TODOS' | TipoPessoa;
+
+export type CooperadoFilters = {
+  searchTerm: string;
+  tipoPessoa: TipoPessoaOptions;
+};

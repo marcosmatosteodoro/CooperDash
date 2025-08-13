@@ -8,5 +8,4 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
-Route::get('/cooperados/search', [CooperadoController::class, 'search']);
 Route::apiResource('cooperados', CooperadoController::class);

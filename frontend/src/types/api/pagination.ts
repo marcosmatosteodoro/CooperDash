@@ -22,7 +22,8 @@ export interface PaginatedResponse<T> {
 
 
 export interface PaginationParams {
-  per_page?: number; // Número de itens por página
-  page?: number; // Página atual, ex: 1, 2, 3
-  q?: string; // Termo de busca
+  per_page?: number;
+  page?: number;
+  q?: string;
+  tipo_pessoa?: 'FISICA' | 'JURIDICA' | '';
 }

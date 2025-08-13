@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Cooperado;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class CooperadoController extends Controller
 {
@@ -12,9 +13,48 @@ class CooperadoController extends Controller
      */
     public function index(Request $request)
     {
-        $perPage = $request->query('per_page', 10);
-        $cooperados = Cooperado::paginate($perPage);
-        return response()->json($cooperados, 200);
+        try {
+            $perPage = $request->query('per_page', 10);
+            $filters = $request->validate([
+                'q' => 'string|min:1',
+                'tipo_pessoa' => 'in:FISICA,JURIDICA'
+            ]);
+
+            $cooperados = Cooperado::query();
+
+            if (!empty($filters['q'])) {
+                $q = $filters['q'];
+
+                $cooperados->where(function ($query) use ($q) {
+                    $query->where(DB::raw('LOWER(nome)'), 'LIKE', '%' . strtolower($q) . '%')
+                        ->orWhere('documento', 'LIKE', "%{$q}%")
+                        ->orWhere('telefone', 'LIKE', "%{$q}%")
+                        ->orWhere('email', 'LIKE', "%{$q}%");
+                });
+            }
+
+            if (!empty($filters['tipo_pessoa'])) {
+                $cooperados->where('tipo_pessoa', $filters['tipo_pessoa']);
+            }
+
+            $cooperados = $cooperados
+                ->orderBy('nome', 'asc')
+                ->paginate($perPage);
+
+            return response()->json($cooperados, 200);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json([
+                'message' => 'Dados inválidos',
+                'errors' => $e->errors()
+            ], 422);
+            
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Erro ao buscar cooperados',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
@@ -90,39 +130,5 @@ class CooperadoController extends Controller
         $cooperado->delete();
         
         return response()->json(null, 204);
-    }
-
-    /**
-     * Search cooperados by multiple fields
-     */
-    public function search(Request $request)
-    {
-        try {
-            $validated = $request->validate([
-                'q' => 'required|string|min:2'
-            ]);
-
-            $perPage = $request->query('per_page', 10);
-
-            $cooperados = Cooperado::where('nome', 'LIKE', "%{$validated['q']}%")
-                ->orWhere('documento', 'LIKE', "%{$validated['q']}%")
-                ->orWhere('telefone', 'LIKE', "%{$validated['q']}%")
-                ->orWhere('email', 'LIKE', "%{$validated['q']}%")
-                ->orderBy('nome', 'asc')
-                ->paginate($perPage);
-
-            return response()->json($cooperados, 200);
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            return response()->json([
-                'message' => 'Dados inválidos',
-                'errors' => $e->errors()
-            ], 422);
-            
-        } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Erro ao buscar cooperados',
-                'error' => $e->getMessage()
-            ], 500);
-        }
     }
 }
