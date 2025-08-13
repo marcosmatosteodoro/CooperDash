@@ -19,7 +19,7 @@ export default function Cooperadores() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.cooperados);
   const { setLayoutData } = useLayout();
-  const [params, setParams] = useState<PaginationParams>({ per_page: 5, page: 2, q: '' });
+  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: '' });
   const [filter, setFilter] = useState<FilterType>('TODOS');
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [tableHeader, setTableHeader] = useState<string[]>([]);
@@ -151,7 +151,7 @@ export default function Cooperadores() {
               <select 
                 className="form-select" 
                 value={params.per_page} 
-                onChange={(e) => setParams({ ...params, per_page: parseInt(e.target.value) })}
+                onChange={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
               >
                 {[5, 10, 20, 50, 100].map(value => (
                   <option key={value} value={value}>
