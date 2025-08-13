@@ -1,3 +1,6 @@
+'use client'
+
+import { useState } from 'react';
 import Swal from 'sweetalert2';
 import { useRouter } from 'next/navigation';
 import { AppDispatch } from '@/store';
@@ -13,6 +16,7 @@ type UseDeleteWithConfirmationParams = {
 export const useDeleteWithConfirmation = ({ entityName, redirectTo, deleteAction}: UseDeleteWithConfirmationParams) => {
   const dispatch = useDispatch<AppDispatch>();
   const router = useRouter();
+  const [deleting, setDeleting] = useState<boolean>(false);
 
   const handleDelete = async (id: string) => {
     const result = await Swal.fire({
@@ -27,6 +31,7 @@ export const useDeleteWithConfirmation = ({ entityName, redirectTo, deleteAction
     });
 
     if (result.isConfirmed) {
+      setDeleting(true);
       await dispatch(deleteAction(id)).unwrap();
       await Swal.fire('Excluído!', `O ${entityName} foi excluído.`, 'success');
 
@@ -36,5 +41,8 @@ export const useDeleteWithConfirmation = ({ entityName, redirectTo, deleteAction
     }
   };
 
-  return handleDelete;
+  return {
+    handleDelete,
+    deleting
+  };
 };

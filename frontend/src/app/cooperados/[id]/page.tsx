@@ -16,7 +16,7 @@ export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { current, status, error } = useSelector((state: RootState) => state.cooperados);
-  const handleDelete = useDeleteWithConfirmation({
+  const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'cooperado',
     redirectTo: '/cooperados',
     deleteAction: (id: string) => deleteCooperado(id), 
@@ -57,7 +57,7 @@ export default function Cooperador() {
     }));
   }, [setLayoutData, current, id]);
 
-  if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
+  if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
 

@@ -20,7 +20,7 @@ export default function Cooperadores() {
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<CooperadoFilters>({ searchTerm: '', tipoPessoa: 'TODOS' });
   const [tableHeader, setTableHeader] = useState<string[]>([]);
-  const handleDelete = useDeleteWithConfirmation({
+  const { handleDelete } = useDeleteWithConfirmation({
       entityName: 'cooperado',
       deleteAction: (id: string) => deleteCooperado(id), 
     });
