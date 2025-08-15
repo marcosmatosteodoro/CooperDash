@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cooperado;
+use App\Models\CooperadoFisico;
+use App\Models\CooperadoJuridico;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -63,10 +65,10 @@ class CooperadoController extends Controller
     public function store(Request $request)
     {
         try {
-            $validated = $request->validate(Cooperado::rules($request->tipo_pessoa));
-            
-            $cooperado = Cooperado::create($validated);
-            
+            $klass = $this->getKlass($request);
+            $validated = $request->validate($klass::rules());
+            $cooperado = $klass::create($validated);
+
             return response()->json($cooperado, 201);
 
         } catch (\Illuminate\Validation\ValidationException $e) {
@@ -97,13 +99,14 @@ class CooperadoController extends Controller
     public function update(Request $request, $id)
     {
         try {
-            $cooperado = Cooperado::find($id);
+            $klass = $this->getKlass($request);
+            $cooperado = $klass::find($id);
 
             if (!$cooperado) {
                 return response()->json(['message' => 'Cooperado não encontrado'], 404);
             }
 
-            $validated = $request->validate(Cooperado::rules($request->tipo_pessoa, $id));
+            $validated = $request->validate($klass::rules($id));
             
             $cooperado->update($validated);
             
@@ -130,5 +133,17 @@ class CooperadoController extends Controller
         $cooperado->delete();
         
         return response()->json(null, 204);
+    }
+
+    private function getKlass($request) {
+        $request->validate([
+            'tipo_pessoa' => 'required|in:FISICA,JURIDICA'
+        ]);
+
+        $tipo_pessoa = $request->tipo_pessoa;
+
+        return $tipo_pessoa === "FISICA" 
+            ? CooperadoFisico::class 
+            : CooperadoJuridico::class;
     }
 }

@@ -10,6 +10,8 @@ class Cooperado extends Model
 {
     use HasFactory;
 
+    protected $table = 'cooperados';
+    
     protected $fillable = [
         'nome',
         'tipo_pessoa',
@@ -21,7 +23,7 @@ class Cooperado extends Model
         'email'
     ];
 
-    public static function rules($tipoPessoa = null, $cooperadoId = null)
+    public static function rules($cooperadoId = null)
     {
         return [
             'nome' => 'required|string|max:255',
@@ -29,8 +31,7 @@ class Cooperado extends Model
             'documento' => [
                 'required',
                 'string',
-                function ($attribute, $value, $fail) use ($tipoPessoa, $cooperadoId) {
-                    $tipo = $tipoPessoa ?? request()->input('tipo_pessoa');
+                function ($attribute, $value, $fail) use ($cooperadoId) {
                     $exists = Cooperado::where('documento', $value)
                         ->when($cooperadoId, fn($q) => $q->where('id', '!=', $cooperadoId))
                         ->exists();
@@ -38,12 +39,6 @@ class Cooperado extends Model
                     if ($exists) {
                         $fail('Este documento já está em uso por outro cooperado.');
                         return;
-                    }
-
-                    if ($tipo === 'FISICA' && !self::validarCPF($value)) {
-                        $fail('CPF inválido.');
-                    } elseif ($tipo === 'JURIDICA' && !self::validarCNPJ($value)) {
-                        $fail('CNPJ inválido.');
                     }
                 }
             ],
