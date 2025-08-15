@@ -1,60 +1,41 @@
-# Dockerfile
-FROM alpine:3.18
+FROM php:8.2-fpm
 
-# Instala PHP, extensões e utilitários
-RUN apk add --no-cache \
-    nginx \
-    php82 \
-    php82-fpm \
-    php82-phar \
-    php82-pdo_pgsql \
-    php82-mbstring \
-    php82-zip \
-    php82-gd \
-    php82-curl \
-    php82-tokenizer \
-    php82-fileinfo \
-    php82-xml \
-    php82-xmlwriter \
-    php82-simplexml \
-    php82-openssl \
-    php82-session \
-    php82-dom \
-    php82-iconv \
-    curl \
+# Instalar dependências
+RUN apt-get update && apt-get install -y \
     git \
+    curl \
+    libpng-dev \
+    libonig-dev \
+    libxml2-dev \
+    zip \
     unzip \
-    supervisor
+    libpq-dev
 
-# Link simbólico para php
-RUN ln -s /usr/bin/php82 /usr/bin/php
+# Limpar cache
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-# Instala composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+# Instalar extensões PHP
+RUN docker-php-ext-install pdo pdo_pgsql mbstring exif pcntl bcmath gd
 
-# Configura PHP-FPM
-RUN sed -i 's/127\.0\.0\.1:9000/\/var\/run\/php-fpm.sock/' /etc/php82/php-fpm.d/www.conf \
-    && sed -i 's/;listen.owner = nobody/listen.owner = nginx/' /etc/php82/php-fpm.d/www.conf \
-    && sed -i 's/;listen.group = nobody/listen.group = nginx/' /etc/php82/php-fpm.d/www.conf
+# Instalar Composer
+COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Configura Nginx
-RUN mkdir -p /run/nginx
-COPY docker/nginx.backend.conf /etc/nginx/http.d/default.conf
+# Definir diretório de trabalho
+WORKDIR /var/www
 
-# Configura supervisord
-COPY docker/supervisord.backend.conf /etc/supervisord.conf
-
-# Copia código Laravel
-WORKDIR /var/www/html
+# Copiar arquivos do projeto
 COPY . .
 
-# Instala dependências do Laravel
-RUN composer install --optimize-autoloader
+# Instalar dependências do Laravel
+RUN composer install
+
+# Gerar chave da aplicação
+RUN cp .env.example .env && php artisan key:generate
 
 # Permissões
-RUN chown -R nginx:nginx storage bootstrap/cache \
-    && chmod -R 775 storage bootstrap/cache
+RUN chown -R www-data:www-data /var/www/storage
+RUN chmod -R 775 /var/www/storage
 
-EXPOSE 80
-
-CMD ["supervisord", "-c", "/etc/supervisord.conf"]
+# Expor porta 8000 e iniciar servidor
+EXPOSE 8000
+CMD php artisan serve --host=0.0.0.0 --port=8000

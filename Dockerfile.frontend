@@ -1,16 +1,12 @@
-# Dockerfile.frontend
-FROM node:20-alpine AS builder
+FROM node:20
 
 WORKDIR /app
-COPY frontend/ .
 
-RUN npm install && npm run build
+COPY ./frontend/package.json ./frontend/package-lock.json ./
 
-# --- Produção ---
-FROM node:20-alpine
+RUN npm install
 
-WORKDIR /app
-COPY --from=builder /app ./
+COPY ./frontend .
 
 EXPOSE 3000
 

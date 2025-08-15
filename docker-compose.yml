@@ -5,8 +5,14 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: laravel-backend
+    restart: unless-stopped
+    working_dir: /var/www
+    volumes:
+      - .:/var/www
     ports:
-      - "8000:80"
+      - "8000:8000"
+    networks:
+      - unicred-network
     environment:
       APP_ENV: local
       APP_DEBUG: "true"
@@ -25,14 +31,23 @@ services:
       context: .
       dockerfile: Dockerfile.frontend
     container_name: next-frontend
+    restart: unless-stopped
+    working_dir: /app
+    volumes:
+      - ./frontend:/app
     ports:
       - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - unicred-network
     environment:
       NEXT_PUBLIC_API_URL: http://localhost:8000/api
 
   db:
     image: postgres:16
     container_name: postgres-db
+    restart: unless-stopped
     environment:
       POSTGRES_DB: mydb
       POSTGRES_USER: myuser
@@ -41,6 +56,12 @@ services:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    networks:
+      - unicred-network
 
 volumes:
   postgres_data:
+
+networks:
+  unicred-network:
+    driver: bridge
