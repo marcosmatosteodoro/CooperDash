@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState, useMemo } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
@@ -10,20 +10,17 @@ import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { texto } from '@/data/textos';
 import { useLayout } from '@/providers/LayoutProvider'
 import { Table, LoadingSpinner, ErrorAlert, ColumnType, ActionsType } from '@/components'
-import { Cooperado, TipoPessoa } from '@/types/cooperado';
+import { Cooperado, CooperadoFilters, TipoPessoaOptions } from '@/types/cooperado';
 import { PaginationParams } from '@/types/api';
-
-type FilterType = 'TODOS' | TipoPessoa;
 
 export default function Cooperadores() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.cooperados);
   const { setLayoutData } = useLayout();
-  const [params, setParams] = useState<PaginationParams>({ per_page: 5, page: 2, q: '' });
-  const [filter, setFilter] = useState<FilterType>('TODOS');
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
+  const [filters, setFilters] = useState<CooperadoFilters>({ searchTerm: '', tipoPessoa: 'TODOS' });
   const [tableHeader, setTableHeader] = useState<string[]>([]);
-  const handleDelete = useDeleteWithConfirmation({
+  const { handleDelete } = useDeleteWithConfirmation({
       entityName: 'cooperado',
       deleteAction: (id: string) => deleteCooperado(id), 
     });
@@ -32,6 +29,13 @@ export default function Cooperadores() {
   useEffect(() => {
       dispatch(fetchCooperados(params));
   }, [dispatch, params]);
+
+  useEffect(() => {
+    const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
+    const tipoPessoa = filters.tipoPessoa !== 'TODOS' ? filters.tipoPessoa : undefined;
+
+    setParams(prev => ({ ...prev, page: 1, q, tipo_pessoa: tipoPessoa }));
+  }, [filters.searchTerm, filters.tipoPessoa]);
 
   useEffect(() => {
     setLayoutData(prev => ({
@@ -51,37 +55,19 @@ export default function Cooperadores() {
 
 
   useEffect(() => {
-    const header = filter === 'TODOS' 
+    const header = filters.tipoPessoa === 'TODOS' 
       ? ['Nome', 'Tipo', 'Documento', 'Data', 'Valor', 'Telefone', 'Email']
       : [
-          texto[filter].nome,
+          texto[filters.tipoPessoa].nome,
           'Tipo',
-          texto[filter].documento,
-          texto[filter].data,
-          texto[filter].valor,
+          texto[filters.tipoPessoa].documento,
+          texto[filters.tipoPessoa].data,
+          texto[filters.tipoPessoa].valor,
           'Telefone',
           'Email',
         ];
     setTableHeader(header);
-  }, [filter]);
-  
-  // Filtrar e buscar cooperados
-  const filteredList = useMemo(() => {
-    return list.filter((cooperado: Cooperado) => {
-      const typeMatch = 
-        filter === 'TODOS' || 
-        (filter === 'FISICA' && cooperado.tipo_pessoa === 'FISICA') || 
-        (filter === 'JURIDICA' && cooperado.tipo_pessoa === 'JURIDICA');
-      
-      const searchMatch = searchTerm === '' || 
-        Object.values(cooperado).some(
-          value => value && 
-          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
-        );
-      
-      return typeMatch && searchMatch;
-    });
-  }, [list, filter, searchTerm]);
+  }, [filters.tipoPessoa]);
   
   const paginationClickHandler = (link: string | null) => {
     if (!link) return;
@@ -151,7 +137,7 @@ export default function Cooperadores() {
               <select 
                 className="form-select" 
                 value={params.per_page} 
-                onChange={(e) => setParams({ ...params, per_page: parseInt(e.target.value) })}
+                onChange={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
               >
                 {[5, 10, 20, 50, 100].map(value => (
                   <option key={value} value={value}>
@@ -173,23 +159,23 @@ export default function Cooperadores() {
                 className="form-control"
                 placeholder="Buscar cooperados..."
                 autoFocus
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                value={filters.searchTerm}
+                onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
               />
             </div>
           </div>
 
           <div className="col-md-4">
             <div className="d-flex flex-wrap align-items-center gap-3">
-              {(['TODOS', 'FISICA', 'JURIDICA'] as FilterType[]).map((filterType) => (
+              {(['TODOS', 'FISICA', 'JURIDICA'] as TipoPessoaOptions[]).map((filterType) => (
                 <div key={filterType} className="form-check">
                   <input
                     className="form-check-input"
                     type="radio"
                     name="filter"
                     id={`filter-${filterType.toLowerCase()}`}
-                    checked={filter === filterType}
-                    onChange={() => setFilter(filterType)}
+                    checked={filters.tipoPessoa === filterType}
+                    onChange={() => setFilters({ ...filters, tipoPessoa: filterType })}
                   />
                   <label className="form-check-label" htmlFor={`filter-${filterType.toLowerCase()}`}>
                     {filterType === 'TODOS' ? 'Todos' : filterType === 'FISICA' ? 'Físicas' : 'Jurídicas'}
@@ -205,12 +191,12 @@ export default function Cooperadores() {
       <Table 
         headers={tableHeader}
         columns={tableColumns}
-        data={filteredList}
+        data={list}
         pagination={pagination}
         actions={tableActions}
         notFoundMessage='Nenhum cooperado encontrado'
-        searchTerm={!!searchTerm}
-        filterCleaner={() => setSearchTerm('')}
+        searchTerm={!!filters.searchTerm}
+        filterCleaner={() => setFilters({ ...filters, searchTerm: '', tipoPessoa: 'TODOS' })}
         paginationClickHandler={paginationClickHandler}
       />
     </>

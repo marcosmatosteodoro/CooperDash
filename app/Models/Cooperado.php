@@ -10,6 +10,8 @@ class Cooperado extends Model
 {
     use HasFactory;
 
+    protected $table = 'cooperados';
+    
     protected $fillable = [
         'nome',
         'tipo_pessoa',
@@ -21,7 +23,7 @@ class Cooperado extends Model
         'email'
     ];
 
-    public static function rules($tipoPessoa = null, $cooperadoId = null)
+    public static function rules($cooperadoId = null)
     {
         return [
             'nome' => 'required|string|max:255',
@@ -29,8 +31,7 @@ class Cooperado extends Model
             'documento' => [
                 'required',
                 'string',
-                function ($attribute, $value, $fail) use ($tipoPessoa, $cooperadoId) {
-                    $tipo = $tipoPessoa ?? request()->input('tipo_pessoa');
+                function ($attribute, $value, $fail) use ($cooperadoId) {
                     $exists = Cooperado::where('documento', $value)
                         ->when($cooperadoId, fn($q) => $q->where('id', '!=', $cooperadoId))
                         ->exists();
@@ -38,12 +39,6 @@ class Cooperado extends Model
                     if ($exists) {
                         $fail('Este documento já está em uso por outro cooperado.');
                         return;
-                    }
-
-                    if ($tipo === 'FISICA' && !self::validarCPF($value)) {
-                        $fail('CPF inválido.');
-                    } elseif ($tipo === 'JURIDICA' && !self::validarCNPJ($value)) {
-                        $fail('CNPJ inválido.');
                     }
                 }
             ],
@@ -84,79 +79,27 @@ class Cooperado extends Model
         ];
     }
 
+    public static function messages()
+    {
+        return [
+            'nome.required' => 'O nome é obrigatório.',
+            'tipo_pessoa.required' => 'O tipo de pessoa é obrigatório.',
+            'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
+            'documento.required' => 'O documento é obrigatório.',
+            'data.required' => 'A data é obrigatória.',
+            'data.date' => 'A data deve ser válida.',
+            'data.before_or_equal' => 'A data não pode ser futura.',
+            'valor.required' => 'O valor é obrigatório.',
+            'valor.numeric' => 'O valor deve ser numérico.',
+            'codigo_pais.required' => 'O código do país é obrigatório.',
+            'telefone.required' => 'O telefone é obrigatório.',
+            'telefone.numeric' => 'O telefone deve conter apenas números.',
+            'email.email' => 'Informe um e-mail válido.',
+        ];
+    }
+    
     public function getTelefoneCompletoAttribute()
     {
         return $this->codigo_pais . $this->telefone;
-    }
-
-    protected static function validarCPF($cpf)
-    {
-        $cpf = preg_replace('/[^0-9]/', '', $cpf);
-
-        if (strlen($cpf) != 11) {
-            return false;
-        }
-
-        if (preg_match('/(\d)\1{10}/', $cpf)) {
-            return false;
-        }
-        
-        for ($t = 9; $t < 11; $t++) {
-            for ($d = 0, $c = 0; $c < $t; $c++) {
-                $d += $cpf[$c] * (($t + 1) - $c);
-            }
-            $d = ((10 * $d) % 11) % 10;
-            if ($cpf[$c] != $d) {
-                return false;
-            }
-        }
-        
-        return true;
-    }
-
-    protected static function validarCNPJ($cnpj)
-    {
-        $cnpj = preg_replace('/[^0-9]/', '', $cnpj);
-
-        if (strlen($cnpj) != 14) {
-            return false;
-        }
-
-        $tamanho = strlen($cnpj) - 2;
-        $numeros = substr($cnpj, 0, $tamanho);
-        $digitos = substr($cnpj, $tamanho);
-        $soma = 0;
-        $pos = $tamanho - 7;
-        
-        for ($i = $tamanho; $i >= 1; $i--) {
-            $soma += $numeros[$tamanho - $i] * $pos--;
-            if ($pos < 2) {
-                $pos = 9;
-            }
-        }
-        
-        $resultado = $soma % 11 < 2 ? 0 : 11 - $soma % 11;
-        if ($resultado != $digitos[0]) {
-            return false;
-        }
-        
-        $tamanho++;
-        $numeros = substr($cnpj, 0, $tamanho);
-        $soma = 0;
-        $pos = $tamanho - 7;
-        
-        for ($i = $tamanho; $i >= 1; $i--) {
-            $soma += $numeros[$tamanho - $i] * $pos--;
-            if ($pos < 2) {
-                $pos = 9;
-            }
-        }
-        
-        $resultado = $soma % 11 < 2 ? 0 : 11 - $soma % 11;
-        if ($resultado != $digitos[1]) {
-            return false;
-        }
-        
-        return true;
     }
 }

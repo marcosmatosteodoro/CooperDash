@@ -139,7 +139,7 @@ export default function NovoCooperador() {
         type: 'email',
         tag: 'input',
         name: 'email',
-        value: formData.telefone,
+        value: formData.email,
         contentClassName: 'col-12',
         placeholder: 'nome@email.com',
         onChange: handleChange
