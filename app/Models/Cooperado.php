@@ -79,6 +79,25 @@ class Cooperado extends Model
         ];
     }
 
+    public static function messages()
+    {
+        return [
+            'nome.required' => 'O nome é obrigatório.',
+            'tipo_pessoa.required' => 'O tipo de pessoa é obrigatório.',
+            'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
+            'documento.required' => 'O documento é obrigatório.',
+            'data.required' => 'A data é obrigatória.',
+            'data.date' => 'A data deve ser válida.',
+            'data.before_or_equal' => 'A data não pode ser futura.',
+            'valor.required' => 'O valor é obrigatório.',
+            'valor.numeric' => 'O valor deve ser numérico.',
+            'codigo_pais.required' => 'O código do país é obrigatório.',
+            'telefone.required' => 'O telefone é obrigatório.',
+            'telefone.numeric' => 'O telefone deve conter apenas números.',
+            'email.email' => 'Informe um e-mail válido.',
+        ];
+    }
+    
     public function getTelefoneCompletoAttribute()
     {
         return $this->codigo_pais . $this->telefone;

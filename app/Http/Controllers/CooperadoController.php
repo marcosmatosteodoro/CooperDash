@@ -18,9 +18,14 @@ class CooperadoController extends Controller
         try {
             $perPage = $request->query('per_page', 10);
             $filters = $request->validate([
-                'q' => 'string|min:1',
+                'q' => 'string|min:2',
                 'tipo_pessoa' => 'in:FISICA,JURIDICA'
-            ]);
+            ],
+            [
+            'q.min' => 'A pesquisa deve ter pelo menos 2 caracteres.',
+            'q.string' => 'O campo :attribute deve ser um texto.',
+            'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
+        ]);
 
             $cooperados = Cooperado::query();
 
@@ -66,7 +71,7 @@ class CooperadoController extends Controller
     {
         try {
             $klass = $this->getKlass($request);
-            $validated = $request->validate($klass::rules());
+            $validated = $request->validate($klass::rules(), $klass::messages());
             $cooperado = $klass::create($validated);
 
             return response()->json($cooperado, 201);
@@ -106,7 +111,7 @@ class CooperadoController extends Controller
                 return response()->json(['message' => 'Cooperado não encontrado'], 404);
             }
 
-            $validated = $request->validate($klass::rules($id));
+            $validated = $request->validate($klass::rules($id), $klass::messages());
             
             $cooperado->update($validated);
             
@@ -136,10 +141,6 @@ class CooperadoController extends Controller
     }
 
     private function getKlass($request) {
-        $request->validate([
-            'tipo_pessoa' => 'required|in:FISICA,JURIDICA'
-        ]);
-
         $tipo_pessoa = $request->tipo_pessoa;
 
         return $tipo_pessoa === "FISICA" 
