@@ -18,11 +18,11 @@ class CooperadoController extends Controller
         try {
             $perPage = $request->query('per_page', 10);
             $filters = $request->validate([
-                'q' => 'string|min:2',
+                'q' => 'string|min:1',
                 'tipo_pessoa' => 'in:FISICA,JURIDICA'
             ],
             [
-            'q.min' => 'A pesquisa deve ter pelo menos 2 caracteres.',
+            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
             'q.string' => 'O campo :attribute deve ser um texto.',
             'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
         ]);
