@@ -1,8 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Table } from './Table';
-import { PaginatedResponse } from '../../types/api';
-import { ColumnType, Ressource } from './types';
+import type { PaginatedResponse } from "@/types/api";
+import type { ColumnType, Ressource } from "@/types/ui";
 
 // Mocks dos subcomponentes
 jest.mock('./', () => ({

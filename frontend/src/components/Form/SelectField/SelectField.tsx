@@ -1,5 +1,5 @@
 import React from "react";
-import { SelectFieldInterface } from '../types'
+import type { SelectFieldInterface } from '@/types/ui';
 
 export const SelectField: React.FC<SelectFieldInterface> = ({field, fieldErrors}) => {
   if (field.tag !== 'select') {

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Form } from './Form';
-import { Field } from './types';
+import type { Field } from '@/types/ui';
 
 describe('Form component', () => {
   const mockOnClick = jest.fn();

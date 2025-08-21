@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { SelectField } from './SelectField';
-import { SelectField as SelectFieldType } from '../types';
+import type { SelectField as SelectFieldType } from '@/types/ui';
 
 describe('SelectField Component', () => {
   const mockOptions = [

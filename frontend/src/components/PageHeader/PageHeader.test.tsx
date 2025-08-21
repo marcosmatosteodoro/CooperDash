@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { PageHeader } from './PageHeader';
-import { BreadcrumbsInterface, BreadcrumbType } from './types';
+import type { BreadcrumbsInterface, BreadcrumbType } from "@/types/ui";
 import '@testing-library/jest-dom';
 
 // Criando mock da função useLayout

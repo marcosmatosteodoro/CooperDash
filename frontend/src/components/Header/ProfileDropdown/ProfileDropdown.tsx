@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { useState } from 'react';
-import { ProfileDropdownProps, ProfileDropdownItemsType } from '../types'
+import type { ProfileDropdownProps, ProfileDropdownItemsType } from "@/types/ui/";
 
 export const ProfileDropdown: React.FC<ProfileDropdownProps> = ({items}) => {
   const [showDropdown, setShowDropdown] = useState(false);

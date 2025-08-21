@@ -1,4 +1,4 @@
-import { ProfileDropdownItemsType } from './types'
+import type { ProfileDropdownItemsType } from "@/types/ui";
 
 export const profileDropdownItems: ProfileDropdownItemsType[] = [
   {

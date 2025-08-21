@@ -1,7 +1,8 @@
 'use client'
 
 import React from 'react';
-import {BreadcrumbsInterface, BreadcrumbType, BreadcrumbItem} from '../'
+import {  BreadcrumbItem} from '../'
+import type {BreadcrumbsInterface, BreadcrumbType} from "@/types/ui";
 
 export const Breadcrumb: React.FC<BreadcrumbsInterface> = ({breadcrumbs}) => (
   <nav aria-label="breadcrumb">

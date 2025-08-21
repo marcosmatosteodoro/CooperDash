@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { Td } from './';
-import { ColumnType, Ressource } from "../types"
+import type { ColumnType, Ressource } from "@/types/ui";
 describe('Td component', () => {
   const baseRessource: Ressource = { name: 'John Doe', url: '/profile/john' };
 

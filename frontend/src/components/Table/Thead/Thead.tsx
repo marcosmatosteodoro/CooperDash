@@ -1,5 +1,5 @@
 
-import { TheadInterface } from "../types"
+import type { TheadInterface } from "@/types/ui";
 import { Th } from '../'
 
 export const Thead: React.FC<TheadInterface> = ({headers, actions}) =>  (

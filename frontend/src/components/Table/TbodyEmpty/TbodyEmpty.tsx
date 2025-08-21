@@ -1,4 +1,4 @@
-import { TbodyEmptyInterface } from "../types"
+import type { TbodyEmptyInterface } from "@/types/ui";
 
 export const TbodyEmpty: React.FC<TbodyEmptyInterface> = ({ notFoundMessage, searchTerm, filterCleaner}: TbodyEmptyInterface) =>  (
   <tr>

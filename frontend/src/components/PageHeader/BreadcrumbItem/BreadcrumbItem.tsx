@@ -2,7 +2,7 @@
 
 import React from 'react';
 import Link from 'next/link';
-import {BreadcrumbItemInterface} from '../'
+import type {BreadcrumbItemInterface} from "@/types/ui";
 
 export const BreadcrumbItem: React.FC<BreadcrumbItemInterface>  = ({breadcrumb, isLast, isFirst}) => {
   const className = `breadcrumb-item ${isLast ? 'active' : ''}`

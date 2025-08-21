@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { TbodyContentInterface, ColumnType } from "../types"
+import type { TbodyContentInterface, ColumnType } from "@/types/ui";
 import { Td } from '../'
 
 export const TbodyContent = <T extends { id: string }>({columns, data, actions, increase}: TbodyContentInterface<T>) =>  (

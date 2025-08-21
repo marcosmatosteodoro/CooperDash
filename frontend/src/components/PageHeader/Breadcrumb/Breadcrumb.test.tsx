@@ -2,7 +2,7 @@ import React from 'react';
 import { render, screen } from '@testing-library/react';
 import { Breadcrumb } from './Breadcrumb';
 import '@testing-library/jest-dom';
-import { BreadcrumbType, BreadcrumbItemInterface } from '../';
+import type { BreadcrumbType, BreadcrumbItemInterface } from "@/types/ui";
 
 // Mock do componente BreadcrumbItem
 jest.mock('../BreadcrumbItem', () => ({

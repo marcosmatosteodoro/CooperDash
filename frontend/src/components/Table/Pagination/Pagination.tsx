@@ -1,6 +1,6 @@
 'use client'
 
-import { PaginationInterface } from "../types"
+import type { PaginationInterface } from "@/types/ui";
 
 export const Pagination = ({
     links,

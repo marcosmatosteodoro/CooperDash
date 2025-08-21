@@ -2,7 +2,7 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { Pagination } from './Pagination';
-import { PaginationInterface } from '../types';
+import type { PaginationInterface } from "@/types/ui";
 
 describe('Pagination component', () => {
   const mockHandler = jest.fn();

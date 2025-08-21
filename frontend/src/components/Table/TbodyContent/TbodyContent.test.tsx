@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import '@testing-library/jest-dom';
 import { TbodyContent } from './TbodyContent';
-import { ColumnType, Ressource } from '../types';
+import type { ColumnType, Ressource } from "@/types/ui";
 
 // Mock do Td para simplificar
 jest.mock('../', () => ({

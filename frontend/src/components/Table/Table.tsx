@@ -1,7 +1,7 @@
 'use client'
 
 import { Thead, TbodyContent, TbodyEmpty, Pagination } from "./"
-import { TableInterface } from "./types"
+import type { TableInterface } from "@/types/ui";
 
 export const Table = <T extends { id: string },>({
     headers, 

@@ -1,6 +1,6 @@
 import React from "react";
 import {InputField, SelectField} from "./"
-import {FormProps, Field} from './types'
+import type { FormProps, Field } from '@/types/ui'
 
 export const Form: React.FC<FormProps> = ({ onClick, handleSubmit, fieldErrors, fields }) => {
   const fieldComponent = (field: Field) => {

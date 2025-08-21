@@ -1,5 +1,5 @@
 import Link from "next/link"
-import { TdInterface } from "../types"
+import type { TdInterface } from "@/types/ui";
 
 export const Td = <T,>({column, ressource}: TdInterface<T>) => {
   const {className, type, attribute, style, href, formatter} = column;

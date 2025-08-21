@@ -1,5 +1,5 @@
 import React from "react";
-import { InputFieldProps } from '../types'
+import type { InputFieldProps } from '@/types/ui';
 
 export const InputField: React.FC<InputFieldProps> = ({ field, fieldErrors }) => {
   if (field.tag !== 'input') {
