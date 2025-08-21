@@ -9,7 +9,12 @@ class CooperadoFactory extends Factory
 {
     protected $model = Cooperado::class;
 
-    public function definition()
+    /**
+     * Define the model's default state.
+     *
+     * @return array<string, mixed>
+     */
+    public function definition(): array
     {
         return [
             'nome' => $this->faker->name,

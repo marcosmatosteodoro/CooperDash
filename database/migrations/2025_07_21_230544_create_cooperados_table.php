@@ -15,15 +15,14 @@ return new class extends Migration
             $table->id();
             $table->string('nome');
             $table->enum('tipo_pessoa', ['FISICA', 'JURIDICA']);
-            $table->string('documento');
-            $table->date('data');
-            $table->decimal('valor', 10, 2);
+            $table->string('documento')->unique('documento');
+            $table->date('data'); // TODO mudar para data_cadastro
+            $table->decimal('valor', 10, 2); // TODO mudar para capital_inicial
             $table->string('codigo_pais', 5)->default('+55');
             $table->string('telefone', 15);
             $table->string('email')->nullable();
+            $table->enum('status', ['ATIVO', 'INATIVO', 'SUSPENSO'])->default('ATIVO');
             $table->timestamps();
-            
-            $table->unique('documento');
         });
     }
 
