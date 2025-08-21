@@ -22,10 +22,10 @@ class CooperadoController extends Controller
                 'tipo_pessoa' => 'in:FISICA,JURIDICA'
             ],
             [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-            'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
-        ]);
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+                'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
+            ]);
 
             $cooperados = Cooperado::query();
 
@@ -78,7 +78,7 @@ class CooperadoController extends Controller
 
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
-                'message' => 'Dados inválidos',
+                'message' => 'Erro ao criar cooperador',
                 'errors' => $e->errors()
             ], 422);
         }
