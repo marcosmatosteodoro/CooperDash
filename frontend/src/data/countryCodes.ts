@@ -1,8 +1,4 @@
-type CountryCodeType = {
-  value: `+${number}`
-  label: string
-  default?: boolean
-}
+import type { CountryCodeType } from "@/types/data";
 
 export const countryCodes: CountryCodeType[] = [
   { value: '+55', label: '🇧🇷 +55 (Brasil)', default: true },

@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { FieldChangeEvent } from '@/components/Form/types'
-import { Cooperado } from '@/types/cooperado'
+import type { FieldChangeEvent } from '@/types/ui/'
+import type { Cooperado } from '@/types/cooperado'
 import { useDispatch } from 'react-redux';
 import { AppDispatch } from '@/store';
 import { useRouter } from 'next/navigation'; 
