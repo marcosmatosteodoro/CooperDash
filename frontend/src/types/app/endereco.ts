@@ -1,6 +1,6 @@
 export interface Endereco {
-  id: number;
-  cooperado_id: number;
+  id: string;
+  cooperado_id: string;
   cep: string;
   logradouro: string;
   numero: string;

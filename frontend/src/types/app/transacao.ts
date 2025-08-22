@@ -1,6 +1,6 @@
 export interface Transacao {
-  id: number;
-  contas_corrente_id: number;
+  id: string;
+  contas_corrente_id: string;
   tipo: TransacaoTipo;
   valor: number;
   saldo_anterior: number;

@@ -1,4 +1,5 @@
 export interface Assembleia {
+  id: string;
   titulo: string;
   descricao: string;
   data_hora: Date;

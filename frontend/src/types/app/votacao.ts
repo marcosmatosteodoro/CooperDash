@@ -1,7 +1,7 @@
 export interface Votacao {
-  id: number;
-  assembleia_id: number;
-  cooperado_id: number;
+  id: string;
+  assembleia_id: string;
+  cooperado_id: string;
   voto: VotacaoVoto;
   data_voto: Date;
   justificativa?: string;

@@ -1,6 +1,6 @@
 export interface ContaCorrente {
-  id: number;
-  cooperado_id: number;
+  id: string;
+  cooperado_id: string;
   numero_conta: string;
   saldo: number;
   limite_credito: number;

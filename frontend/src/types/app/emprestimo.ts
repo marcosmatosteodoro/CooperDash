@@ -1,6 +1,6 @@
 export interface Emprestimo {
-  id: number;
-  cooperado_id: number;
+  id: string;
+  cooperado_id: string;
   valor_solicitado: number;
   valor_aprovado?: number;
   parcelas: number;

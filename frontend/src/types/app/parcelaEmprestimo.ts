@@ -1,6 +1,6 @@
 export interface ParcelaEmprestimo {
-  id: number;
-  emprestimo_id: number;
+  id: string;
+  emprestimo_id: string;
   numero_parcela: number;
   valor_parcela: number;
   data_vencimento: Date;
