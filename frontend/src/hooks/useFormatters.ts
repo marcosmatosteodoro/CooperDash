@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import type { TipoPessoa } from '@/types/cooperado'
+import type { TipoPessoa } from '@/types/app/cooperado'
 
 const useFormatters = () => {
   const formatCPF = useCallback((cpf: string): string => {

@@ -9,9 +9,10 @@ import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { texto } from '@/data/textos';
 import { useLayout } from '@/providers/LayoutProvider'
-import { Table, LoadingSpinner, ErrorAlert, ColumnType, ActionsType } from '@/components'
-import { Cooperado, CooperadoFilters, TipoPessoaOptions } from '@/types/cooperado';
-import { PaginationParams } from '@/types/api';
+import { Table, LoadingSpinner, ErrorAlert } from '@/components'
+import type { Cooperado, CooperadoFilters, TipoPessoaOptions } from '@/types/app/cooperado';
+import type { PaginationParams } from '@/types/api';
+import type { ColumnType, ActionsType } from '@/types/ui';
 
 export default function Cooperadores() {
   const dispatch: AppDispatch = useDispatch();

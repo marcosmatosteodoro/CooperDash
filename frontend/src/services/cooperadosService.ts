@@ -1,5 +1,5 @@
 import apiClient from '@/api/apiClient';
-import { Cooperado } from '@/types/cooperado';
+import { Cooperado } from '@/types/app/cooperado';
 import type { PaginationParams, ApiService } from '@/types/api';
 
 const getParams = (params: PaginationParams): string => {

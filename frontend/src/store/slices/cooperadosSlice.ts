@@ -1,7 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction, SerializedError } from '@reduxjs/toolkit';
 import CooperadosService from '@/services/cooperadosService';
 import { PaginatedResponse, PaginationParams } from '@/types/api';
-import { Cooperado } from '@/types/cooperado';
+import { Cooperado } from '@/types/app/cooperado';
 
 interface CooperadoState {
   pagination: PaginatedResponse<Cooperado>;
