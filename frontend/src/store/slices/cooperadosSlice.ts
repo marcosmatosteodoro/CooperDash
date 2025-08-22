@@ -1,36 +1,10 @@
-import { createSlice, createAsyncThunk, PayloadAction, SerializedError } from '@reduxjs/toolkit';
+import { createSlice, createAsyncThunk, PayloadAction } from '@reduxjs/toolkit';
 import CooperadosService from '@/services/cooperadosService';
-import { PaginatedResponse, PaginationParams } from '@/types/api';
-import { Cooperado } from '@/types/app/cooperado';
+import type { PaginatedResponse, PaginationParams } from '@/types/api';
+import type { Cooperado } from '@/types/app/cooperado';
+import type { RejectValue, SliceError, SliceState } from '@/types/app/slice';
 
-interface CooperadoState {
-  pagination: PaginatedResponse<Cooperado>;
-  list: Cooperado[];
-  current: Cooperado | null;
-  status: 'idle' | 'loading' | 'succeeded' | 'failed';
-  error: string | null;
-  fieldErrors: Record<string, string[]> | null;
-}
-
-interface ApiError {
-  response?: {
-    data: {
-      message: string;
-      errors?: Record<string, string[]>;
-    };
-  };
-  message: string;
-}
-
-type RejectValue = {
-  error: SerializedError;
-  payload?: { 
-    message?: string; 
-    errors?: Record<string, string[]>
-  };
-}
-
-const initialState: CooperadoState = {
+const initialState: SliceState<Cooperado> = {
   pagination: {} as PaginatedResponse<Cooperado>,
   list: [],
   current: null,
@@ -63,7 +37,7 @@ export const createCooperado = createAsyncThunk<Cooperado, Omit<Cooperado, 'id'>
       const response = await CooperadosService.create(data);
       return response.data;
     } catch (error: unknown) {
-      const err = error as ApiError;
+      const err = error as SliceError;
 
       if (err.response?.data) {
         return rejectWithValue(err.response.data);
@@ -84,7 +58,7 @@ export const updateCooperado = createAsyncThunk<
       const response = await CooperadosService.update(id, data);
       return response.data;
     } catch (error: unknown) {
-      const err = error as ApiError;
+      const err = error as SliceError;
 
       if (err.response) {
         const payload = err.response.data || {};
