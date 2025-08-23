@@ -11,7 +11,7 @@ import { countryCodes } from '@/data/countryCodes';
 import { texto } from '@/data/textos';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
-import { FormProps } from '@/components/Form/types'
+import type { FormProps } from '@/types/ui'
 
 export default function NovoCooperador() {
   const router = useRouter();

@@ -12,7 +12,7 @@ import useCooperadoForm from '@/hooks/useCooperadoForm';
 import { countryCodes } from '@/data/countryCodes';
 import { texto } from '@/data/textos';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
-import { FormProps } from '@/components/Form/types'
+import type { FormProps } from '@/types/ui'
 
 export default function EditarCooperador() {
   const { id } = useParams();
