@@ -31,7 +31,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.frontend
-    container_name: next-frontend
+    container_name: frontend
     restart: unless-stopped
     working_dir: /app
     volumes:
