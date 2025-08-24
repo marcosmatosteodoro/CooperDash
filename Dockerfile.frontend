@@ -1,15 +1,58 @@
-FROM node:20
+# Dockerfile.frontend
+FROM node:20 AS base
+
+# Atualiza e limpa o sistema
+RUN apt-get update && apt-get upgrade -y && apt-get clean
 
 WORKDIR /app
 
+# Etapa de dependências COMPLETAS (inclui devDependencies para build)
+FROM base AS deps
 COPY ./frontend/package.json ./frontend/package-lock.json ./
+RUN npm ci && npm cache clean --force
 
-RUN npm install
+# Etapa de desenvolvimento
+FROM base AS development
+WORKDIR /app
 
+# Copia node_modules com todas as dependências
+COPY --from=deps /app/node_modules ./node_modules
 COPY ./frontend .
 
+ENV NODE_ENV=development
+EXPOSE 3000
+
+# Comando para desenvolvimento com hot reload
+CMD ["npm", "run", "dev"]
+
+# Etapa de build para produção
+FROM base AS builder
+WORKDIR /app
+
+# Copia TODAS as dependências (incluindo devDependencies para build)
+COPY --from=deps /app/node_modules ./node_modules
+COPY ./frontend .
+
+# Build da aplicação Next.js
 RUN npm run build
+
+# Etapa de produção final
+FROM base AS production
+WORKDIR /app
+
+ENV NODE_ENV=production
+ENV PORT=3000
+
+# Instala APENAS dependências de produção para a imagem final
+COPY ./frontend/package.json ./frontend/package-lock.json ./
+RUN npm ci --only=production && npm cache clean --force
+
+# Copia apenas o necessário para produção
+COPY --from=builder /app/public ./public
+COPY --from=builder /app/.next/standalone ./
+COPY --from=builder /app/.next/static ./.next/static
 
 EXPOSE 3000
 
+# Inicia a aplicação em modo produção
 CMD ["npm", "run", "start"]
