@@ -60,7 +60,8 @@ services:
       - "80:80"
       - "443:443"
     volumes:
-      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/prod.conf:/etc/nginx/conf.d/default.conf
+      - ./nginx/ssl-certs:/etc/nginx/ssl 
     depends_on:
       - backend
       - frontend
@@ -69,6 +70,12 @@ services:
 
 volumes:
   postgres_data_prod:
+  nginx_ssl:
+    driver: local
+    driver_opts:
+      type: none
+      device: /etc/nginx/ssl
+      o: bind
 
 networks:
   cooperdash-network:
