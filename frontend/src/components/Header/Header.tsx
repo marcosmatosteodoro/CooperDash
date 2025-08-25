@@ -6,8 +6,8 @@ import Image from 'next/image';
 import { useLayout } from '@/providers/LayoutProvider';
 import { ProfileDropdown } from './';
 import { profileDropdownItems } from './data';
-import whiteLogo from '@/assets/images/logo_zallpy_white.png';
-import blackLogo from '@/assets/images/logo_zallpy_black.png';
+import whiteLogo from '@/assets/images/cooperdash_white.png';
+import blackLogo from '@/assets/images/cooperdash_black.png';
 
 export const Header: React.FC = () => {
   const { toggleTheme, layoutData } = useLayout();
