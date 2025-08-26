@@ -5,8 +5,8 @@ export interface ContaCorrente {
   saldo: number;
   limite_credito: number;
   status: ContaCorrenteStatus;
-  data_abertura: Date;
-  data_encerramento?: Date;
+  data_abertura: string;
+  data_encerramento?: string;
 }
 
 export type ContaCorrenteStatus = 'ATIVA' | 'BLOQUEADA' | 'CANCELADA';

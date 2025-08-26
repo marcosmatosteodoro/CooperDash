@@ -12,7 +12,16 @@ const useContaCorrenteForm = () => {
   const { list } = useSelector((state: RootState) => state.cooperados);
   const router = useRouter();
 
-  const [formData, setFormData] = useState<ContaCorrente>({} as ContaCorrente);
+  const [formData, setFormData] = useState<ContaCorrente>({
+    id: '',
+    cooperado_id: '',
+    numero_conta: '',
+    saldo: 0,
+    limite_credito: 0,
+    status: 'ATIVA',
+    data_abertura: '',
+    data_encerramento: '',
+  } as ContaCorrente);
   
   const [CooperadoOptions, setCooperadoOptions] = useState<Option[]>([]);
   
@@ -45,7 +54,7 @@ const useContaCorrenteForm = () => {
 
     try {
       const action = await dispatch(createContaCorrente(formData)).unwrap();
-      router.push(`/contasCorrentes/${action.id}`);
+      router.push(`/contas-correntes/${action.id}`);
     } catch (error) {
       console.error('Erro ao salvar contaCorrente:', error);
     }
@@ -60,14 +69,14 @@ const useContaCorrenteForm = () => {
       }
 
       await dispatch(updateContaCorrente({ id: formData.id, data: formData })).unwrap();
-      router.push(`/contasCorrentes/${formData.id}`);
+      router.push(`/contas-correntes/${formData.id}`);
     } catch (error) {
       console.error('Erro ao editar contaCorrente:', error);
     }
   };
 
   const clearContaCorrenteError = () => {
-    dispatch({ type: 'contasCorrentes/clearError' });
+    dispatch({ type: 'contas-correntes/clearError' });
   };
 
   return {
