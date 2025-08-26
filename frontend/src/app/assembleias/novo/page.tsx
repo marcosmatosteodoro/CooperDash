@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useFormatters from '@/hooks/useFormatters';
 import useAssembleiaForm from '@/hooks/useAssembleiaForm';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
@@ -14,7 +13,6 @@ import type { FormProps } from '@/types/ui'
 export default function NovoAssembleia() {
   const router = useRouter();
   const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
   const { formData, handleChange, handleSubmitNewAssembleia, clearAssembleiaError } = useAssembleiaForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.assembleias);
 
@@ -134,7 +132,7 @@ export default function NovoAssembleia() {
       {
         label: 'Descrição',
         type: 'text',
-        tag: 'input',
+        tag: 'textarea',
         name: 'descricao',
         value: formData.descricao,
         contentClassName: 'col-12',
@@ -143,7 +141,7 @@ export default function NovoAssembleia() {
       {
         label: 'Resultado',
         type: 'text',
-        tag: 'input',
+        tag: 'textarea',
         name: 'resultado',
         value: formData.resultado,
         contentClassName: 'col-12',
