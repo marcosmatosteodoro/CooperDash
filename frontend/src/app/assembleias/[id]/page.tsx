@@ -21,7 +21,7 @@ export default function Cooperador() {
     deleteAction: (id: string) => deleteAssembleia(id), 
   });
   const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
+  const { formatTextToCapitalized } = useFormatters();
 
   useEffect(() => {
     dispatch(fetchAssembleia(id));
@@ -73,15 +73,15 @@ export default function Cooperador() {
           },
           {
             label: 'Data e Hora',
-            value: formatCep(current?.data_hora)
+            value: current?.data_hora
           },
           {
             label: 'Tipo',
-            value: current?.tipo
+            value: formatTextToCapitalized(current?.tipo)
           },
           {
             label: 'Status',
-            value: current?.status
+            value: formatTextToCapitalized(current?.status)
           },
           {
             label: 'Pauta',

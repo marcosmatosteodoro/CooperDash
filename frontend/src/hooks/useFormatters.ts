@@ -67,6 +67,12 @@ const useFormatters = () => {
     return `${day}/${month}/${year} ${hours}:${minutes}`;
   }, []);
 
+  const formatTextToCapitalized = useCallback((text: string): string => {
+    if (!text) return '';
+    text = text.replaceAll('_', ' ');
+    return text.charAt(0).toUpperCase() + text.slice(1).toLowerCase();
+  }, []);
+
   return {
     formatCPF,
     formatCNPJ,
@@ -74,7 +80,8 @@ const useFormatters = () => {
     formatDate,
     formatCurrency,
     formatCep,
-    formatDateTime
+    formatDateTime,
+    formatTextToCapitalized
   };
 };
 
