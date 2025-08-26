@@ -3,7 +3,8 @@ export type InputTag = 'input' | 'select' | 'textarea' | 'checkbox' | 'radio';
 export type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 export type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;
 export type TextareaChangeEvent = React.ChangeEvent<HTMLTextAreaElement>;
-export type FieldChangeEvent = InputChangeEvent | SelectChangeEvent | TextareaChangeEvent;
+export type CheckboxChangeEvent = InputChangeEvent;
+export type FieldChangeEvent = InputChangeEvent | SelectChangeEvent | TextareaChangeEvent | CheckboxChangeEvent;
 
 export type InputGroupType = {
   className?: string
