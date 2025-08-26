@@ -120,4 +120,30 @@ describe('Form component', () => {
     expect(screen.getByTestId('input-group')).toBeInTheDocument();
     expect(screen.getByText('@')).toBeInTheDocument();
   });
+
+  it('renders a checkbox field', () => {
+    const checkboxField: Field = {
+      name: 'aceito',
+      label: 'Aceito os termos',
+      tag: 'checkbox',
+      type: 'checkbox',
+      checked: false,
+      className: '',
+      contentClassName: 'col-md-12',
+      onChange: mockOnChange,
+    };
+
+    render(
+      <Form
+        fields={[checkboxField]}
+        fieldErrors={null}
+        onClick={mockOnClick}
+        handleSubmit={mockHandleSubmit}
+      />
+    );
+
+    expect(screen.getByRole('checkbox')).toBeInTheDocument();
+    expect(screen.getByLabelText('Aceito os termos')).toBeInTheDocument();
+  });
+
 });

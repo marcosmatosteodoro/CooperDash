@@ -1,5 +1,5 @@
 import React from "react";
-import {InputField, SelectField} from "./"
+import {InputField, SelectField, CheckboxField} from "./"
 import type { FormProps, Field } from '@/types/ui'
 
 export const Form: React.FC<FormProps> = ({ onClick, handleSubmit, fieldErrors, fields }) => {
@@ -7,6 +7,7 @@ export const Form: React.FC<FormProps> = ({ onClick, handleSubmit, fieldErrors, 
     const component = {
       input: <InputField field={field} fieldErrors={fieldErrors}  />,
       select: <SelectField field={field} fieldErrors={fieldErrors}  />,
+      checkbox: <CheckboxField field={field} fieldErrors={fieldErrors}  />,
       textarea: <textarea id={field.name}  />
     }
 
@@ -18,9 +19,11 @@ export const Form: React.FC<FormProps> = ({ onClick, handleSubmit, fieldErrors, 
       <div className="row g-3">
         { fields.map((field) => (
           <div key={field.name} className={field.contentClassName}>
-            <label htmlFor={field.name} className="form-label">
+            { field.tag !== 'checkbox' && (
+              <label htmlFor={field.name} className="form-label">
               {field.label}
             </label>
+            )}
 
             { field.inputGroup ? 
               <div 
