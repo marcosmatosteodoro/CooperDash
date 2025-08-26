@@ -8,12 +8,16 @@ export const SelectField: React.FC<SelectFieldInterface> = ({field, fieldErrors}
   }
 
   const {name, className, options, value, onChange} = field;
-
   const finalClassName = [
     'form-control',
     className,
     fieldErrors?.[name] ? 'is-invalid' : ''
   ].filter(Boolean).join(' ');
+
+  const isSelected = (optionValue: string | number) => {
+    return value === optionValue
+  };
+
 
   return (
     <select
@@ -25,7 +29,7 @@ export const SelectField: React.FC<SelectFieldInterface> = ({field, fieldErrors}
       onChange={onChange}
     >
       { options?.map(({value, text}) => (
-        <option key={value} value={value}>
+        <option key={value} value={value} selected={isSelected(value)}>
           {text}
         </option>
       )) }
