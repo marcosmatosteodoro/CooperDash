@@ -45,7 +45,7 @@ export default function ContasCorrentes() {
       title: 'Lista de Contas Correntes',
       buttons: (
         <Link className="btn btn-primary" href="/contas-correntes/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Endereço
+          <i className="bi bi-plus-circle me-2"></i>Nova Conta Corrente
         </Link>
       )
     }));
@@ -130,7 +130,7 @@ export default function ContasCorrentes() {
               <input
                 type="text"
                 className="form-control"
-                placeholder="Buscar enderecos..."
+                placeholder="Buscar contas correntes..."
                 autoFocus
                 value={filters.searchTerm}
                 onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
