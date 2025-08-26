@@ -50,13 +50,31 @@ const useFormatters = () => {
     return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
   }, []);
 
+  const formatDateTime = useCallback((data: string | Date): string => {
+    if (!data) return '';
+
+    const date = data instanceof Date ? data : new Date(data);
+
+    // Verifica se a data é válida
+    if (isNaN(date.getTime())) return '';
+
+    // Extrai dia, mês, ano, hora e minuto usando UTC para evitar deslocamento por fuso horário
+    const day = date.getUTCDate().toString().padStart(2, '0');
+    const month = (date.getUTCMonth() + 1).toString().padStart(2, '0');
+    const year = date.getUTCFullYear();
+    const hours = date.getUTCHours().toString().padStart(2, '0');
+    const minutes = date.getUTCMinutes().toString().padStart(2, '0');
+    return `${day}/${month}/${year} ${hours}:${minutes}`;
+  }, []);
+
   return {
     formatCPF,
     formatCNPJ,
     formatDocument,
     formatDate,
     formatCurrency,
-    formatCep
+    formatCep,
+    formatDateTime
   };
 };
 
