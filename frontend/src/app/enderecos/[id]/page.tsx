@@ -56,7 +56,7 @@ export default function Endereco() {
           >
             <i className="bi bi-trash me-2"></i>Excluir
           </button>
-          <Link className="btn btn-outline-secondary" href="/cooperados">
+          <Link className="btn btn-outline-secondary" href="/enderecos">
             <i className="bi bi-arrow-left me-2"></i>Voltar
           </Link>
         </div>
@@ -65,7 +65,7 @@ export default function Endereco() {
   }, [setLayoutData, current, id]);
 
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
-  if (!current) return <NotFoundPage message="Cooperado não encontrado" />;
+  if (!current) return <NotFoundPage message="Endereço não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
 
 
