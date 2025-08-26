@@ -10,7 +10,7 @@ import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { texto } from '@/data/textos';
-import { NotFoundPage, ErrorAlert, LoadingSpinner } from '@/components';
+import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
 
 export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
@@ -62,58 +62,51 @@ export default function Cooperador() {
   if (error) return <ErrorAlert message={error} />;
 
   return (
-    <div className="row">
-      <div className="col-md-6">
-        <div className="mb-3">
-          <h5 className="text-muted mb-3">
-            <i className="bi bi-file-text me-2"></i>
-            Informações Básicas
-          </h5>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">{texto[current.tipo_pessoa].nome}:</span>
-              <span>{current.nome}</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">Tipo:</span>
-              <span>{current.tipo_pessoa === 'FISICA' ? 'Pessoa Física' : 'Pessoa Jurídica'}</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">{texto[current.tipo_pessoa].documento}:</span>
-              <span>{formatDocument(current.documento, current.tipo_pessoa)}</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">{texto[current.tipo_pessoa].data}:</span>
-              <span>{formatDate(current.data)}</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">{texto[current.tipo_pessoa].valor}:</span>
-              <span>{formatCurrency(current.valor)}</span>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="col-md-6">
-        <div className="mb-3">
-          <h5 className="text-muted mb-3">
-            <i className="bi bi-telephone me-2"></i>
-            Contato
-          </h5>
-          <ul className="list-group list-group-flush">
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">Telefone:</span>
-              <span>{current.codigo_pais} {current.telefone}</span>
-            </li>
-            <li className="list-group-item d-flex justify-content-between align-items-center">
-              <span className="fw-bold">Email:</span>
+    <ShowModel 
+      firstColumn={{
+        title: 'Informações Básicas',
+        icon: 'bi-file-text',
+        contents: [
+          {
+            label: texto[current.tipo_pessoa].nome,
+            value: current.nome
+          },
+          {
+            label: 'Tipo',
+            value: current.tipo_pessoa === 'FISICA' ? 'Pessoa Física' : 'Pessoa Jurídica'
+          },
+          {
+            label: texto[current.tipo_pessoa].documento,
+            value: formatDocument(current.documento, current.tipo_pessoa)
+          },
+          {
+            label: texto[current.tipo_pessoa].data,
+            value: formatDate(current.data)
+          },
+          {
+            label: texto[current.tipo_pessoa].valor,
+            value: formatCurrency(current.valor)
+          },
+        ]
+      }}
+      secondColumn={{
+        title: 'Contato',
+        icon: 'bi-telephone',
+        contents: [
+          {
+            label: 'Telefone',
+            value: `${current.codigo_pais} ${current.telefone}`
+          },
+          {
+            label: 'Email',
+            value: (
               <a href={`mailto:${current.email}`} className="text-decoration-none">
                 {current.email}
               </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    </div>
+            )
+          },
+        ]
+      }}
+    />
   );
 }
