@@ -13,7 +13,6 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoEndereco() {
   const router = useRouter();
-  
   const { setLayoutData } = useLayout();
   const { formatCep } = useFormatters();
   const { formData, CooperadoOptions, handleChange, handleCheckboxChange, handleSubmitNewEndereco, clearEnderecoError } = useEnderecoForm();
@@ -56,6 +55,7 @@ export default function NovoEndereco() {
         tag: 'select',
         name: 'tipo',
         contentClassName: 'col-md-6 col-lg-4',
+        value: formData.tipo,
         onChange: handleChange,
         options: [
           {
@@ -138,6 +138,7 @@ export default function NovoEndereco() {
         tag: 'select',
         name: 'cooperado_id',
         contentClassName: 'col-md-6',
+        value: formData.cooperado_id,
         onChange: handleChange,
         options: CooperadoOptions
       },
