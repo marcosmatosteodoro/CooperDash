@@ -40,17 +40,16 @@ export default function Assembleias() {
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/assembleias', label: 'Endereços' }
+        { path: '/assembleias', label: 'Assembleias' }
       ],
-      title: 'Lista de Endereços',
+      title: 'Lista de Assembleias',
       buttons: (
         <Link className="btn btn-primary" href="/assembleias/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Endereço
+          <i className="bi bi-plus-circle me-2"></i>Novo Assembleia
         </Link>
       )
     }));
   }, [setLayoutData]);
-
 
   const tableHeader = [
     "Título",
