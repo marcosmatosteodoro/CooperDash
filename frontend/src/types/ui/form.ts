@@ -1,4 +1,4 @@
-export type InputType = 'text' | 'date' | 'number' | 'tel' | 'email' | 'password' | 'checkbox' | 'radio';
+export type InputType = 'text' | 'date' | 'number' | 'tel' | 'email' | 'password' | 'checkbox' | 'radio' | 'datetime-local';
 export type InputTag = 'input' | 'select' | 'textarea' | 'checkbox' | 'radio';
 export type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 export type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;

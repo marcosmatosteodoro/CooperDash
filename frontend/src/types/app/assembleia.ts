@@ -2,7 +2,7 @@ export interface Assembleia {
   id: string;
   titulo: string;
   descricao: string;
-  data_hora: Date;
+  data_hora: string;
   tipo: TipoAssembleia;
   status: StatusAssembleia;
   pauta: string;
