@@ -45,12 +45,18 @@ const useFormatters = () => {
     });
   }, []);
 
+  const formatCep = useCallback((cep: string): string => {
+    if (!cep) return '';
+    return cep.replace(/(\d{5})(\d{3})/, '$1-$2');
+  }, []);
+
   return {
     formatCPF,
     formatCNPJ,
     formatDocument,
     formatDate,
-    formatCurrency
+    formatCurrency,
+    formatCep
   };
 };
 

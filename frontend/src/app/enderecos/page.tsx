@@ -23,7 +23,7 @@ export default function Enderecos() {
       entityName: 'endereco',
       deleteAction: (id: string) => deleteEndereco(id), 
     });
-  const { formatDocument, formatDate, formatCurrency } = useFormatters();
+  const { formatCep } = useFormatters();
 
   useEffect(() => {
       dispatch(fetchEnderecos(params));
@@ -77,7 +77,8 @@ export default function Enderecos() {
       href: (ressource: Endereco) => `/enderecos/${ressource.id}`
     },
     {
-      attribute: 'cep', 
+      attribute: 'cep',
+      formatter: (ressource: Endereco) => formatCep(ressource.cep)
     },
     {
       attribute: 'numero', 
