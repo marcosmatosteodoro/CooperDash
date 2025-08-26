@@ -8,9 +8,11 @@ export interface Endereco {
   bairro: string;
   cidade: string;
   estado: string;
-  tipo: string;
+  tipo: EnderecoTipo;
   principal: boolean;
 }
+
+export type EnderecoTipo = 'RESIDENCIAL' | 'COMERCIAL' | 'COBRANCA';
 
 export type EnderecoFilters = {
   searchTerm: string;
