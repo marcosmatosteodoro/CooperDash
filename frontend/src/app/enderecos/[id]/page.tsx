@@ -12,11 +12,11 @@ import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
 
-export default function Cooperador() {
+export default function Endereco() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
   const { current, status, error } = useSelector((state: RootState) => state.enderecos);
-  const { current: cooperado, status: cooperadoStatus, error: cooperadoError } = useSelector((state: RootState) => state.cooperados);
+  const { current: cooperado } = useSelector((state: RootState) => state.cooperados);
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'endereco',
     redirectTo: '/enderecos',
