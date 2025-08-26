@@ -5,42 +5,49 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { fetchCooperado, deleteCooperado } from '@/store/slices/cooperadosSlice';
+import { fetchEndereco, deleteEndereco } from '@/store/slices/enderecosSlice';
+import { fetchCooperado } from '@/store/slices/cooperadosSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
-import { texto } from '@/data/textos';
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
 
 export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.cooperados);
+  const { current, status, error } = useSelector((state: RootState) => state.enderecos);
+  const { current: cooperado, status: cooperadoStatus, error: cooperadoError } = useSelector((state: RootState) => state.cooperados);
   const { handleDelete, deleting } = useDeleteWithConfirmation({
-    entityName: 'cooperado',
-    redirectTo: '/cooperados',
-    deleteAction: (id: string) => deleteCooperado(id), 
+    entityName: 'endereco',
+    redirectTo: '/enderecos',
+    deleteAction: (id: string) => deleteEndereco(id), 
   });
   const { setLayoutData } = useLayout();
-  const { formatDocument, formatDate, formatCurrency } = useFormatters();
+  const { formatCep } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchCooperado(id));
+    dispatch(fetchEndereco(id));
   }, [dispatch, id]);
+  
+  useEffect(() => {
+    if(current && current.cooperado_id) {
+      dispatch(fetchCooperado(current.cooperado_id));
+    }
+  }, [current]);
 
   useEffect(() => {
     setLayoutData(prev => ({
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/cooperados', label: 'Cooperados' }, 
-        { path: `/cooperados/${id}`, label: current?.nome || 'Detalhes' }
+        { path: '/enderecos', label: 'Endereços' }, 
+        { path: `/enderecos/${id}`, label: current?.logradouro || 'Detalhes' }
       ],
-      title: current?.nome ? `Detalhes: ${current.nome}` : 'Detalhes do Cooperado',
+      title: current?.logradouro ? `Detalhes: ${current.logradouro}` : 'Detalhes do Endereço',
       icon: 'bi-person-badge',
       buttons: (
         <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/cooperados/${id}/editar`}>
+          <Link className="btn btn-primary" href={`/enderecos/${id}/editar`}>
             <i className="bi bi-pencil-square me-2"></i>Editar
           </Link>
           <button 
@@ -61,49 +68,59 @@ export default function Cooperador() {
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
 
+
   return (
-    <ShowModel 
+    <ShowModel
       firstColumn={{
         title: 'Informações Básicas',
         icon: 'bi-file-text',
         contents: [
           {
-            label: texto[current.tipo_pessoa].nome,
-            value: current.nome
+            label: 'Logradouro',
+            value: current?.logradouro
           },
           {
-            label: 'Tipo',
-            value: current.tipo_pessoa === 'FISICA' ? 'Pessoa Física' : 'Pessoa Jurídica'
+            label: 'CEP',
+            value: formatCep(current?.cep)
           },
           {
-            label: texto[current.tipo_pessoa].documento,
-            value: formatDocument(current.documento, current.tipo_pessoa)
+            label: 'Número',
+            value: current?.numero
           },
           {
-            label: texto[current.tipo_pessoa].data,
-            value: formatDate(current.data)
+            label: 'Bairro',
+            value: current?.bairro
           },
           {
-            label: texto[current.tipo_pessoa].valor,
-            value: formatCurrency(current.valor)
+            label: 'Cidade',
+            value: current?.cidade
           },
+          {
+            label: 'Estado',
+            value: current?.estado
+          },
+          
         ]
       }}
       secondColumn={{
-        title: 'Contato',
-        icon: 'bi-telephone',
+        title: 'Outras Informações',
+        icon: 'bi-info-circle',
         contents: [
           {
-            label: 'Telefone',
-            value: `${current.codigo_pais} ${current.telefone}`
+            label: 'Principal',
+            value: current?.principal ? 'Sim' : 'Não'
           },
           {
-            label: 'Email',
-            value: (
-              <a href={`mailto:${current.email}`} className="text-decoration-none">
-                {current.email}
-              </a>
-            )
+            label: 'Tipo',
+            value: current?.tipo
+          },
+          {
+            label: 'Complemento',
+            value: current?.complemento || '-'
+          },
+          {
+            label: 'Cooperado',
+            value: cooperado?.nome || 'Carregando...'
           },
         ]
       }}

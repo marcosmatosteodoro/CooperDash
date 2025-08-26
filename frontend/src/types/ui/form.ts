@@ -1,9 +1,10 @@
 export type InputType = 'text' | 'date' | 'number' | 'tel' | 'email' | 'password' | 'checkbox' | 'radio';
-export type InputTag = 'input' | 'select' | 'textarea';
+export type InputTag = 'input' | 'select' | 'textarea' | 'checkbox' | 'radio';
 export type InputChangeEvent = React.ChangeEvent<HTMLInputElement>;
 export type SelectChangeEvent = React.ChangeEvent<HTMLSelectElement>;
 export type TextareaChangeEvent = React.ChangeEvent<HTMLTextAreaElement>;
-export type FieldChangeEvent = InputChangeEvent | SelectChangeEvent | TextareaChangeEvent;
+export type CheckboxChangeEvent = InputChangeEvent;
+export type FieldChangeEvent = InputChangeEvent | SelectChangeEvent | TextareaChangeEvent | CheckboxChangeEvent;
 
 export type InputGroupType = {
   className?: string
@@ -54,8 +55,13 @@ export type TextareaField = BaseField & {
   cols?: number;
 };
 
+export type CheckboxField = BaseField & {
+  tag: 'checkbox';
+  checked: boolean;
+};
+
 // Tipo unificado para Field
-export type Field = InputField | SelectField | TextareaField;
+export type Field = InputField | SelectField | TextareaField | CheckboxField;
 
 // Tipos genéricos para formulários
 export interface FormProps {
@@ -75,3 +81,4 @@ export interface FieldComponentProps {
 // Aliases para manter compatibilidade com código existente
 export type InputFieldProps = FieldComponentProps;
 export type SelectFieldInterface = FieldComponentProps;
+export type CheckboxFieldProps = FieldComponentProps;

@@ -33,7 +33,7 @@ class Endereco extends Model
             'bairro' => 'required|string|max:100',
             'cidade' => 'required|string|max:100',
             'estado' => 'required|string|max:2',
-            'tipo' => 'required|string|in:residencial,comercial,cobranca',
+            'tipo' => 'required|string|in:RESIDENCIAL,COMERCIAL,COBRANCA',
             'principal' => 'required|boolean',
         ];
     }
