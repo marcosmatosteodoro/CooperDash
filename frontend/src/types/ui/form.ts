@@ -77,8 +77,8 @@ export interface FieldComponentProps {
   fieldErrors: Record<string, string[]> | null;
 }
 
-
 // Aliases para manter compatibilidade com código existente
+export type TexareaFieldProps = FieldComponentProps;
 export type InputFieldProps = FieldComponentProps;
 export type SelectFieldInterface = FieldComponentProps;
 export type CheckboxFieldProps = FieldComponentProps;
