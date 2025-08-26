@@ -12,7 +12,7 @@ import useEnderecoForm from '@/hooks/useEnderecoForm';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
-export default function EditarCooperador() {
+export default function EditarEndereco() {
   const { id } = useParams();
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();

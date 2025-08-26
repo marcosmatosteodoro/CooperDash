@@ -10,7 +10,18 @@ const useAssembleiaForm = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
-  const [formData, setFormData] = useState<Assembleia>({} as Assembleia);
+  const [formData, setFormData] = useState<Assembleia>({
+    id: '',
+    titulo: '',
+    descricao: '',
+    data_hora: '',
+    tipo: 'ORDINARIA',
+    status: 'AGENDADA',
+    pauta: '',
+    local: '',
+    resultado: '',
+    quorum_minimo: 0
+  } as Assembleia);
   
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;

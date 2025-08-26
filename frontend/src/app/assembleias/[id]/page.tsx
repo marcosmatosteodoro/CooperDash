@@ -5,49 +5,41 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { fetchEndereco, deleteEndereco } from '@/store/slices/enderecosSlice';
-import { fetchCooperado } from '@/store/slices/cooperadosSlice';
+import { fetchAssembleia, deleteAssembleia } from '@/store/slices/assembleiasSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
 
-export default function Endereco() {
+export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.enderecos);
-  const { current: cooperado } = useSelector((state: RootState) => state.cooperados);
+  const { current, status, error } = useSelector((state: RootState) => state.assembleias);
   const { handleDelete, deleting } = useDeleteWithConfirmation({
-    entityName: 'endereco',
-    redirectTo: '/enderecos',
-    deleteAction: (id: string) => deleteEndereco(id), 
+    entityName: 'assembleia',
+    redirectTo: '/assembleias',
+    deleteAction: (id: string) => deleteAssembleia(id), 
   });
   const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
+  const { formatTextToCapitalized } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchEndereco(id));
+    dispatch(fetchAssembleia(id));
   }, [dispatch, id]);
-  
-  useEffect(() => {
-    if(current && current.cooperado_id) {
-      dispatch(fetchCooperado(current.cooperado_id));
-    }
-  }, [current]);
 
   useEffect(() => {
     setLayoutData(prev => ({
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/enderecos', label: 'Endereços' }, 
-        { path: `/enderecos/${id}`, label: current?.logradouro || 'Detalhes' }
+        { path: '/assembleias', label: 'Assembleias' }, 
+        { path: `/assembleias/${id}`, label: current?.titulo || 'Detalhes' }
       ],
-      title: current?.logradouro ? `Detalhes: ${current.logradouro}` : 'Detalhes do Endereço',
+      title: current?.titulo ? `Detalhes: ${current.titulo}` : 'Detalhes da Assembleia',
       icon: 'bi-person-badge',
       buttons: (
         <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/enderecos/${id}/editar`}>
+          <Link className="btn btn-primary" href={`/assembleias/${id}/editar`}>
             <i className="bi bi-pencil-square me-2"></i>Editar
           </Link>
           <button 
@@ -56,7 +48,7 @@ export default function Endereco() {
           >
             <i className="bi bi-trash me-2"></i>Excluir
           </button>
-          <Link className="btn btn-outline-secondary" href="/cooperados">
+          <Link className="btn btn-outline-secondary" href="/assembleias">
             <i className="bi bi-arrow-left me-2"></i>Voltar
           </Link>
         </div>
@@ -76,28 +68,28 @@ export default function Endereco() {
         icon: 'bi-file-text',
         contents: [
           {
-            label: 'Logradouro',
-            value: current?.logradouro
+            label: 'Título',
+            value: current?.titulo
           },
           {
-            label: 'CEP',
-            value: formatCep(current?.cep)
+            label: 'Data e Hora',
+            value: current?.data_hora
           },
           {
-            label: 'Número',
-            value: current?.numero
+            label: 'Tipo',
+            value: formatTextToCapitalized(current?.tipo)
           },
           {
-            label: 'Bairro',
-            value: current?.bairro
+            label: 'Status',
+            value: formatTextToCapitalized(current?.status)
           },
           {
-            label: 'Cidade',
-            value: current?.cidade
+            label: 'Pauta',
+            value: current?.pauta
           },
           {
-            label: 'Estado',
-            value: current?.estado
+            label: 'Quorum Mínimo',
+            value: current?.quorum_minimo
           },
           
         ]
@@ -107,20 +99,16 @@ export default function Endereco() {
         icon: 'bi-info-circle',
         contents: [
           {
-            label: 'Principal',
-            value: current?.principal ? 'Sim' : 'Não'
+            label: 'Local',
+            value: current?.local
           },
           {
-            label: 'Tipo',
-            value: current?.tipo
+            label: 'Descrição',
+            value: current?.descricao
           },
           {
-            label: 'Complemento',
-            value: current?.complemento || '-'
-          },
-          {
-            label: 'Cooperado',
-            value: cooperado?.nome || 'Carregando...'
+            label: 'Resultado',
+            value: current?.resultado || '-'
           },
         ]
       }}

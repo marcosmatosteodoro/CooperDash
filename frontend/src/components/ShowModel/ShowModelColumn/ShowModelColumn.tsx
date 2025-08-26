@@ -10,7 +10,7 @@ export const ShowModelColumn: React.FC<ShowModelColumnProps> = ({ title, icon, c
       </h5>
       <ul className="list-group list-group-flush">
         { contents.map((content, index) => (
-          <li key={index} className="list-group-item d-flex justify-content-between align-items-center">
+          <li key={index} className="list-group-item d-flex justify-content-between align-items-start gap-2">
             <span className="fw-bold">{content.label}:</span>
             <span>{content.value}</span>
           </li>
