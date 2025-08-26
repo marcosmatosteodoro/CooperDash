@@ -7,7 +7,7 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({ field, fieldErrors
     return <></>
   }
 
-  const { label, checked, onChange } = field;
+  const { label, checked, name, onChange } = field;
 
   return (
     <div className="form-check">
@@ -15,6 +15,7 @@ export const CheckboxField: React.FC<CheckboxFieldProps> = ({ field, fieldErrors
         className="form-check-input"
         type="checkbox"
         id={label}
+        name={name}
         checked={checked}
         onChange={onChange}
       />
