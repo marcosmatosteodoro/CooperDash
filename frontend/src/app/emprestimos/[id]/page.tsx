@@ -5,28 +5,28 @@ import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
-import { fetchEndereco, deleteEndereco } from '@/store/slices/enderecosSlice';
+import { fetchEmprestimo, deleteEmprestimo } from '@/store/slices/emprestimosSlice';
 import { fetchCooperado } from '@/store/slices/cooperadosSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
 
-export default function Endereco() {
+export default function Emprestimo() {
   const { id } = useParams<{ id: string }>();
   const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.enderecos);
+  const { current, status, error } = useSelector((state: RootState) => state.emprestimos);
   const { current: cooperado } = useSelector((state: RootState) => state.cooperados);
   const { handleDelete, deleting } = useDeleteWithConfirmation({
-    entityName: 'endereco',
-    redirectTo: '/enderecos',
-    deleteAction: (id: string) => deleteEndereco(id), 
+    entityName: 'emprestimo',
+    redirectTo: '/emprestimos',
+    deleteAction: (id: string) => deleteEmprestimo(id), 
   });
   const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
+  const { formatDate, formatTextToCapitalized, formatCurrency } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchEndereco(id));
+    dispatch(fetchEmprestimo(id));
   }, [dispatch, id]);
   
   useEffect(() => {
@@ -40,14 +40,14 @@ export default function Endereco() {
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/enderecos', label: 'Endereços' }, 
-        { path: `/enderecos/${id}`, label: current?.logradouro || 'Detalhes' }
+        { path: '/emprestimos', label: 'Emprestimos' }, 
+        { path: `/emprestimos/${id}`, label: 'Detalhes' }
       ],
-      title: current?.logradouro ? `Detalhes: ${current.logradouro}` : 'Detalhes do Endereço',
+      title: 'Detalhes do Emprestimo',
       icon: 'bi-person-badge',
       buttons: (
         <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/enderecos/${id}/editar`}>
+          <Link className="btn btn-primary" href={`/emprestimos/${id}/editar`}>
             <i className="bi bi-pencil-square me-2"></i>Editar
           </Link>
           <button 
@@ -56,7 +56,7 @@ export default function Endereco() {
           >
             <i className="bi bi-trash me-2"></i>Excluir
           </button>
-          <Link className="btn btn-outline-secondary" href="/enderecos">
+          <Link className="btn btn-outline-secondary" href="/emprestimos">
             <i className="bi bi-arrow-left me-2"></i>Voltar
           </Link>
         </div>
@@ -65,7 +65,7 @@ export default function Endereco() {
   }, [setLayoutData, current, id]);
 
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
-  if (!current) return <NotFoundPage message="Endereço não encontrado" />;
+  if (!current) return <NotFoundPage message="Emprestimo não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
 
 
@@ -76,28 +76,28 @@ export default function Endereco() {
         icon: 'bi-file-text',
         contents: [
           {
-            label: 'Logradouro',
-            value: current?.logradouro
+            label: 'Valor Solicitado',
+            value: formatCurrency(current?.valor_solicitado)
           },
           {
-            label: 'CEP',
-            value: formatCep(current?.cep)
+            label: 'Valor Aprovado',
+            value: formatCurrency(current?.valor_aprovado) || '-'
           },
           {
-            label: 'Número',
-            value: current?.numero
+            label: 'Parcelas',
+            value: current?.parcelas
           },
           {
-            label: 'Bairro',
-            value: current?.bairro
+            label: 'Taxa de Juros',
+            value: current?.taxa_juros + '%'
           },
           {
-            label: 'Cidade',
-            value: current?.cidade
+            label: 'Status',
+            value: formatTextToCapitalized(current?.status)
           },
           {
-            label: 'Estado',
-            value: current?.estado
+            label: 'Cooperado',
+            value: cooperado?.nome || 'Carregando...'
           },
           
         ]
@@ -107,20 +107,24 @@ export default function Endereco() {
         icon: 'bi-info-circle',
         contents: [
           {
-            label: 'Principal',
-            value: current?.principal ? 'Sim' : 'Não'
+            label: 'Data da Solicitação',
+            value: formatDate(current?.data_solicitacao)
           },
           {
-            label: 'Tipo',
-            value: current?.tipo
+            label: 'Data da Análise',
+            value: current?.data_analise ? formatDate(current?.data_analise) : '-'
           },
           {
-            label: 'Complemento',
-            value: current?.complemento || '-'
+            label: 'Data da Liquidação',
+            value: current?.data_liquidacao ? formatDate(current?.data_liquidacao) : '-'
           },
           {
-            label: 'Cooperado',
-            value: cooperado?.nome || 'Carregando...'
+            label: 'Finalidade',
+            value: current?.finalidade
+          },
+          {
+            label: 'Observação',
+            value: current?.observacao || '-'
           },
         ]
       }}
