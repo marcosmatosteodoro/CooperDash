@@ -7,9 +7,9 @@ export interface Emprestimo {
   taxa_juros: number;
   status: StatusEmprestimo;
   finalidade: string;
-  data_solicitacao: Date;
-  data_analise?: Date;
-  data_liquidacao?: Date;
+  data_solicitacao: string;
+  data_analise?: string;
+  data_liquidacao?: string;
   observacao?: string;
 }
 
