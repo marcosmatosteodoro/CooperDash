@@ -38,7 +38,7 @@ describe("CheckboxField", () => {
     rerender(
       <CheckboxField
         {...baseProps}
-        field={{ ...baseProps.field, checked: true }}
+        field={{ ...baseProps.field, checked: true, tag: "checkbox" }}
       />
     );
 
@@ -57,7 +57,7 @@ describe("CheckboxField", () => {
     const { container } = render(
       <CheckboxField
         {...baseProps}
-        field={{ ...baseProps.field, tag: "input" as any }}
+        field={{ ...baseProps.field, tag: "input" }}
       />
     );
     expect(container).toBeEmptyDOMElement();
