@@ -7,7 +7,7 @@ export interface Transacao {
   saldo_posterior: number;
   descricao: string;
   categoria: string;
-  data_transacao: Date;
+  data_transacao: string;
 }
 
 export type TransacaoTipo = 'DEPOSITO' | 'SAQUE' | 'TRANSFERENCIA' | 'RENDIMENTO' | 'TAXA';

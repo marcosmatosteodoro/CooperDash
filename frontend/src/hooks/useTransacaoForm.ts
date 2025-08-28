@@ -1,25 +1,43 @@
-import React, { useState } from 'react';
-import type { FieldChangeEvent } from '@/types/ui/'
+import React, { useEffect, useState } from 'react';
+import type { FieldChangeEvent, Option } from '@/types/ui/'
 import type { Transacao } from '@/types/app/transacao'
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/navigation'; 
 import { createTransacao, updateTransacao } from '@/store/slices/transacoesSlice';
+import { fetchContasCorrentes } from '@/store/slices/contasCorrentesSlice';
 
 const useTransacaoForm = () => {
   const dispatch: AppDispatch = useDispatch();
+  const { list } = useSelector((state: RootState) => state.contasCorrentes);
   const router = useRouter();
 
   const [formData, setFormData] = useState<Transacao>({} as Transacao);
   
-  const handleValueChange = (e: FieldChangeEvent) => {
+  const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
-    const numericValue = parseFloat(value) || 0;
     setFormData(prev => ({
       ...prev,
-      [name]: numericValue
+      [name]: value
     }));
   };
+  const [contaCorrenteOptions, setContaCorrenteOptions] = useState<Option[]>([]);
+  
+    useEffect(() => {
+        dispatch(fetchContasCorrentes({ per_page: 999999999 }));
+    }, [dispatch]);
+  
+    useEffect(() => {
+      if (list) {
+        const options = list.map(item => ({
+          value: item.id,
+          text: item.numero_conta
+        }));
+
+        options.unshift({ value: '', text: 'Selecione uma conta' });
+        setContaCorrenteOptions(options);
+      }
+    }, [list]);
 
   const handleSubmitNewTransacao = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,9 +70,10 @@ const useTransacaoForm = () => {
   };
 
   return {
-    formData, 
+    formData,
+    contaCorrenteOptions,
     setFormData,
-    handleValueChange,
+    handleChange,
     handleSubmitNewTransacao,
     handleSubmitEditTransacao,
     clearTransacaoError
