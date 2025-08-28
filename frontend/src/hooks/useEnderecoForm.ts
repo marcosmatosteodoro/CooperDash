@@ -49,7 +49,6 @@ const useEnderecoForm = () => {
       ...prev,
       [name]: value
     }));
-    console.log('Field changed:', 'name => {', name, '}, value => {', value, '}');
   };
 
   const handleCheckboxChange = (e: FieldChangeEvent) => {
