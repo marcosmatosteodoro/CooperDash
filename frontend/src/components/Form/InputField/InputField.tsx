@@ -28,7 +28,7 @@ export const InputField: React.FC<InputFieldProps> = ({ field, fieldErrors }) =>
       max={max}
       step={step}
       placeholder={placeholder}
-      value={value || ''}
+      value={value ?? ''}
       onChange={onChange}
       aria-invalid={!!fieldErrors?.[field.name]}
       aria-describedby={fieldErrors?.[field.name] ? `${name}-error` : undefined}
