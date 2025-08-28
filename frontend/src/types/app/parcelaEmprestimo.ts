@@ -3,8 +3,8 @@ export interface ParcelaEmprestimo {
   emprestimo_id: string;
   numero_parcela: number;
   valor_parcela: number;
-  data_vencimento: Date;
-  data_pagamento?: Date;
+  data_vencimento: string;
+  data_pagamento?: string;
   status: ParcelaEmprestimoStatus;
   valor_pago: number;
   dias_atraso: number;

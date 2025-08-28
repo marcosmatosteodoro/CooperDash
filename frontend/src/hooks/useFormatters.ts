@@ -22,7 +22,7 @@ const useFormatters = () => {
     return documento;
   }, [formatCPF, formatCNPJ]);
 
-  const formatDate = useCallback((data: string | Date): string => {
+  const formatDate = useCallback((data: string | Date | null): string => {
     if (!data) return '';
     
     const date = data instanceof Date ? data : new Date(data);

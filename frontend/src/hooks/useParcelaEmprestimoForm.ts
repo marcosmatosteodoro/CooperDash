@@ -1,17 +1,48 @@
-import React, { useState } from 'react';
-import type { FieldChangeEvent } from '@/types/ui/'
+import React, { useEffect, useState } from 'react';
+import type { FieldChangeEvent, Option } from '@/types/ui/'
 import type { ParcelaEmprestimo } from '@/types/app/parcelaEmprestimo'
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/navigation'; 
 import { createParcelaEmprestimo, updateParcelaEmprestimo } from '@/store/slices/parcelasEmprestimosSlice';
+import { fetchEmprestimos } from '@/store/slices/emprestimosSlice';
 
 const useParcelaEmprestimoForm = () => {
   const dispatch: AppDispatch = useDispatch();
+  const { list } = useSelector((state: RootState) => state.emprestimos);
   const router = useRouter();
 
-  const [formData, setFormData] = useState<ParcelaEmprestimo>({} as ParcelaEmprestimo);
+  const [formData, setFormData] = useState<ParcelaEmprestimo>({
+    id: '',
+    numero_parcela: 1,
+    valor_parcela: 0,
+    emprestimo_id: '',
+    data_vencimento: new Date().toISOString().split('T')[0],
+    data_pagamento: undefined,
+    status: 'PENDENTE',
+    dias_atraso: 0,
+    valor_pago: 0,
+    multa: 0,
+    juros: 0
+  } as ParcelaEmprestimo);
+  const [emprestimoOptions, setEmprestimoOptions] = useState<Option[]>([]);
   
+    useEffect(() => {
+        dispatch(fetchEmprestimos({ per_page: 999999999 }));
+    }, [dispatch]);
+  
+    useEffect(() => {
+      if (list) {
+        const options = list.map(item => ({
+          value: item.id,
+          text: (item.valor_aprovado || item.valor_solicitado).toString()
+        }));
+
+        options.unshift({ value: '', text: 'Selecione um empréstimo' });
+        setEmprestimoOptions(options);
+      }
+    }, [list]);
+
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -51,7 +82,8 @@ const useParcelaEmprestimoForm = () => {
   };
 
   return {
-    formData, 
+    formData,
+    emprestimoOptions,
     setFormData,
     handleChange,
     handleSubmitNewParcelaEmprestimo,
