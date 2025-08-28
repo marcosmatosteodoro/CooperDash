@@ -1,17 +1,52 @@
-import React, { useState } from 'react';
-import type { FieldChangeEvent } from '@/types/ui/'
+import React, { useEffect, useState } from 'react';
+import type { FieldChangeEvent, Option } from '@/types/ui/'
 import type { Votacao } from '@/types/app/votacao'
-import { useDispatch } from 'react-redux';
-import { AppDispatch } from '@/store';
+import { useDispatch, useSelector } from 'react-redux';
+import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/navigation'; 
 import { createVotacao, updateVotacao } from '@/store/slices/votacoesSlice';
+import { fetchCooperados } from '@/store/slices/cooperadosSlice';
+import { fetchAssembleias } from '@/store/slices/assembleiasSlice';
 
 const useVotacaoForm = () => {
   const dispatch: AppDispatch = useDispatch();
+  const { list: cooperado } = useSelector((state: RootState) => state.cooperados);
+  const { list: assembleia } = useSelector((state: RootState) => state.assembleias);
   const router = useRouter();
 
   const [formData, setFormData] = useState<Votacao>({} as Votacao);
+  const [cooperadoOptions, setCooperadoOptions] = useState<Option[]>([]);
+  const [assembleiaOptions, setAssembleiaOptions] = useState<Option[]>([]);
+
+    useEffect(() => {
+      dispatch(fetchCooperados({ per_page: 999999999 }));
+      dispatch(fetchAssembleias({ per_page: 999999999 }));
+    }, [dispatch]);
   
+    useEffect(() => {
+      if (cooperado) {
+        const options = cooperado.map(item => ({
+          value: item.id,
+          text: item.nome
+        }));
+  
+        options.unshift({ value: '', text: 'Selecione um cooperado' });
+        setCooperadoOptions(options);
+      }
+    }, [cooperado]);
+    
+    useEffect(() => {
+      if (assembleia) {
+        const options = assembleia.map(item => ({
+          value: item.id,
+          text: item.titulo
+        }));
+
+        options.unshift({ value: '', text: 'Selecione uma assembleia' });
+        setAssembleiaOptions(options);
+      }
+    }, [assembleia]);
+
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -69,7 +104,9 @@ const useVotacaoForm = () => {
   };
 
   return {
-    formData, 
+    formData,
+    cooperadoOptions,
+    assembleiaOptions,
     setFormData,
     handleChange,
     handleDocumentChange,

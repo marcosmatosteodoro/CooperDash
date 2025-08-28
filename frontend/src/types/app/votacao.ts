@@ -3,7 +3,7 @@ export interface Votacao {
   assembleia_id: string;
   cooperado_id: string;
   voto: VotacaoVoto;
-  data_voto: Date;
+  data_voto: string;
   justificativa?: string;
 }
 
