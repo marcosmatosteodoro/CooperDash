@@ -14,11 +14,6 @@ export const SelectField: React.FC<SelectFieldInterface> = ({field, fieldErrors}
     fieldErrors?.[name] ? 'is-invalid' : ''
   ].filter(Boolean).join(' ');
 
-  const isSelected = (optionValue: string | number) => {
-    return value === optionValue
-  };
-
-
   return (
     <select
       data-testid="form-select-field"
@@ -29,7 +24,7 @@ export const SelectField: React.FC<SelectFieldInterface> = ({field, fieldErrors}
       onChange={onChange}
     >
       { options?.map(({value, text}) => (
-        <option key={value} value={value} selected={isSelected(value)}>
+        <option key={value} value={value} >
           {text}
         </option>
       )) }

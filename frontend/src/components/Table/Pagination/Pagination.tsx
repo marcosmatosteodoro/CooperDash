@@ -20,7 +20,7 @@ export const Pagination = ({
     <div className="d-flex flex-column flex-md-row align-items-center justify-content-between gap-3 p-3">
       <nav aria-label="...">
         <ul className="pagination">
-          {links.map((link, index) => (
+          {links && links.map((link, index) => (
             <li key={index} className={`page-item ${link.active ? 'active' : ''} ${!link.url ? 'disabled' : ''}`}>
               <button
                 className="page-link" 
