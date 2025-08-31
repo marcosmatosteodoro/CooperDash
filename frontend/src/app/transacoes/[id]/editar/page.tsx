@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
@@ -16,7 +15,7 @@ export default function EditarTransacao() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.transacoes);
-  const { setLayoutData } = useLayout();
+  const { setEditLayout } = useLayout();
   const { 
     formData,
     contaCorrenteOptions,
@@ -39,23 +38,8 @@ export default function EditarTransacao() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/transacoes', label: 'Transações' }, 
-        { path: `/transacoes/${id}`, label: current?.valor.toString() || 'Detalhes' },
-        { path: `/transacoes/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Transação',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/transacoes/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/transacoes`, label: 'Transações', id: typeof id === 'string' ? id : '', dynamicLabel: current?.valor.toString() || 'Transação' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Transação não encontrado" />;

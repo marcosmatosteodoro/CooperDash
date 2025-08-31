@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
@@ -13,28 +12,14 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoEndereco() {
   const router = useRouter();
-  const { setLayoutData } = useLayout();
+  const { setNewLayout } = useLayout();
   const { formatCep } = useFormatters();
   const { formData, CooperadoOptions, handleChange, handleCheckboxChange, handleSubmitNewEndereco, clearEnderecoError } = useEnderecoForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.enderecos);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/enderecos', label: 'Endereços' }, 
-        { label: 'Novo' }, 
-      ],
-      title: 'Novo Endereço',
-      icon: 'bi-person-plus',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={'/enderecos'}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setNewLayout({ path: '/enderecos', label: 'Endereços', title: 'Novo Endereço' });
+  }, [setNewLayout]);
 
   const formProps: FormProps = {
     onClick: () => router.push('/enderecos'),

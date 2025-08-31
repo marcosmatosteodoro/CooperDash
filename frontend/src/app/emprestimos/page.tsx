@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchEmprestimos, deleteEmprestimo, } from '@/store/slices/emprestimosSlice';
@@ -16,7 +15,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function Emprestimos() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.emprestimos);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<EmprestimoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -36,21 +35,8 @@ export default function Emprestimos() {
   }, [filters.searchTerm]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/emprestimos', label: 'Emprestimos' }
-      ],
-      title: 'Lista de Emprestimos',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/emprestimos/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Emprestimo
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/emprestimos', label: 'Empréstimos', buttonName: 'Lista de Empréstimos' });
+  }, [setListLayout]);
 
 
   const tableHeader = [

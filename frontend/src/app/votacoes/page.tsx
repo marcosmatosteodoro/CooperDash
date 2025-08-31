@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchVotacoes, deleteVotacao, } from '@/store/slices/votacoesSlice';
@@ -16,7 +15,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function Votacoes() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.votacoes);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<VotacaoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -36,21 +35,8 @@ export default function Votacoes() {
   }, [filters.searchTerm]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/votacoes', label: 'Votações' }
-      ],
-      title: 'Lista de Votações',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/votacoes/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Votação
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/votacoes', label: 'Votações', buttonName: 'Lista de Votações' });
+  }, [setListLayout]);
 
 
   const tableHeader = [
@@ -113,6 +99,6 @@ export default function Votacoes() {
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '' })}
       paginationClickHandler={paginationClickHandler}
-    />
+      />
   );
 }

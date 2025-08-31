@@ -1,13 +1,11 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchEmprestimo } from '@/store/slices/emprestimosSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useFormatters from '@/hooks/useFormatters';
 import useEmprestimoForm from '@/hooks/useEmprestimoForm';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
@@ -17,8 +15,7 @@ export default function EditarEmprestimo() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.emprestimos);
-  const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
+  const { setEditLayout } = useLayout();
   const { 
     formData,
     CooperadoOptions,
@@ -41,23 +38,8 @@ export default function EditarEmprestimo() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/emprestimos', label: 'Emprestimos' }, 
-        { path: `/emprestimos/${id}`, label: 'Detalhes' },
-        { path: `/emprestimos/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Emprestimo',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/emprestimos/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/emprestimos`, label: 'Empréstimos', id: typeof id === 'string' ? id : '', dynamicLabel: 'Detalhes' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Emprestimo não encontrado" />;

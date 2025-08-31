@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchTransacoes, deleteTransacao, } from '@/store/slices/transacoesSlice';
@@ -16,7 +15,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function Transacoes() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.transacoes);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<TransacaoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -36,21 +35,8 @@ export default function Transacoes() {
   }, [filters.searchTerm]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/transacoes', label: 'Transações' }
-      ],
-      title: 'Lista de Transações',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/transacoes/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Transação
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/transacoes', label: 'Transações', buttonName: 'Lista de Transações' });
+  }, [setListLayout]);
 
 
   const tableHeader = [

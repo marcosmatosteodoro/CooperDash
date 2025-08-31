@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
@@ -16,7 +15,7 @@ export default function EditarContaCorrente() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.contasCorrentes);
-  const { setLayoutData } = useLayout();
+  const { setEditLayout } = useLayout();
   const { 
     formData,
     CooperadoOptions,
@@ -39,23 +38,8 @@ export default function EditarContaCorrente() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/contas-correntes', label: 'Contas Correntes' }, 
-        { path: `/contas-correntes/${id}`, label: current?.numero_conta || 'Detalhes' },
-        { path: `/contas-correntes/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Conta Corrente',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/contas-correntes/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/contas-correntes`, label: 'Contas Correntes', id: typeof id === 'string' ? id : '', dynamicLabel: current?.numero_conta || 'Conta' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Endereço não encontrado" />;

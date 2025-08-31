@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchParcelasEmprestimos, deleteParcelaEmprestimo, } from '@/store/slices/parcelasEmprestimosSlice';
@@ -16,7 +15,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function ParcelasEmprestimos() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.parcelasEmprestimos);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<ParcelaEmprestimoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -36,21 +35,8 @@ export default function ParcelasEmprestimos() {
   }, [filters.searchTerm]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/parcelas-emprestimos', label: 'Parcelas de emprestimos' }
-      ],
-      title: 'Lista de Parcelas de emprestimos',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/parcelas-emprestimos/novo">
-          <i className="bi bi-plus-circle me-2"></i>Nova Parcela de Emprestimo
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/parcelas-emprestimos', label: 'Parcelas de Empréstimos', buttonName: 'Lista de Parcelas de Empréstimos' });
+  }, [setListLayout]);
 
 
   const tableHeader = [

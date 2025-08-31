@@ -1,13 +1,11 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchAssembleia } from '@/store/slices/assembleiasSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useFormatters from '@/hooks/useFormatters';
 import useAssembleiaForm from '@/hooks/useAssembleiaForm';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
@@ -17,8 +15,7 @@ export default function EditarCooperador() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.assembleias);
-  const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
+  const { setEditLayout } = useLayout();
   const { 
     formData,
     setFormData,
@@ -40,23 +37,8 @@ export default function EditarCooperador() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/assembleias', label: 'Assembleias' }, 
-        { path: `/assembleias/${id}`, label: current?.titulo || 'Detalhes' },
-        { path: `/assembleias/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Assembleia',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/assembleias/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/assembleias`, label: 'Assembleias', id: typeof id === 'string' ? id : '', dynamicLabel: current?.titulo || 'Assembleia' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Endereço não encontrado" />;

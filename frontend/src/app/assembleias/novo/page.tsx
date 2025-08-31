@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
@@ -12,27 +11,13 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoAssembleia() {
   const router = useRouter();
-  const { setLayoutData } = useLayout();
+  const { setNewLayout } = useLayout();
   const { formData, handleChange, handleSubmitNewAssembleia, clearAssembleiaError } = useAssembleiaForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.assembleias);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/assembleias', label: 'Assembleias' },
-        { path: '/assembleias', label: 'Nova' },
-      ],
-      title: 'Novo Assembleia',
-      icon: 'bi-person-plus',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={'/assembleias'}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setNewLayout({ path: '/assembleias', label: 'Assembleias', title: 'Nova Assembleia' });
+  }, [setNewLayout]);
 
   const formProps: FormProps = {
     onClick: () => router.push('/assembleias'),

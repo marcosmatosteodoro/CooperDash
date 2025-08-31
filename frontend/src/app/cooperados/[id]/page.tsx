@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
@@ -21,7 +20,7 @@ export default function Cooperador() {
     redirectTo: '/cooperados',
     deleteAction: (id: string) => deleteCooperado(id), 
   });
-  const { setLayoutData } = useLayout();
+  const { setShowLayout } = useLayout();
   const { formatDocument, formatDate, formatCurrency } = useFormatters();
 
   useEffect(() => {
@@ -29,33 +28,8 @@ export default function Cooperador() {
   }, [dispatch, id]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/cooperados', label: 'Cooperados' }, 
-        { path: `/cooperados/${id}`, label: current?.nome || 'Detalhes' }
-      ],
-      title: current?.nome ? `Detalhes: ${current.nome}` : 'Detalhes do Cooperado',
-      icon: 'bi-person-badge',
-      buttons: (
-        <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/cooperados/${id}/editar`}>
-            <i className="bi bi-pencil-square me-2"></i>Editar
-          </Link>
-          <button 
-            onClick={() => current?.id && handleDelete(current.id)}
-            className="btn btn-danger"
-          >
-            <i className="bi bi-trash me-2"></i>Excluir
-          </button>
-          <Link className="btn btn-outline-secondary" href="/cooperados">
-            <i className="bi bi-arrow-left me-2"></i>Voltar
-          </Link>
-        </div>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setShowLayout({ path: `/cooperados`, label: 'Cooperados', id: typeof id === 'string' ? id : '', dynamicLabel: current?.nome || 'Novo Cooperado', onClick: () => current?.id && handleDelete(current.id) });
+  }, [setShowLayout, current, id]);
 
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Cooperado não encontrado" />;

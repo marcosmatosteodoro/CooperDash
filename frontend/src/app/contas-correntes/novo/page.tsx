@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
@@ -12,27 +11,13 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoEndereco() {
   const router = useRouter();
-  const { setLayoutData } = useLayout();
+  const { setNewLayout } = useLayout();
   const { formData, CooperadoOptions, handleChange, handleSubmitNewContaCorrente, clearContaCorrenteError } = useContaCorrenteForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.enderecos);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/contas-correntes', label: 'Contas Correntes' }, 
-        { label: 'Nova' }, 
-      ],
-      title: 'Nova Conta Corrente',
-      icon: 'bi-person-plus',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={'/contas-correntes'}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setNewLayout({ path: '/contas-correntes', label: 'Contas Correntes', title: 'Nova Conta Corrente' });
+  }, [setNewLayout]);
 
   const formProps: FormProps = {
     onClick: () => router.push('/contas-correntes'),

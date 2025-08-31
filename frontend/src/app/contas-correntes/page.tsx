@@ -16,7 +16,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function ContasCorrentes() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.contasCorrentes);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<ContaCorrenteFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -36,21 +36,8 @@ export default function ContasCorrentes() {
   }, [filters.searchTerm]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' },
-        { path: '/contas-correntes', label: 'Contas Correntes' }
-      ],
-      title: 'Lista de Contas Correntes',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/contas-correntes/novo">
-          <i className="bi bi-plus-circle me-2"></i>Nova Conta Corrente
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/contas-correntes', label: 'Contas Correntes', buttonName: 'Lista de Contas' });
+  }, [setListLayout]);
 
 
   const tableHeader = [

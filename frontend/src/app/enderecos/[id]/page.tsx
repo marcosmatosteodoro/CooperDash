@@ -22,7 +22,7 @@ export default function Endereco() {
     redirectTo: '/enderecos',
     deleteAction: (id: string) => deleteEndereco(id), 
   });
-  const { setLayoutData } = useLayout();
+  const { setShowLayout } = useLayout();
   const { formatCep } = useFormatters();
 
   useEffect(() => {
@@ -36,33 +36,8 @@ export default function Endereco() {
   }, [current]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/enderecos', label: 'Endereços' }, 
-        { path: `/enderecos/${id}`, label: current?.logradouro || 'Detalhes' }
-      ],
-      title: current?.logradouro ? `Detalhes: ${current.logradouro}` : 'Detalhes do Endereço',
-      icon: 'bi-person-badge',
-      buttons: (
-        <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/enderecos/${id}/editar`}>
-            <i className="bi bi-pencil-square me-2"></i>Editar
-          </Link>
-          <button 
-            onClick={() => current?.id && handleDelete(current.id)}
-            className="btn btn-danger"
-          >
-            <i className="bi bi-trash me-2"></i>Excluir
-          </button>
-          <Link className="btn btn-outline-secondary" href="/enderecos">
-            <i className="bi bi-arrow-left me-2"></i>Voltar
-          </Link>
-        </div>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setShowLayout({ path: `/enderecos`, label: 'Endereços', id: typeof id === 'string' ? id : '', dynamicLabel: current?.logradouro || 'Endereço', onClick: () => current?.id && handleDelete(current.id) });
+  }, [setShowLayout, current, id]);
 
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Endereço não encontrado" />;

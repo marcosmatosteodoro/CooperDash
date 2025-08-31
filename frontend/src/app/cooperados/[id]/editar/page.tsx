@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
@@ -19,7 +18,7 @@ export default function EditarCooperador() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.cooperados);
-  const { setLayoutData } = useLayout();
+  const { setEditLayout } = useLayout();
   const { formatDocument } = useFormatters();
   const { 
     formData,
@@ -44,23 +43,8 @@ export default function EditarCooperador() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/cooperados', label: 'Cooperados' }, 
-        { path: `/cooperados/${id}`, label: current?.nome || 'Detalhes' },
-        { path: `/cooperados/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Cooperado',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/cooperados/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/cooperados`, label: 'Cooperados', id: typeof id === 'string' ? id : '', dynamicLabel: current?.nome || 'Novo Cooperado' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Cooperado não encontrado" />;

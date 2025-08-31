@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
@@ -17,7 +16,7 @@ export default function EditarEndereco() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.enderecos);
-  const { setLayoutData } = useLayout();
+  const { setEditLayout } = useLayout();
   const { formatCep } = useFormatters();
   const { 
     formData,
@@ -42,23 +41,8 @@ export default function EditarEndereco() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/enderecos', label: 'Endereços' }, 
-        { path: `/enderecos/${id}`, label: current?.logradouro || 'Detalhes' },
-        { path: `/enderecos/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Endereço',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/enderecos/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/enderecos`, label: 'Endereços', id: typeof id === 'string' ? id : '', dynamicLabel: current?.logradouro || 'Endereço' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Endereço não encontrado" />;

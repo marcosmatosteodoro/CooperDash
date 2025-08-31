@@ -22,7 +22,7 @@ export default function Emprestimo() {
     redirectTo: '/emprestimos',
     deleteAction: (id: string) => deleteEmprestimo(id), 
   });
-  const { setLayoutData } = useLayout();
+  const { setShowLayout } = useLayout();
   const { formatDate, formatTextToCapitalized, formatCurrency } = useFormatters();
 
   useEffect(() => {
@@ -36,33 +36,8 @@ export default function Emprestimo() {
   }, [current]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/emprestimos', label: 'Emprestimos' }, 
-        { path: `/emprestimos/${id}`, label: 'Detalhes' }
-      ],
-      title: 'Detalhes do Emprestimo',
-      icon: 'bi-person-badge',
-      buttons: (
-        <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/emprestimos/${id}/editar`}>
-            <i className="bi bi-pencil-square me-2"></i>Editar
-          </Link>
-          <button 
-            onClick={() => current?.id && handleDelete(current.id)}
-            className="btn btn-danger"
-          >
-            <i className="bi bi-trash me-2"></i>Excluir
-          </button>
-          <Link className="btn btn-outline-secondary" href="/emprestimos">
-            <i className="bi bi-arrow-left me-2"></i>Voltar
-          </Link>
-        </div>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setShowLayout({ path: `/emprestimos`, label: 'Empréstimos', id: typeof id === 'string' ? id : '', dynamicLabel: 'Detalhes', onClick: () => current?.id && handleDelete(current.id) });
+  }, [setShowLayout, current, id]);
 
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Emprestimo não encontrado" />;

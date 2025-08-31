@@ -1,7 +1,6 @@
 'use client'
 
-import { ChangeEvent, useEffect, useState } from 'react';
-import Link from 'next/link';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchAssembleias, deleteAssembleia, } from '@/store/slices/assembleiasSlice';
@@ -16,7 +15,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function Assembleias() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.assembleias);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<AssembleiaFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -25,32 +24,20 @@ export default function Assembleias() {
     });
   const { formatDateTime } = useFormatters();
 
+  
   useEffect(() => {
-      dispatch(fetchAssembleias(params));
+    dispatch(fetchAssembleias(params));
   }, [dispatch, params]);
-
+  
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
-
+    
     setParams(prev => ({ ...prev, page: 1, q }));
   }, [filters.searchTerm]);
-
+  
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/assembleias', label: 'Assembleias' }
-      ],
-      title: 'Lista de Assembleias',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/assembleias/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Assembleia
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/assembleias', label: 'Assembleias', buttonName: 'Lista de Assembleias' });
+  }, [setListLayout]);
 
   const tableHeader = [
     "Título",

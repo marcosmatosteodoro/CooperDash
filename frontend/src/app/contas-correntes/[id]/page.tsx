@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
@@ -22,7 +21,7 @@ export default function Endereco() {
     redirectTo: '/contas-correntes',
     deleteAction: (id: string) => deleteContaCorrente(id), 
   });
-  const { setLayoutData } = useLayout();
+  const { setShowLayout } = useLayout();
   const { formatCurrency, formatDate, formatTextToCapitalized } = useFormatters();
 
   useEffect(() => {
@@ -36,33 +35,8 @@ export default function Endereco() {
   }, [current]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/contas-correntes', label: 'Contas Correntes' }, 
-        { path: `/contas-correntes/${id}`, label: current?.numero_conta || 'Detalhes' }
-      ],
-      title: current?.numero_conta ? `Detalhes: ${current.numero_conta}` : 'Detalhes da Conta Corrente',
-      icon: 'bi-person-badge',
-      buttons: (
-        <div className="d-flex gap-2">
-          <Link className="btn btn-primary" href={`/contas-correntes/${id}/editar`}>
-            <i className="bi bi-pencil-square me-2"></i>Editar
-          </Link>
-          <button 
-            onClick={() => current?.id && handleDelete(current.id)}
-            className="btn btn-danger"
-          >
-            <i className="bi bi-trash me-2"></i>Excluir
-          </button>
-          <Link className="btn btn-outline-secondary" href="/contas-correntes">
-            <i className="bi bi-arrow-left me-2"></i>Voltar
-          </Link>
-        </div>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setShowLayout({ path: `/contas-correntes`, label: 'Contas Correntes', id: typeof id === 'string' ? id : '', dynamicLabel: current?.numero_conta || 'Conta', onClick: () => current?.id && handleDelete(current.id) });
+  }, [setShowLayout, current, id]);
 
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Conta Corrente não encontrada" />;

@@ -1,7 +1,6 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
@@ -12,27 +11,13 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoEmprestimo() {
   const router = useRouter();
-  const { setLayoutData } = useLayout();
+  const { setNewLayout } = useLayout();
   const { formData, CooperadoOptions, handleChange, handleSubmitNewEmprestimo, clearEmprestimoError } = useEmprestimoForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.emprestimos);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/emprestimos', label: 'Emprestimos' }, 
-        { label: 'Novo' }, 
-      ],
-      title: 'Novo Emprestimo',
-      icon: 'bi-person-plus',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={'/emprestimos'}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setNewLayout({ path: '/emprestimos', label: 'Emprestimos', title: 'Novo Emprestimo' });
+  }, [setNewLayout]);
 
   const formProps: FormProps = {
     onClick: () => router.push('/emprestimos'),

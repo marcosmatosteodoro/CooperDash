@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchEnderecos, deleteEndereco, } from '@/store/slices/enderecosSlice';
@@ -16,7 +15,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function Enderecos() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.enderecos);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<EnderecoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
@@ -36,21 +35,8 @@ export default function Enderecos() {
   }, [filters.searchTerm]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/enderecos', label: 'Endereços' }
-      ],
-      title: 'Lista de Endereços',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/enderecos/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Endereço
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/enderecos', label: 'Endereços', buttonName: 'Lista de Endereços' });
+  }, [setListLayout]);
 
 
   const tableHeader = [

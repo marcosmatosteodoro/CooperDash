@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch, } from '@/store';
 import { fetchCooperados, deleteCooperado, } from '@/store/slices/cooperadosSlice';
@@ -17,7 +16,7 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 export default function Cooperadores() {
   const dispatch: AppDispatch = useDispatch();
   const { list, pagination, status, error } = useSelector((state: RootState) => state.cooperados);
-  const { setLayoutData } = useLayout();
+  const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<CooperadoFilters>({ searchTerm: '', tipoPessoa: 'TODOS' });
   const [tableHeader, setTableHeader] = useState<string[]>([]);
@@ -39,21 +38,8 @@ export default function Cooperadores() {
   }, [filters.searchTerm, filters.tipoPessoa]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/cooperados', label: 'Cooperados' }
-      ],
-      title: 'Lista de Cooperados',
-      icon: '',
-      buttons: (
-        <Link className="btn btn-primary" href="/cooperados/novo">
-          <i className="bi bi-plus-circle me-2"></i>Novo Cooperado
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setListLayout({ path: '/cooperados', label: 'Cooperados', buttonName: 'Novo Cooperado' });
+  }, [setListLayout]);
 
 
   useEffect(() => {

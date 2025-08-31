@@ -12,27 +12,13 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoVotacao() {
   const router = useRouter();
-  const { setLayoutData } = useLayout();
+  const { setNewLayout } = useLayout();
   const { formData, cooperadoOptions, assembleiaOptions, handleChange, handleSubmitNewVotacao, clearVotacaoError } = useVotacaoForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.votacoes);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/votacoes', label: 'Votações' },
-        { label: 'Nova' }, 
-      ],
-      title: 'Novo Votação',
-      icon: 'bi-person-plus',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={'/votacoes'}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setNewLayout({path: '/votacoes',label: 'Nova Votação',title: 'Nova Votação'});
+  }, [setNewLayout]);
 
   const formProps: FormProps = {
     onClick: () => router.push('/votacoes'),

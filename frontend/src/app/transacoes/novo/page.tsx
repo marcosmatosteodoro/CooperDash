@@ -12,27 +12,13 @@ import type { FormProps } from '@/types/ui'
 
 export default function NovoTransacao() {
   const router = useRouter();
-  const { setLayoutData } = useLayout();
+  const { setNewLayout } = useLayout();
   const { formData, contaCorrenteOptions, handleChange, handleSubmitNewTransacao, clearTransacaoError } = useTransacaoForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.transacoes);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/transacoes', label: 'Transações' }, 
-        { label: 'Nova' }, 
-      ],
-      title: 'Novo Transação',
-      icon: 'bi-person-plus',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={'/transacoes'}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData]);
+    setNewLayout({ path: '/transacoes', label: 'Transações', title: 'Novo Transação' });
+  }, [setNewLayout]);
 
   const formProps: FormProps = {
     onClick: () => router.push('/transacoes'),

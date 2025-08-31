@@ -16,7 +16,7 @@ export default function EditarVotacao() {
   const router = useRouter();
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.votacoes);
-  const { setLayoutData } = useLayout();
+  const { setEditLayout } = useLayout();
   const { 
     formData,
     cooperadoOptions,
@@ -40,23 +40,8 @@ export default function EditarVotacao() {
   }, [current, setFormData]);
 
   useEffect(() => {
-    setLayoutData(prev => ({
-      ...prev,
-      breadcrumbs: [
-        { path: '/', label: 'Home' }, 
-        { path: '/votacoes', label: 'Votações' }, 
-        { path: `/votacoes/${id}`, label: 'Detalhes' },
-        { path: `/votacoes/${id}/editar`, label: 'Edição' }
-      ],
-      title: 'Editar Votação',
-      icon: 'bi-pencil-square',
-      buttons: (
-        <Link className="btn btn-outline-secondary" href={`/votacoes/${id}`}>
-          <i className="bi bi-arrow-left me-2"></i>Voltar
-        </Link>
-      )
-    }));
-  }, [setLayoutData, current, id]);
+    setEditLayout({ path: `/votacoes`, label: 'Votações', id: typeof id === 'string' ? id : '', dynamicLabel: 'Detalhes' });
+  }, [setEditLayout, current, id]);
 
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (!current ) return <NotFoundPage message="Votação não encontrado" />;
