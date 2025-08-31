@@ -43,6 +43,7 @@ export default function Transacoes() {
         { path: '/transacoes', label: 'Transações' }
       ],
       title: 'Lista de Transações',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/transacoes/novo">
           <i className="bi bi-plus-circle me-2"></i>Novo Transação

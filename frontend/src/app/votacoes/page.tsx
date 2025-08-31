@@ -43,6 +43,7 @@ export default function Votacoes() {
         { path: '/votacoes', label: 'Votações' }
       ],
       title: 'Lista de Votações',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/votacoes/novo">
           <i className="bi bi-plus-circle me-2"></i>Novo Votação
