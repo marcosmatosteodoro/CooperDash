@@ -43,6 +43,7 @@ export default function Emprestimos() {
         { path: '/emprestimos', label: 'Emprestimos' }
       ],
       title: 'Lista de Emprestimos',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/emprestimos/novo">
           <i className="bi bi-plus-circle me-2"></i>Novo Emprestimo

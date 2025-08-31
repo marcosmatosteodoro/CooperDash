@@ -22,6 +22,7 @@ export default function NovoEmprestimo() {
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
         { path: '/emprestimos', label: 'Emprestimos' }, 
+        { label: 'Novo' }, 
       ],
       title: 'Novo Emprestimo',
       icon: 'bi-person-plus',
