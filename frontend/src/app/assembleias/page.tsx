@@ -43,6 +43,7 @@ export default function Assembleias() {
         { path: '/assembleias', label: 'Assembleias' }
       ],
       title: 'Lista de Assembleias',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/assembleias/novo">
           <i className="bi bi-plus-circle me-2"></i>Novo Assembleia
