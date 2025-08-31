@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Validation\Rule;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ContasCorrente extends Model
@@ -19,10 +20,15 @@ class ContasCorrente extends Model
         'cooperado_id'
     ];
 
-    public static function rules()
+    public static function rules($id = null)
     {
         return [
-            'numero_conta' => 'required|string|max:255|unique:contas_correntes',
+            'numero_conta' => [
+                'required', 
+                'string', 
+                'max:255', 
+                Rule::unique('contas_correntes')->ignore($id),
+            ],
             'saldo' => 'required|numeric|min:0',
             'limite_credito' => 'required|numeric|min:0',
             'status' => 'required|in:ATIVA,BLOQUEADA,CANCELADA',
