@@ -61,7 +61,7 @@ export default function NovoVotacao() {
       },
       {
         label: 'Data da votação',
-        type: 'text',
+        type: 'date',
         tag: 'input',
         name: 'data_voto',
         value: formData.data_voto,
@@ -97,7 +97,7 @@ export default function NovoVotacao() {
         tag: 'textarea',
         name: 'justificativa',
         value: formData.justificativa,
-        contentClassName: 'col-md-6',
+        contentClassName: 'col-12',
         onChange: handleChange
       },
     ]

@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchVotacao } from '@/store/slices/votacoesSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useFormatters from '@/hooks/useFormatters';
 import useVotacaoForm from '@/hooks/useVotacaoForm';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
@@ -18,7 +17,6 @@ export default function EditarVotacao() {
   const dispatch: AppDispatch = useDispatch();
   const { current, status, error, fieldErrors } = useSelector((state: RootState) => state.votacoes);
   const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
   const { 
     formData,
     cooperadoOptions,
@@ -90,7 +88,7 @@ export default function EditarVotacao() {
       },
       {
         label: 'Data da votação',
-        type: 'text',
+        type: 'date',
         tag: 'input',
         name: 'data_voto',
         value: formData.data_voto,
@@ -126,7 +124,7 @@ export default function EditarVotacao() {
         tag: 'textarea',
         name: 'justificativa',
         value: formData.justificativa,
-        contentClassName: 'col-md-6',
+        contentClassName: 'col-12',
         onChange: handleChange
       },
     ]

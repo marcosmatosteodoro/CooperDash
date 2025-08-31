@@ -14,7 +14,14 @@ const useVotacaoForm = () => {
   const { list: assembleia } = useSelector((state: RootState) => state.assembleias);
   const router = useRouter();
 
-  const [formData, setFormData] = useState<Votacao>({} as Votacao);
+  const [formData, setFormData] = useState<Votacao>({
+    id: '',
+    assembleia_id: '',
+    cooperado_id: '',
+    voto: 'FAVOR',
+    data_voto: '',
+    justificativa: ''
+  } as Votacao);
   const [cooperadoOptions, setCooperadoOptions] = useState<Option[]>([]);
   const [assembleiaOptions, setAssembleiaOptions] = useState<Option[]>([]);
 
