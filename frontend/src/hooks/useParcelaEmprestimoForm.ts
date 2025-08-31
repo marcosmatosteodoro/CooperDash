@@ -56,7 +56,7 @@ const useParcelaEmprestimoForm = () => {
 
     try {
       const action = await dispatch(createParcelaEmprestimo(formData)).unwrap();
-      router.push(`/parcelasEmprestimos/${action.id}`);
+      router.push(`/parcelas-emprestimos/${action.id}`);
     } catch (error) {
       console.error('Erro ao salvar parcelaEmprestimo:', error);
     }
@@ -71,7 +71,7 @@ const useParcelaEmprestimoForm = () => {
       }
 
       await dispatch(updateParcelaEmprestimo({ id: formData.id, data: formData })).unwrap();
-      router.push(`/parcelasEmprestimos/${formData.id}`);
+      router.push(`/parcelas-emprestimos/${formData.id}`);
     } catch (error) {
       console.error('Erro ao editar parcelaEmprestimo:', error);
     }
