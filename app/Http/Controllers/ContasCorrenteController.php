@@ -89,7 +89,7 @@ class ContasCorrenteController extends Controller
                 return response()->json(['message' => 'Conta corrente não encontrada'], 404);
             }
 
-            $validated = $request->validate(ContasCorrente::rules(), ContasCorrente::messages());
+            $validated = $request->validate(ContasCorrente::rules($id), ContasCorrente::messages());
             $conta->update($validated);
 
             return response()->json($conta, 200);

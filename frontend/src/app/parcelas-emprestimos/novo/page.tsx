@@ -21,7 +21,8 @@ export default function NovoEndereco() {
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/parcelas-emprestimos', label: 'Parcelas' }, 
+        { path: '/parcelas-emprestimos', label: 'Parcelas' },
+        { label: 'Nova' }, 
       ],
       title: 'Nova Parcela',
       icon: 'bi-person-plus',

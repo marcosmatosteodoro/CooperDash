@@ -43,6 +43,7 @@ export default function Enderecos() {
         { path: '/enderecos', label: 'Endereços' }
       ],
       title: 'Lista de Endereços',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/enderecos/novo">
           <i className="bi bi-plus-circle me-2"></i>Novo Endereço

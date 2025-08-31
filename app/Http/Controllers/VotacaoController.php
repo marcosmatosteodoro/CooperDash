@@ -110,6 +110,8 @@ class VotacaoController extends Controller
             return response()->json(['message' => 'Votação não encontrada'], 404);
         }
 
+        $votacao->delete();
+
         return response()->json(null, 204);
     }
 }

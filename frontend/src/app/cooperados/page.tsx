@@ -46,6 +46,7 @@ export default function Cooperadores() {
         { path: '/cooperados', label: 'Cooperados' }
       ],
       title: 'Lista de Cooperados',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/cooperados/novo">
           <i className="bi bi-plus-circle me-2"></i>Novo Cooperado

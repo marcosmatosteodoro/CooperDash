@@ -71,7 +71,7 @@ export default function EditarContaCorrente() {
         tag: 'input',
         name: 'numero_conta',
         value: formData.numero_conta,
-        contentClassName: 'col-md-6 col-lg-4',
+        contentClassName: 'col-12',
         onChange: handleChange
       },
       {
@@ -139,7 +139,7 @@ export default function EditarContaCorrente() {
         type: 'text',
         tag: 'select',
         name: 'cooperado_id',
-        contentClassName: 'col-md-6',
+        contentClassName: 'col-md-6 col-lg-4',
         value: formData.cooperado_id,
         onChange: handleChange,
         options: CooperadoOptions

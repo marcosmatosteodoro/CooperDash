@@ -21,7 +21,8 @@ export default function NovoAssembleia() {
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/assembleias', label: 'Assembleias' }, 
+        { path: '/assembleias', label: 'Assembleias' },
+        { path: '/assembleias', label: 'Nova' },
       ],
       title: 'Novo Assembleia',
       icon: 'bi-person-plus',

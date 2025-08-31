@@ -43,6 +43,7 @@ export default function ParcelasEmprestimos() {
         { path: '/parcelas-emprestimos', label: 'Parcelas de emprestimos' }
       ],
       title: 'Lista de Parcelas de emprestimos',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/parcelas-emprestimos/novo">
           <i className="bi bi-plus-circle me-2"></i>Nova Parcela de Emprestimo

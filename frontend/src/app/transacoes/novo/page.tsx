@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useFormatters from '@/hooks/useFormatters';
 import useTransacaoForm from '@/hooks/useTransacaoForm';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
@@ -14,7 +13,6 @@ import type { FormProps } from '@/types/ui'
 export default function NovoTransacao() {
   const router = useRouter();
   const { setLayoutData } = useLayout();
-  const { formatCep } = useFormatters();
   const { formData, contaCorrenteOptions, handleChange, handleSubmitNewTransacao, clearTransacaoError } = useTransacaoForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.transacoes);
 
@@ -24,6 +22,7 @@ export default function NovoTransacao() {
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
         { path: '/transacoes', label: 'Transações' }, 
+        { label: 'Nova' }, 
       ],
       title: 'Novo Transação',
       icon: 'bi-person-plus',

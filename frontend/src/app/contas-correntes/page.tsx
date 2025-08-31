@@ -43,6 +43,7 @@ export default function ContasCorrentes() {
         { path: '/contas-correntes', label: 'Contas Correntes' }
       ],
       title: 'Lista de Contas Correntes',
+      icon: '',
       buttons: (
         <Link className="btn btn-primary" href="/contas-correntes/novo">
           <i className="bi bi-plus-circle me-2"></i>Nova Conta Corrente

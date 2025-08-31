@@ -109,6 +109,8 @@ class EmprestimoController extends Controller
             return response()->json(['message' => 'Empréstimo não encontrado'], 404);
         }
 
+        $emprestimo->delete();
+
         return response()->json(null, 204);
     }
 }

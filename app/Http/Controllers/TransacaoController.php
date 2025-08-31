@@ -30,7 +30,8 @@ class TransacaoController extends Controller
             $transacoes->where(function ($query) use ($q) {
                 $query->where(DB::raw('LOWER(descricao)'), 'LIKE', '%' . strtolower($q) . '%')
                     ->orWhere('categoria', 'LIKE', "%{$q}%")
-                    ->orWhere('data_transacao', 'LIKE', "%{$q}%");
+                    ->orWhere('data_transacao', 'LIKE', "%{$q}%")
+                    ->orWhere('valor', 'LIKE', "%{$q}%");
             });
         }
 

@@ -110,6 +110,8 @@ class EnderecoController extends Controller
             return response()->json(['message' => 'Endereço não encontrado'], 404);
         }
 
+        $endereco->delete();
+
         return response()->json(null, 204);
     }
 }

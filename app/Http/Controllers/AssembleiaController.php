@@ -108,6 +108,8 @@ class AssembleiaController extends Controller
             return response()->json(['message' => 'Assembleia não encontrada'], 404);
         }
 
+        $assembleia->delete();
+
         return response()->json(null, 204);
     }
 }

@@ -26,6 +26,7 @@ export default function NovoCooperador() {
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
         { path: '/cooperados', label: 'Cooperados' }, 
+        { label: 'Novo' }, 
       ],
       title: 'Novo Cooperado',
       icon: 'bi-person-plus',

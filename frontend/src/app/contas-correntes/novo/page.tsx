@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useFormatters from '@/hooks/useFormatters';
 import useContaCorrenteForm from '@/hooks/useContaCorrenteForm';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
@@ -14,7 +13,6 @@ import type { FormProps } from '@/types/ui'
 export default function NovoEndereco() {
   const router = useRouter();
   const { setLayoutData } = useLayout();
-  const { formatDate } = useFormatters();
   const { formData, CooperadoOptions, handleChange, handleSubmitNewContaCorrente, clearContaCorrenteError } = useContaCorrenteForm();
   const { error, fieldErrors } = useSelector((state: RootState) => state.enderecos);
 
@@ -24,6 +22,7 @@ export default function NovoEndereco() {
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
         { path: '/contas-correntes', label: 'Contas Correntes' }, 
+        { label: 'Nova' }, 
       ],
       title: 'Nova Conta Corrente',
       icon: 'bi-person-plus',
@@ -36,7 +35,7 @@ export default function NovoEndereco() {
   }, [setLayoutData]);
 
   const formProps: FormProps = {
-    onClick: () => router.push('/enderecos'),
+    onClick: () => router.push('/contas-correntes'),
     handleSubmit: handleSubmitNewContaCorrente,
     fieldErrors: fieldErrors,
     fields: [
@@ -46,7 +45,7 @@ export default function NovoEndereco() {
         tag: 'input',
         name: 'numero_conta',
         value: formData.numero_conta,
-        contentClassName: 'col-md-6 col-lg-4',
+        contentClassName: 'col-12',
         onChange: handleChange
       },
       {
@@ -114,7 +113,7 @@ export default function NovoEndereco() {
         type: 'text',
         tag: 'select',
         name: 'cooperado_id',
-        contentClassName: 'col-md-6',
+        contentClassName: 'col-md-6 col-lg-4',
         value: formData.cooperado_id,
         onChange: handleChange,
         options: CooperadoOptions
