@@ -12,7 +12,17 @@ const useTransacaoForm = () => {
   const { list } = useSelector((state: RootState) => state.contasCorrentes);
   const router = useRouter();
 
-  const [formData, setFormData] = useState<Transacao>({} as Transacao);
+  const [formData, setFormData] = useState<Transacao>({
+    id: '',
+    contas_corrente_id: '',
+    valor: 0,
+    tipo: 'DEPOSITO',
+    saldo_anterior: 0,
+    saldo_posterior: 0,
+    data_transacao: '',
+    categoria: '',
+    descricao: ''
+  });
   
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
