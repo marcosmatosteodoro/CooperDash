@@ -21,7 +21,8 @@ export default function NovoVotacao() {
       ...prev,
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
-        { path: '/votacoes', label: 'Votações' }, 
+        { path: '/votacoes', label: 'Votações' },
+        { label: 'Nova' }, 
       ],
       title: 'Novo Votação',
       icon: 'bi-person-plus',

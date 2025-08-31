@@ -24,6 +24,7 @@ export default function NovoEndereco() {
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
         { path: '/enderecos', label: 'Endereços' }, 
+        { label: 'Novo' }, 
       ],
       title: 'Novo Endereço',
       icon: 'bi-person-plus',

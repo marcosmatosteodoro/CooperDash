@@ -24,6 +24,7 @@ export default function NovoTransacao() {
       breadcrumbs: [
         { path: '/', label: 'Home' }, 
         { path: '/transacoes', label: 'Transações' }, 
+        { label: 'Nova' }, 
       ],
       title: 'Novo Transação',
       icon: 'bi-person-plus',
