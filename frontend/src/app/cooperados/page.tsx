@@ -125,82 +125,47 @@ export default function Cooperadores() {
     },
   }
 
+  const otherFilters = (
+    <div className="col-md-4">
+      <div className="d-flex flex-wrap align-items-center gap-3">
+        {(['TODOS', 'FISICA', 'JURIDICA'] as TipoPessoaOptions[]).map((filterType) => (
+          <div key={filterType} className="form-check">
+            <input
+              className="form-check-input"
+              type="radio"
+              name="filter"
+              id={`filter-${filterType.toLowerCase()}`}
+              checked={filters.tipoPessoa === filterType}
+              onChange={() => setFilters({ ...filters, tipoPessoa: filterType })}
+            />
+            <label className="form-check-label" htmlFor={`filter-${filterType.toLowerCase()}`}>
+              {filterType === 'TODOS' ? 'Todos' : filterType === 'FISICA' ? 'Físicas' : 'Jurídicas'}
+            </label>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+
   if (status === 'loading' || status === 'idle') return <LoadingSpinner />;
   if (error) return <ErrorAlert message={error} />;
 
   return (
-    <>
-      {/* Filtros e Busca */}
-      <section className="mb-4">
-        <div className="row align-items-center g-3">
-          <div className="col-xl-3 col-md-4">
-            <div className="input-group">
-              {/* select de 5 10 20 50 100 */}
-              <select 
-                className="form-select" 
-                value={params.per_page} 
-                onChange={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
-              >
-                {[5, 10, 20, 50, 100].map(value => (
-                  <option key={value} value={value}>
-                    {value}
-                  </option>
-                ))}
-              </select>
-              <span className="input-group-text">por página</span>
-            </div>
-          </div>
-
-          <div className="col-xl-9 col-md-8 mb-3 mb-md-0">
-            <div className="input-group">
-              <span className="input-group-text">
-                <i className="bi bi-search"></i>
-              </span>
-              <input
-                type="text"
-                className="form-control"
-                placeholder="Buscar cooperados..."
-                autoFocus
-                value={filters.searchTerm}
-                onChange={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
-              />
-            </div>
-          </div>
-
-          <div className="col-md-4">
-            <div className="d-flex flex-wrap align-items-center gap-3">
-              {(['TODOS', 'FISICA', 'JURIDICA'] as TipoPessoaOptions[]).map((filterType) => (
-                <div key={filterType} className="form-check">
-                  <input
-                    className="form-check-input"
-                    type="radio"
-                    name="filter"
-                    id={`filter-${filterType.toLowerCase()}`}
-                    checked={filters.tipoPessoa === filterType}
-                    onChange={() => setFilters({ ...filters, tipoPessoa: filterType })}
-                  />
-                  <label className="form-check-label" htmlFor={`filter-${filterType.toLowerCase()}`}>
-                    {filterType === 'TODOS' ? 'Todos' : filterType === 'FISICA' ? 'Físicas' : 'Jurídicas'}
-                  </label>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Tabela */}
-      <Table 
-        headers={tableHeader}
-        columns={tableColumns}
-        data={list}
-        pagination={pagination}
-        actions={tableActions}
-        notFoundMessage='Nenhum cooperado encontrado'
-        searchTerm={!!filters.searchTerm}
-        filterCleaner={() => setFilters({ ...filters, searchTerm: '', tipoPessoa: 'TODOS' })}
-        paginationClickHandler={paginationClickHandler}
-      />
-    </>
+    <Table
+      params={params}
+      headers={tableHeader}
+      columns={tableColumns}
+      data={list}
+      pagination={pagination}
+      actions={tableActions}
+      otherFilters={otherFilters}
+      notFoundMessage='Nenhum cooperado encontrado'
+      placeholderFilter='Buscar cooperados...'
+      searchTerm={filters.searchTerm}
+      paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
+      filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
+      filterCleaner={() => setFilters({ ...filters, searchTerm: '', tipoPessoa: 'TODOS' })}
+      paginationClickHandler={paginationClickHandler}
+    />
   );
 }
