@@ -110,6 +110,8 @@ class ParcelasEmprestimoController extends Controller
             return response()->json(['message' => 'Parcela não encontrada'], 404);
         }
 
+        $parcela->delete();
+
         return response()->json(null, 204);
     }
 }
