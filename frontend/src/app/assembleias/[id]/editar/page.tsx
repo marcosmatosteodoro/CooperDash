@@ -3,13 +3,13 @@
 import React, { useEffect } from 'react';
 import { useParams, useRouter } from 'next/navigation'; 
 import { useLayout } from '@/providers/LayoutProvider'
-import useAssembleiaForm from '@/hooks/useAssembleiaForm';
+import useAssembleia from '@/hooks/useAssembleia';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 
 export default function EditarCooperador() {
   const { id } = useParams();
   const router = useRouter();
-  const { assembleias, getFieldsProps, getAssembleia, handleSubmitEditAssembleia, clearAssembleiaError  } = useAssembleiaForm();
+  const { assembleias, getFieldsProps, getAssembleia, handleSubmitEditAssembleia, clearAssembleiaError  } = useAssembleia();
   const { current, status, error, fieldErrors } = assembleias;
   const { setEditLayout } = useLayout();
 

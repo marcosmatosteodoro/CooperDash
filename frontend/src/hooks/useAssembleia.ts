@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createAssembleia, fetchAssembleia, fetchAssembleias, updateAssembleia } from '@/store/slices/assembleiasSlice';
 import { PaginationParams } from '@/types/api';
 
-const useAssembleiaForm = () => {
+const useAssembleia = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
 
@@ -206,4 +206,4 @@ const useAssembleiaForm = () => {
   };
 };
 
-export default useAssembleiaForm;
+export default useAssembleia;

@@ -3,13 +3,13 @@
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation'; 
 import { useLayout } from '@/providers/LayoutProvider'
-import useAssembleiaForm from '@/hooks/useAssembleiaForm';
+import useAssembleia from '@/hooks/useAssembleia';
 import { Form, ErrorAlert } from '@/components'
 
 export default function NovoAssembleia() {
   const router = useRouter();
   const { setNewLayout } = useLayout();
-  const { assembleias, getFieldsProps, handleSubmitNewAssembleia, clearAssembleiaError } = useAssembleiaForm();
+  const { assembleias, getFieldsProps, handleSubmitNewAssembleia, clearAssembleiaError } = useAssembleia();
   const { error, fieldErrors } = assembleias;
 
   useEffect(() => {

@@ -7,11 +7,11 @@ import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
-import useAssembleiaForm from '@/hooks/useAssembleiaForm';
+import useAssembleia from '@/hooks/useAssembleia';
 
 export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
-  const { assembleias, getAssembleia } = useAssembleiaForm();
+  const { assembleias, getAssembleia } = useAssembleia();
   const { current, status, error } = assembleias;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'assembleia',

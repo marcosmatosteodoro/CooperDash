@@ -11,11 +11,11 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Assembleia, AssembleiaFilters, StatusAssembleia } from '@/types/app/assembleia';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
-import useAssembleiaForm from '@/hooks/useAssembleiaForm';
+import useAssembleia from '@/hooks/useAssembleia';
 
 export default function Assembleias() {
   const dispatch: AppDispatch = useDispatch();
-  const { assembleias, getAssembleias } = useAssembleiaForm();
+  const { assembleias, getAssembleias } = useAssembleia();
   const { list, pagination, status, error } = assembleias;
   const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
