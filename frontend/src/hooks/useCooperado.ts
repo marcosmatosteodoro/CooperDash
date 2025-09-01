@@ -13,8 +13,8 @@ import { PaginationParams } from '@/types/api';
 
 const useCooperado = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { formatDocument } = useFormatters();
   const router = useRouter();
+  const { formatDocument } = useFormatters();
 
   const cooperados = useSelector((state: RootState) => state.cooperados);
 
