@@ -11,10 +11,12 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Assembleia, AssembleiaFilters, StatusAssembleia } from '@/types/app/assembleia';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import useAssembleiaForm from '@/hooks/useAssembleiaForm';
 
 export default function Assembleias() {
   const dispatch: AppDispatch = useDispatch();
-  const { list, pagination, status, error } = useSelector((state: RootState) => state.assembleias);
+  const { assembleias, getAssembleias } = useAssembleiaForm();
+  const { list, pagination, status, error } = assembleias;
   const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<AssembleiaFilters>({ searchTerm: '' });
@@ -26,9 +28,9 @@ export default function Assembleias() {
 
   
   useEffect(() => {
-    dispatch(fetchAssembleias(params));
-  }, [dispatch, params]);
-  
+    getAssembleias(params);
+  }, [getAssembleias, params]);
+
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
     
@@ -47,12 +49,6 @@ export default function Assembleias() {
     "Quorum Mínimo",
     "Data e Hora",
   ]
-  
-  const paginationClickHandler = (link: string | null) => {
-    if (!link) return;
-    const page = new URL(link).searchParams.get('page');
-    setParams({ ...params, page: page ? parseInt(page) : 1 })
-  }
 
   const tableColumns: ColumnType<Assembleia>[] = [
     {
@@ -115,7 +111,7 @@ export default function Assembleias() {
       paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '' })}
-      paginationClickHandler={paginationClickHandler}
+      setParams={setParams}
     />
   );
 }

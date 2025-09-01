@@ -2,18 +2,17 @@
 
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
-import { fetchAssembleia, deleteAssembleia } from '@/store/slices/assembleiasSlice';
+import { deleteAssembleia } from '@/store/slices/assembleiasSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
+import useAssembleiaForm from '@/hooks/useAssembleiaForm';
 
 export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.assembleias);
+  const { assembleias, getAssembleia } = useAssembleiaForm();
+  const { current, status, error } = assembleias;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'assembleia',
     redirectTo: '/assembleias',
@@ -23,8 +22,8 @@ export default function Cooperador() {
   const { formatTextToCapitalized } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchAssembleia(id));
-  }, [dispatch, id]);
+    getAssembleia(id);
+  }, [getAssembleia, id]);
 
   useEffect(() => {
     setShowLayout({ path: `/assembleias`, label: 'Assembleias', id: typeof id === 'string' ? id : '', dynamicLabel: current?.titulo || 'Assembleia', onClick: () => current?.id && handleDelete(current.id) });
