@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchEmprestimo } from '@/store/slices/emprestimosSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useEmprestimoForm from '@/hooks/useEmprestimoForm';
+import useEmprestimo from '@/hooks/useEmprestimo';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
@@ -23,7 +23,7 @@ export default function EditarEmprestimo() {
     handleChange,
     handleSubmitEditEmprestimo,
     clearEmprestimoError 
-  } = useEmprestimoForm();
+  } = useEmprestimo();
 
   useEffect(() => {
     if (id) {

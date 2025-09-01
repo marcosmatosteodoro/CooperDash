@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createParcelaEmprestimo, updateParcelaEmprestimo } from '@/store/slices/parcelasEmprestimosSlice';
 import { fetchEmprestimos } from '@/store/slices/emprestimosSlice';
 
-const useParcelaEmprestimoForm = () => {
+const useParcelaEmprestimo = () => {
   const dispatch: AppDispatch = useDispatch();
   const { list } = useSelector((state: RootState) => state.emprestimos);
   const router = useRouter();
@@ -92,4 +92,4 @@ const useParcelaEmprestimoForm = () => {
   };
 };
 
-export default useParcelaEmprestimoForm;
+export default useParcelaEmprestimo;

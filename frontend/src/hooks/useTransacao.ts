@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createTransacao, updateTransacao } from '@/store/slices/transacoesSlice';
 import { fetchContasCorrentes } from '@/store/slices/contasCorrentesSlice';
 
-const useTransacaoForm = () => {
+const useTransacao = () => {
   const dispatch: AppDispatch = useDispatch();
   const { list } = useSelector((state: RootState) => state.contasCorrentes);
   const router = useRouter();
@@ -90,4 +90,4 @@ const useTransacaoForm = () => {
   };
 };
 
-export default useTransacaoForm;
+export default useTransacao;

@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useParcelaEmprestimoForm from '@/hooks/useParcelaEmprestimoForm';
+import useParcelaEmprestimo from '@/hooks/useParcelaEmprestimo';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
 import type { FormProps } from '@/types/ui'
@@ -12,7 +12,7 @@ import type { FormProps } from '@/types/ui'
 export default function NovoEndereco() {
   const router = useRouter();
   const { setNewLayout } = useLayout();
-  const { formData, emprestimoOptions, handleChange, handleSubmitNewParcelaEmprestimo, clearParcelaEmprestimoError } = useParcelaEmprestimoForm();
+  const { formData, emprestimoOptions, handleChange, handleSubmitNewParcelaEmprestimo, clearParcelaEmprestimoError } = useParcelaEmprestimo();
   const { error, fieldErrors } = useSelector((state: RootState) => state.parcelasEmprestimos);
 
   useEffect(() => {

@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
 import useFormatters from '@/hooks/useFormatters';
-import useEnderecoForm from '@/hooks/useEnderecoForm';
+import useEndereco from '@/hooks/useEndereco';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
 import type { FormProps } from '@/types/ui'
@@ -14,7 +14,7 @@ export default function NovoEndereco() {
   const router = useRouter();
   const { setNewLayout } = useLayout();
   const { formatCep } = useFormatters();
-  const { formData, CooperadoOptions, handleChange, handleCheckboxChange, handleSubmitNewEndereco, clearEnderecoError } = useEnderecoForm();
+  const { formData, CooperadoOptions, handleChange, handleCheckboxChange, handleSubmitNewEndereco, clearEnderecoError } = useEndereco();
   const { error, fieldErrors } = useSelector((state: RootState) => state.enderecos);
 
   useEffect(() => {

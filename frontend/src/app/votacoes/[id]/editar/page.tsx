@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchVotacao } from '@/store/slices/votacoesSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useVotacaoForm from '@/hooks/useVotacaoForm';
+import useVotacao from '@/hooks/useVotacao';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
@@ -25,7 +25,7 @@ export default function EditarVotacao() {
     handleChange,
     handleSubmitEditVotacao,
     clearVotacaoError 
-  } = useVotacaoForm();
+  } = useVotacao();
 
   useEffect(() => {
     if (id) {

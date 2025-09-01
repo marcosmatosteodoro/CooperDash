@@ -7,7 +7,7 @@ import { RootState, AppDispatch } from '@/store';
 import { fetchEndereco } from '@/store/slices/enderecosSlice';
 import { useLayout } from '@/providers/LayoutProvider'
 import useFormatters from '@/hooks/useFormatters';
-import useEnderecoForm from '@/hooks/useEnderecoForm';
+import useEndereco from '@/hooks/useEndereco';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
@@ -26,7 +26,7 @@ export default function EditarEndereco() {
     handleCheckboxChange,
     handleSubmitEditEndereco,
     clearEnderecoError 
-  } = useEnderecoForm();
+  } = useEndereco();
 
   useEffect(() => {
     if (id) {

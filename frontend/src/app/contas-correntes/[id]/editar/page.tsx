@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchContaCorrente } from '@/store/slices/contasCorrentesSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useContaCorrenteForm from '@/hooks/useContaCorrenteForm';
+import useContaCorrente from '@/hooks/useContaCorrente';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
@@ -23,7 +23,7 @@ export default function EditarContaCorrente() {
     handleChange,
     handleSubmitEditContaCorrente,
     clearContaCorrenteError 
-  } = useContaCorrenteForm();
+  } = useContaCorrente();
 
   useEffect(() => {
     if (id) {

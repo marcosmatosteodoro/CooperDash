@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchTransacao } from '@/store/slices/transacoesSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useTransacaoForm from '@/hooks/useTransacaoForm';
+import useTransacao from '@/hooks/useTransacao';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
@@ -23,7 +23,7 @@ export default function EditarTransacao() {
     handleChange,
     handleSubmitEditTransacao,
     clearTransacaoError 
-  } = useTransacaoForm();
+  } = useTransacao();
 
   useEffect(() => {
     if (id) {

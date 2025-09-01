@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createEmprestimo, updateEmprestimo } from '@/store/slices/emprestimosSlice';
 import { fetchCooperados } from '@/store/slices/cooperadosSlice';
 
-const useEmprestimoForm = () => {
+const useEmprestimo = () => {
   const dispatch: AppDispatch = useDispatch();
   const { list } = useSelector((state: RootState) => state.cooperados);
   const router = useRouter();
@@ -94,4 +94,4 @@ const useEmprestimoForm = () => {
   };
 };
 
-export default useEmprestimoForm;
+export default useEmprestimo;

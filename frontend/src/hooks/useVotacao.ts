@@ -8,7 +8,7 @@ import { createVotacao, updateVotacao } from '@/store/slices/votacoesSlice';
 import { fetchCooperados } from '@/store/slices/cooperadosSlice';
 import { fetchAssembleias } from '@/store/slices/assembleiasSlice';
 
-const useVotacaoForm = () => {
+const useVotacao = () => {
   const dispatch: AppDispatch = useDispatch();
   const { list: cooperado } = useSelector((state: RootState) => state.cooperados);
   const { list: assembleia } = useSelector((state: RootState) => state.assembleias);
@@ -124,4 +124,4 @@ const useVotacaoForm = () => {
   };
 };
 
-export default useVotacaoForm;
+export default useVotacao;

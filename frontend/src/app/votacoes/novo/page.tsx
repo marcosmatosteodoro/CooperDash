@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useVotacaoForm from '@/hooks/useVotacaoForm';
+import useVotacao from '@/hooks/useVotacao';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
 import type { FormProps } from '@/types/ui'
@@ -13,7 +13,7 @@ import type { FormProps } from '@/types/ui'
 export default function NovoVotacao() {
   const router = useRouter();
   const { setNewLayout } = useLayout();
-  const { formData, cooperadoOptions, assembleiaOptions, handleChange, handleSubmitNewVotacao, clearVotacaoError } = useVotacaoForm();
+  const { formData, cooperadoOptions, assembleiaOptions, handleChange, handleSubmitNewVotacao, clearVotacaoError } = useVotacao();
   const { error, fieldErrors } = useSelector((state: RootState) => state.votacoes);
 
   useEffect(() => {

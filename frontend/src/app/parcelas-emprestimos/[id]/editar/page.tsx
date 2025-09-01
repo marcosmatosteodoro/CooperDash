@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { RootState, AppDispatch } from '@/store';
 import { fetchParcelaEmprestimo } from '@/store/slices/parcelasEmprestimosSlice';
 import { useLayout } from '@/providers/LayoutProvider'
-import useParcelaEmprestimoForm from '@/hooks/useParcelaEmprestimoForm';
+import useParcelaEmprestimo from '@/hooks/useParcelaEmprestimo';
 import {Form, ErrorAlert, LoadingSpinner, NotFoundPage} from '@/components/';
 import type { FormProps } from '@/types/ui'
 
@@ -23,7 +23,7 @@ export default function EditarParcelaEmprestimo() {
     handleChange,
     handleSubmitEditParcelaEmprestimo,
     clearParcelaEmprestimoError
-  } = useParcelaEmprestimoForm();
+  } = useParcelaEmprestimo();
 
   useEffect(() => {
     if (id) {

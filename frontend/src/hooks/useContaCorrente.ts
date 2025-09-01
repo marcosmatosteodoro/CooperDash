@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createContaCorrente, updateContaCorrente } from '@/store/slices/contasCorrentesSlice';
 import { fetchCooperados } from '@/store/slices/cooperadosSlice';
 
-const useContaCorrenteForm = () => {
+const useContaCorrente = () => {
   const dispatch: AppDispatch = useDispatch();
   const { list } = useSelector((state: RootState) => state.cooperados);
   const router = useRouter();
@@ -90,4 +90,4 @@ const useContaCorrenteForm = () => {
   };
 };
 
-export default useContaCorrenteForm;
+export default useContaCorrente;

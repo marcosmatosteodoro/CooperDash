@@ -4,7 +4,7 @@ import React, { useEffect } from 'react';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useEmprestimoForm from '@/hooks/useEmprestimoForm';
+import useEmprestimo from '@/hooks/useEmprestimo';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
 import type { FormProps } from '@/types/ui'
@@ -12,7 +12,7 @@ import type { FormProps } from '@/types/ui'
 export default function NovoEmprestimo() {
   const router = useRouter();
   const { setNewLayout } = useLayout();
-  const { formData, CooperadoOptions, handleChange, handleSubmitNewEmprestimo, clearEmprestimoError } = useEmprestimoForm();
+  const { formData, CooperadoOptions, handleChange, handleSubmitNewEmprestimo, clearEmprestimoError } = useEmprestimo();
   const { error, fieldErrors } = useSelector((state: RootState) => state.emprestimos);
 
   useEffect(() => {

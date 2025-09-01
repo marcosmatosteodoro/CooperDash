@@ -7,7 +7,7 @@ import { useRouter } from 'next/navigation';
 import { createEndereco, updateEndereco } from '@/store/slices/enderecosSlice';
 import { fetchCooperados } from '@/store/slices/cooperadosSlice';
 
-const useEnderecoForm = () => {
+const useEndereco = () => {
   const dispatch: AppDispatch = useDispatch();
   const { list } = useSelector((state: RootState) => state.cooperados);
   const router = useRouter();
@@ -112,4 +112,4 @@ const useEnderecoForm = () => {
   };
 };
 
-export default useEnderecoForm;
+export default useEndereco;

@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation'; 
 import { useSelector } from 'react-redux';
 import { useLayout } from '@/providers/LayoutProvider'
-import useTransacaoForm from '@/hooks/useTransacaoForm';
+import useTransacao from '@/hooks/useTransacao';
 import { RootState } from '@/store';
 import { Form, ErrorAlert } from '@/components'
 import type { FormProps } from '@/types/ui'
@@ -13,7 +13,7 @@ import type { FormProps } from '@/types/ui'
 export default function NovoTransacao() {
   const router = useRouter();
   const { setNewLayout } = useLayout();
-  const { formData, contaCorrenteOptions, handleChange, handleSubmitNewTransacao, clearTransacaoError } = useTransacaoForm();
+  const { formData, contaCorrenteOptions, handleChange, handleSubmitNewTransacao, clearTransacaoError } = useTransacao();
   const { error, fieldErrors } = useSelector((state: RootState) => state.transacoes);
 
   useEffect(() => {
