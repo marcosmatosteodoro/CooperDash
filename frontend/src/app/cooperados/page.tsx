@@ -1,20 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react';
-import { deleteCooperado, } from '@/store/slices/cooperadosSlice';
-import useFormatters from '@/hooks/useFormatters';
-import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
-import { texto } from '@/data/textos';
-import { useLayout } from '@/providers/LayoutProvider'
-import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Cooperado, CooperadoFilters, TipoPessoaOptions } from '@/types/app/cooperado';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import { useEffect, useState } from 'react';
+import { useLayout } from '@/providers/LayoutProvider'
+import { deleteCooperado, } from '@/store/slices/cooperadosSlice';
+import useFormatters from '@/hooks/useFormatters';
+import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import useCooperado from '@/hooks/useCooperado';
+import { texto } from '@/data/textos';
+import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 
 export default function Cooperadores() {
   const { setListLayout } = useLayout();
-  const { cooperados, getAll } = useCooperado();
+  const { cooperados, getCooperados } = useCooperado();
   const { list, pagination, status, error } = cooperados;
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<CooperadoFilters>({ searchTerm: '', tipoPessoa: 'TODOS' });
@@ -26,8 +26,8 @@ export default function Cooperadores() {
     });
 
   useEffect(() => {
-    getAll(params);
-  }, [getAll, params]);
+    getCooperados(params);
+  }, [getCooperados, params]);
 
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;

@@ -143,7 +143,7 @@ const useCooperado = () => {
     dispatch(fetchCooperado(id as string));
   }, [dispatch]);
 
-  const getAll = useCallback((params: PaginationParams) => {
+  const getCooperados = useCallback((params: PaginationParams) => {
     dispatch(fetchCooperados(params));
   }, [dispatch]);
 
@@ -221,7 +221,7 @@ const useCooperado = () => {
     clearCooperadoError,
     getFieldsProps,
     getCooperado,
-    getAll
+    getCooperados
   };
 };
 
