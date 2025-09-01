@@ -2,30 +2,29 @@
 
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
-import { fetchCooperado, deleteCooperado } from '@/store/slices/cooperadosSlice';
+import { deleteCooperado } from '@/store/slices/cooperadosSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
+import useCooperado from '@/hooks/useCooperado';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { texto } from '@/data/textos';
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
 
 export default function Cooperador() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.cooperados);
+  const { setShowLayout } = useLayout();
+  const { formatDocument, formatDate, formatCurrency } = useFormatters();
+  const { cooperados, getCooperado } = useCooperado();
+  const { current, status, error } = cooperados;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'cooperado',
     redirectTo: '/cooperados',
     deleteAction: (id: string) => deleteCooperado(id), 
   });
-  const { setShowLayout } = useLayout();
-  const { formatDocument, formatDate, formatCurrency } = useFormatters();
-
+  
   useEffect(() => {
-    dispatch(fetchCooperado(id));
-  }, [dispatch, id]);
+    getCooperado(id as string);
+  }, [getCooperado, id]);
 
   useEffect(() => {
     setShowLayout({ path: `/cooperados`, label: 'Cooperados', id: typeof id === 'string' ? id : '', dynamicLabel: current?.nome || 'Novo Cooperado', onClick: () => current?.id && handleDelete(current.id) });

@@ -17,7 +17,7 @@ export const Table = <T extends { id: string },>({
     filter,
     paramsCleaner,
     filterCleaner,
-    paginationClickHandler
+    setParams,
   }: TableInterface<T>) =>  {
 
   const increase = pagination.per_page * (pagination.current_page - 1);
@@ -51,7 +51,8 @@ export const Table = <T extends { id: string },>({
 
         <Pagination 
           {...pagination} 
-          paginationClickHandler={paginationClickHandler} 
+          params={params}
+          setParams={setParams} 
         />
 
       </section>

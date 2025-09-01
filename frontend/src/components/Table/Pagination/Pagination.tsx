@@ -7,13 +7,15 @@ export const Pagination = ({
     current_page,
     last_page,
     total,
-    paginationClickHandler
+    params,
+    setParams
   }: PaginationInterface) =>  {
 
-  const onClickHandler = (url: string | null) => {
-    if (url) {
-      paginationClickHandler(url);
-    }
+
+  const onClickHandler = (link: string | null) => {
+    if (!link) return;
+    const page = new URL(link).searchParams.get('page');
+    setParams({ ...params, page: page ? parseInt(page) : 1 })
   };
 
   return (

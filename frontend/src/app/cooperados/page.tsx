@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch, } from '@/store';
-import { fetchCooperados, deleteCooperado, } from '@/store/slices/cooperadosSlice';
+import { deleteCooperado, } from '@/store/slices/cooperadosSlice';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { texto } from '@/data/textos';
@@ -12,23 +10,24 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Cooperado, CooperadoFilters, TipoPessoaOptions } from '@/types/app/cooperado';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import useCooperado from '@/hooks/useCooperado';
 
 export default function Cooperadores() {
-  const dispatch: AppDispatch = useDispatch();
-  const { list, pagination, status, error } = useSelector((state: RootState) => state.cooperados);
   const { setListLayout } = useLayout();
+  const { cooperados, getAll } = useCooperado();
+  const { list, pagination, status, error } = cooperados;
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
   const [filters, setFilters] = useState<CooperadoFilters>({ searchTerm: '', tipoPessoa: 'TODOS' });
   const [tableHeader, setTableHeader] = useState<string[]>([]);
+  const { formatDocument, formatDate, formatCurrency } = useFormatters();
   const { handleDelete } = useDeleteWithConfirmation({
       entityName: 'cooperado',
       deleteAction: (id: string) => deleteCooperado(id), 
     });
-  const { formatDocument, formatDate, formatCurrency } = useFormatters();
 
   useEffect(() => {
-      dispatch(fetchCooperados(params));
-  }, [dispatch, params]);
+    getAll(params);
+  }, [getAll, params]);
 
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
@@ -56,12 +55,6 @@ export default function Cooperadores() {
         ];
     setTableHeader(header);
   }, [filters.tipoPessoa]);
-  
-  const paginationClickHandler = (link: string | null) => {
-    if (!link) return;
-    const page = new URL(link).searchParams.get('page');
-    setParams({ ...params, page: page ? parseInt(page) : 1 })
-  }
 
   const tableColumns: ColumnType<Cooperado>[] = [
     {
@@ -138,7 +131,6 @@ export default function Cooperadores() {
 
   return (
     <Table
-      params={params}
       headers={tableHeader}
       columns={tableColumns}
       data={list}
@@ -151,7 +143,8 @@ export default function Cooperadores() {
       paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '', tipoPessoa: 'TODOS' })}
-      paginationClickHandler={paginationClickHandler}
+      params={params}
+      setParams={setParams}
     />
   );
 }

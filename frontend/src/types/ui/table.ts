@@ -39,11 +39,12 @@ export interface TableInterface<T> {
   filter: Filter;
   paramsCleaner: ParamsCleaner;
   filterCleaner: FilterCleaner;
-  paginationClickHandler: (link: string | null) => void;
+  setParams: (params: PaginationParams) => void;
 }
 
 export interface PaginationInterface extends Omit<PaginatedResponse<Ressource>, 'data'> {
-  paginationClickHandler: (link: string | null) => void;
+  params: PaginationParams;
+  setParams: (params: PaginationParams) => void;
 } 
 // Interfaces auxiliares
 export interface TheadInterface {
