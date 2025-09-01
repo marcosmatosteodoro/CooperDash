@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch, } from '@/store';
-import { fetchAssembleias, deleteAssembleia, } from '@/store/slices/assembleiasSlice';
+import {  deleteAssembleia, } from '@/store/slices/assembleiasSlice';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { useLayout } from '@/providers/LayoutProvider'
@@ -14,7 +12,6 @@ import type { ColumnType, ActionsType } from '@/types/ui';
 import useAssembleia from '@/hooks/useAssembleia';
 
 export default function Assembleias() {
-  const dispatch: AppDispatch = useDispatch();
   const { assembleias, getAssembleias } = useAssembleia();
   const { list, pagination, status, error } = assembleias;
   const { setListLayout } = useLayout();
