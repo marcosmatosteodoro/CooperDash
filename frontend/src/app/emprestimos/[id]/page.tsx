@@ -1,22 +1,21 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
-import { fetchEmprestimo, deleteEmprestimo } from '@/store/slices/emprestimosSlice';
-import { fetchCooperado } from '@/store/slices/cooperadosSlice';
+import { deleteEmprestimo } from '@/store/slices/emprestimosSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
+import useEmprestimo from '@/hooks/useEmprestimo';
+import useCooperado from '@/hooks/useCooperado';
 
 export default function Emprestimo() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.emprestimos);
-  const { current: cooperado } = useSelector((state: RootState) => state.cooperados);
+  const { emprestimos, getEmprestimo } = useEmprestimo();
+  const { cooperados, getCooperado } = useCooperado();
+  const { current, status, error } = emprestimos;
+  const { current: cooperado } = cooperados;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'emprestimo',
     redirectTo: '/emprestimos',
@@ -26,14 +25,14 @@ export default function Emprestimo() {
   const { formatDate, formatTextToCapitalized, formatCurrency } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchEmprestimo(id));
-  }, [dispatch, id]);
+    getEmprestimo(id);
+  }, [getEmprestimo, id]);
   
   useEffect(() => {
     if(current && current.cooperado_id) {
-      dispatch(fetchCooperado(current.cooperado_id));
+      getCooperado(current.cooperado_id);
     }
-  }, [current]);
+  }, [current, getCooperado]);
 
   useEffect(() => {
     setShowLayout({ path: `/emprestimos`, label: 'Empréstimos', id: typeof id === 'string' ? id : '', dynamicLabel: 'Detalhes', onClick: () => current?.id && handleDelete(current.id) });
@@ -42,7 +41,6 @@ export default function Emprestimo() {
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Emprestimo não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
-
 
   return (
     <ShowModel
