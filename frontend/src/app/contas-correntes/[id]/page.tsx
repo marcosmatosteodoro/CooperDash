@@ -2,20 +2,20 @@
 
 import React, { useEffect } from 'react';
 import { useParams } from 'next/navigation'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
-import { fetchContaCorrente, deleteContaCorrente } from '@/store/slices/contasCorrentesSlice';
-import { fetchCooperado } from '@/store/slices/cooperadosSlice';
+import { deleteContaCorrente } from '@/store/slices/contasCorrentesSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
+import useContaCorrente from '@/hooks/useContaCorrente';
+import useCooperado from '@/hooks/useCooperado';
 
 export default function Endereco() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.contasCorrentes);
-  const { current: cooperado } = useSelector((state: RootState) => state.cooperados);
+  const {  contasCorrentes, getContaCorrente } = useContaCorrente();
+  const {  cooperados, getCooperado } = useCooperado();
+  const { current, status, error } = contasCorrentes;
+  const { current: cooperado } = cooperados;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'contaCorrente',
     redirectTo: '/contas-correntes',
@@ -25,14 +25,14 @@ export default function Endereco() {
   const { formatCurrency, formatDate, formatTextToCapitalized } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchContaCorrente(id));
-  }, [dispatch, id]);
+    getContaCorrente(id);
+  }, [getContaCorrente, id]);
   
   useEffect(() => {
     if(current && current.cooperado_id) {
-      dispatch(fetchCooperado(current.cooperado_id));
+      getCooperado(current.cooperado_id);
     }
-  }, [current]);
+  }, [current, getCooperado]);
 
   useEffect(() => {
     setShowLayout({ path: `/contas-correntes`, label: 'Contas Correntes', id: typeof id === 'string' ? id : '', dynamicLabel: current?.numero_conta || 'Conta', onClick: () => current?.id && handleDelete(current.id) });

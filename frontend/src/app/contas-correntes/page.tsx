@@ -1,10 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch, } from '@/store';
-import { fetchContasCorrentes, deleteContaCorrente, } from '@/store/slices/contasCorrentesSlice';
+import { deleteContaCorrente, } from '@/store/slices/contasCorrentesSlice';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { useLayout } from '@/providers/LayoutProvider'
@@ -12,12 +9,13 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { ContaCorrente, ContaCorrenteFilters } from '@/types/app/contaCorrente';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import useContaCorrente from '@/hooks/useContaCorrente';
 
 export default function ContasCorrentes() {
-  const dispatch: AppDispatch = useDispatch();
-  const { list, pagination, status, error } = useSelector((state: RootState) => state.contasCorrentes);
+  const { contasCorrentes, getContasCorrentes } = useContaCorrente();
+  const { list, pagination, status, error } = contasCorrentes;
   const { setListLayout } = useLayout();
-  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
+  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<ContaCorrenteFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
       entityName: 'contaCorrente',
@@ -26,8 +24,8 @@ export default function ContasCorrentes() {
   const { formatTextToCapitalized, formatDate } = useFormatters();
 
   useEffect(() => {
-      dispatch(fetchContasCorrentes(params));
-  }, [dispatch, params]);
+    getContasCorrentes(params);
+  }, [getContasCorrentes, params]);
 
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
@@ -46,13 +44,6 @@ export default function ContasCorrentes() {
     "Data de abertura",
     "Data de encerramento",
   ]
-
-  
-  const paginationClickHandler = (link: string | null) => {
-    if (!link) return;
-    const page = new URL(link).searchParams.get('page');
-    setParams({ ...params, page: page ? parseInt(page) : 1 })
-  }
 
   const tableColumns: ColumnType<ContaCorrente>[] = [
     {
@@ -101,7 +92,7 @@ export default function ContasCorrentes() {
       paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '' })}
-      paginationClickHandler={paginationClickHandler}
+      setParams={setParams}
     />
   );
 }
