@@ -1,22 +1,21 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
-import { fetchEndereco, deleteEndereco } from '@/store/slices/enderecosSlice';
-import { fetchCooperado } from '@/store/slices/cooperadosSlice';
+import { deleteEndereco } from '@/store/slices/enderecosSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
+import useEndereco from '@/hooks/useEndereco';
+import useCooperado from '@/hooks/useCooperado';
 
 export default function Endereco() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.enderecos);
-  const { current: cooperado } = useSelector((state: RootState) => state.cooperados);
+  const { enderecos, getEndereco } = useEndereco();
+  const { cooperados, getCooperado } = useCooperado();
+  const { current, status, error } = enderecos;
+  const { current: cooperado } = cooperados;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'endereco',
     redirectTo: '/enderecos',
@@ -26,14 +25,14 @@ export default function Endereco() {
   const { formatCep } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchEndereco(id));
-  }, [dispatch, id]);
-  
+    getEndereco(id);
+  }, [getEndereco, id]);
+
   useEffect(() => {
     if(current && current.cooperado_id) {
-      dispatch(fetchCooperado(current.cooperado_id));
+      getCooperado(current.cooperado_id);
     }
-  }, [current]);
+  }, [current, getCooperado]);
 
   useEffect(() => {
     setShowLayout({ path: `/enderecos`, label: 'Endereços', id: typeof id === 'string' ? id : '', dynamicLabel: current?.logradouro || 'Endereço', onClick: () => current?.id && handleDelete(current.id) });
@@ -42,7 +41,6 @@ export default function Endereco() {
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Endereço não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
-
 
   return (
     <ShowModel

@@ -1,17 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import type { FieldChangeEvent, Option } from '@/types/ui/'
+import React, { useCallback, useState } from 'react';
+import type { Field, FieldChangeEvent } from '@/types/ui/'
 import type { Endereco } from '@/types/app/endereco'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/navigation'; 
-import { createEndereco, updateEndereco } from '@/store/slices/enderecosSlice';
-import { fetchCooperados } from '@/store/slices/cooperadosSlice';
+import { createEndereco, fetchEndereco, fetchEnderecos, updateEndereco } from '@/store/slices/enderecosSlice';
+import useCooperado from './useCooperado';
+import { PaginationParams } from '@/types/api';
+import useFormatters from './useFormatters';
 
 const useEndereco = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { list } = useSelector((state: RootState) => state.cooperados);
   const router = useRouter();
-
+  const { cooperadoOptions, getCooperadoOptions } = useCooperado();
+  const { formatCep } = useFormatters();
+  const enderecos = useSelector((state: RootState) => state.enderecos);
   const [formData, setFormData] = useState<Endereco>({
     id: '',
     logradouro: '',
@@ -25,23 +28,134 @@ const useEndereco = () => {
     principal: false,
     cooperado_id: ''
   });
-  const [CooperadoOptions, setCooperadoOptions] = useState<Option[]>([]);
 
-  useEffect(() => {
-      dispatch(fetchCooperados({ per_page: 999999999 }));
+  const getFieldsProps = useCallback((): Field[] => {
+    if(!cooperadoOptions || cooperadoOptions.length == 0) {
+      getCooperadoOptions()
+    }
+
+    return [
+      {
+        label: 'Logradouro',
+        type: 'text',
+        tag: 'input',
+        name: 'logradouro',
+        value: formData.logradouro,
+        contentClassName: 'col-12',
+        onChange: handleChange
+      },
+      {
+        label: 'Tipo',
+        type: 'text',
+        tag: 'select',
+        name: 'tipo',
+        contentClassName: 'col-md-6 col-lg-4',
+        value: formData.tipo,
+        onChange: handleChange,
+        options: [
+          {
+            value: "RESIDENCIAL",
+            text: "Residencial"
+          },
+          {
+            value: "COMERCIAL",
+            text: "Comercial"
+          },
+          {
+            value: "COBRANCA",
+            text: "Cobrança"
+          },
+        ]
+      },
+      {
+        label: 'CEP',
+        type: 'text',
+        tag: 'input',
+        name: 'cep',
+        value: formatCep(formData.cep),
+        contentClassName: 'col-md-6 col-lg-4',
+        maxLength: 9,
+        placeholder: 'xxxxx-xxx',
+        onChange: handleChange
+      },
+      {
+        label: 'Estado',
+        type: 'text',
+        tag: 'input',
+        name: 'estado',
+        value: formData.estado,
+        contentClassName: 'col-md-6 col-lg-4',
+        maxLength: 2,
+        placeholder: 'SP',
+        onChange: handleChange
+      },
+      {
+        label: 'Bairro',
+        type: 'text',
+        tag: 'input',
+        name: 'bairro',
+        value: formData.bairro,
+        contentClassName: 'col-md-6 col-lg-4',
+        onChange: handleChange
+      },
+      {
+        label: 'Cidade',
+        type: 'text',
+        tag: 'input',
+        name: 'cidade',
+        value: formData.cidade,
+        contentClassName: 'col-md-6 col-lg-4',
+        onChange: handleChange
+      },
+      {
+        label: 'Número',
+        type: 'text',
+        tag: 'input',
+        name: 'numero',
+        value: formData.numero,
+        contentClassName: 'col-md-6 col-lg-4',
+        maxLength: 10,
+        placeholder: 'S/N',
+        onChange: handleChange
+      },
+      {
+        label: 'Complemento',
+        type: 'text',
+        tag: 'input',
+        name: 'complemento',
+        value: formData.complemento,
+        contentClassName: 'col-md-6',
+        onChange: handleChange
+      },
+      {
+        label: 'Cooperado',
+        type: 'text',
+        tag: 'select',
+        name: 'cooperado_id',
+        contentClassName: 'col-md-6',
+        value: formData.cooperado_id,
+        onChange: handleChange,
+        options: cooperadoOptions
+      },
+      {
+        label: 'Endereço Principal',
+        type: 'checkbox',
+        tag: 'checkbox',
+        name: 'principal',
+        checked: formData.principal,
+        contentClassName: 'col-12',
+        onChange: handleCheckboxChange
+      }
+    ]
+  }, [formData, cooperadoOptions, getCooperadoOptions, formatCep]);
+
+  const getEndereco = useCallback((id: string) => {
+    dispatch(fetchEndereco(id as string));
   }, [dispatch]);
 
-  useEffect(() => {
-    if (list) {
-      const options = list.map(item => ({
-        value: item.id,
-        text: item.nome
-      }));
-
-      options.unshift({ value: '', text: 'Selecione um cooperado' });
-      setCooperadoOptions(options);
-    }
-  }, [list]);
+  const getEnderecos = useCallback((params: PaginationParams) => {
+    dispatch(fetchEnderecos(params));
+  }, [dispatch]);
 
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
@@ -101,14 +215,17 @@ const useEndereco = () => {
   };
 
   return {
+    enderecos,
     formData,
-    CooperadoOptions,
     setFormData,
     handleChange,
     handleCheckboxChange,
     handleSubmitNewEndereco,
     handleSubmitEditEndereco,
-    clearEnderecoError
+    clearEnderecoError,
+    getFieldsProps,
+    getEndereco,
+    getEnderecos
   };
 };
 

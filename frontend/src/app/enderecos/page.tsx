@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch, } from '@/store';
-import { fetchEnderecos, deleteEndereco, } from '@/store/slices/enderecosSlice';
+import { deleteEndereco, } from '@/store/slices/enderecosSlice';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { useLayout } from '@/providers/LayoutProvider'
@@ -11,12 +9,13 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Endereco, EnderecoFilters, EnderecoTipo } from '@/types/app/endereco';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import useEndereco from '@/hooks/useEndereco';
 
 export default function Enderecos() {
-  const dispatch: AppDispatch = useDispatch();
-  const { list, pagination, status, error } = useSelector((state: RootState) => state.enderecos);
+  const { enderecos, getEnderecos } = useEndereco();
+  const { list, pagination, status, error } = enderecos;
   const { setListLayout } = useLayout();
-  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
+  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<EnderecoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
       entityName: 'endereco',
@@ -25,8 +24,8 @@ export default function Enderecos() {
   const { formatCep } = useFormatters();
 
   useEffect(() => {
-      dispatch(fetchEnderecos(params));
-  }, [dispatch, params]);
+    getEnderecos(params);
+  }, [getEnderecos, params]);
 
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
@@ -38,7 +37,6 @@ export default function Enderecos() {
     setListLayout({ path: '/enderecos', label: 'Endereços', buttonName: 'Lista de Endereços' });
   }, [setListLayout]);
 
-
   const tableHeader = [
     "Logradouro",
     "CEP",
@@ -48,13 +46,6 @@ export default function Enderecos() {
     "Estado",
     "Tipo",
   ]
-
-  
-  const paginationClickHandler = (link: string | null) => {
-    if (!link) return;
-    const page = new URL(link).searchParams.get('page');
-    setParams({ ...params, page: page ? parseInt(page) : 1 })
-  }
 
   const tableColumns: ColumnType<Endereco>[] = [
     {
@@ -118,7 +109,7 @@ export default function Enderecos() {
       paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '' })}
-      paginationClickHandler={paginationClickHandler}
+      setParams={setParams}
     />
   );
 }
