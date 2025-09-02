@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import type { Field, FieldChangeEvent } from '@/types/ui/'
+import type { Field, FieldChangeEvent, Option } from '@/types/ui/'
 import type { Cooperado } from '@/types/app/cooperado'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch } from '@/store';
@@ -18,6 +18,7 @@ const useCooperado = () => {
 
   const cooperados = useSelector((state: RootState) => state.cooperados);
 
+  const [cooperadoOptions, setCooperadoOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<Cooperado>({
     id: '',
     nome: '',
@@ -147,6 +148,10 @@ const useCooperado = () => {
     dispatch(fetchCooperados(params));
   }, [dispatch]);
 
+  const getCooperadoOptions = useCallback(() => {
+    dispatch(fetchCooperados({ per_page: 999999999 }));
+  }, [dispatch]);
+
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -209,8 +214,21 @@ const useCooperado = () => {
     }
   }, [cooperados, setFormData]);
 
+  useEffect(() => {
+    if (cooperados.list) {
+      const options = cooperados.list.map(item => ({
+        value: item.id,
+        text: item.nome
+      }));
+
+      options.unshift({ value: '', text: 'Selecione um cooperado' });
+      setCooperadoOptions(options);
+    }
+  }, [cooperados.list]);
+
   return {
     cooperados,
+    cooperadoOptions,
     formData,
     setFormData,
     handleChange,
@@ -221,7 +239,8 @@ const useCooperado = () => {
     clearCooperadoError,
     getFieldsProps,
     getCooperado,
-    getCooperados
+    getCooperados,
+    getCooperadoOptions
   };
 };
 
