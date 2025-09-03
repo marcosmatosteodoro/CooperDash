@@ -1,17 +1,18 @@
-import React, { useEffect, useState } from 'react';
-import type { FieldChangeEvent, Option } from '@/types/ui/'
+import React, { useCallback, useEffect, useState } from 'react';
+import type { Field, FieldChangeEvent } from '@/types/ui/'
 import type { ParcelaEmprestimo } from '@/types/app/parcelaEmprestimo'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/navigation'; 
-import { createParcelaEmprestimo, updateParcelaEmprestimo } from '@/store/slices/parcelasEmprestimosSlice';
-import { fetchEmprestimos } from '@/store/slices/emprestimosSlice';
+import { createParcelaEmprestimo, fetchParcelaEmprestimo, fetchParcelasEmprestimos, updateParcelaEmprestimo } from '@/store/slices/parcelasEmprestimosSlice';
+import useEmprestimo from './useEmprestimo';
+import { PaginationParams } from '@/types/api';
 
 const useParcelaEmprestimo = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { list } = useSelector((state: RootState) => state.emprestimos);
   const router = useRouter();
-
+  const parcelasEmprestimos = useSelector((state: RootState) => state.parcelasEmprestimos);
+  const { emprestimoOptions, getEmprestimoOptions } = useEmprestimo();
   const [formData, setFormData] = useState<ParcelaEmprestimo>({
     id: '',
     numero_parcela: 1,
@@ -25,23 +26,132 @@ const useParcelaEmprestimo = () => {
     multa: 0,
     juros: 0
   } as ParcelaEmprestimo);
-  const [emprestimoOptions, setEmprestimoOptions] = useState<Option[]>([]);
   
-    useEffect(() => {
-        dispatch(fetchEmprestimos({ per_page: 999999999 }));
-    }, [dispatch]);
-  
-    useEffect(() => {
-      if (list) {
-        const options = list.map(item => ({
-          value: item.id,
-          text: (item.valor_aprovado || item.valor_solicitado).toString()
-        }));
+  const getFieldsProps = useCallback((): Field[] => {
+    if(!emprestimoOptions || emprestimoOptions.length == 0) {
+      getEmprestimoOptions()
+    }
 
-        options.unshift({ value: '', text: 'Selecione um empréstimo' });
-        setEmprestimoOptions(options);
-      }
-    }, [list]);
+    return [
+      {
+        label: 'Número da parcela',
+        type: 'number',
+        tag: 'input',
+        name: 'numero_parcela',
+        value: formData.numero_parcela,
+        contentClassName: 'col-md-6 col-lg-4',
+        onChange: handleChange
+      },
+      {
+        label: 'Valor da parcela',
+        type: 'number',
+        tag: 'input',
+        name: 'valor_parcela',
+        value: formData.valor_parcela,
+        contentClassName: 'col-md-6 col-lg-4',
+        onChange: handleChange
+      },
+      {
+        label: 'Emprestimo',
+        type: 'text',
+        tag: 'select',
+        name: 'emprestimo_id',
+        contentClassName: 'col-md-6 col-lg-4',
+        value: formData.emprestimo_id,
+        onChange: handleChange,
+        options: emprestimoOptions
+      },
+      {
+        label: 'Data de Vencimento',
+        type: 'date',
+        tag: 'input',
+        name: 'data_vencimento',
+        value: formData.data_vencimento,
+        contentClassName: 'col-md-6 col-lg-4',
+        onChange: handleChange
+      },
+      {
+        label: 'Data de Pagamento',
+        type: 'date',
+        tag: 'input',
+        name: 'data_pagamento',
+        value: formData.data_pagamento,
+        contentClassName: 'col-md-6 col-lg-4',
+        onChange: handleChange
+      },
+      {
+        label: 'Status',
+        type: 'text',
+        tag: 'select',
+        name: 'status',
+        contentClassName: 'col-md-6 col-lg-4',
+        value: formData.status,
+        onChange: handleChange,
+        options: [
+          {
+            value: "PENDENTE",
+            text: "Pendente"
+          },
+          {
+            value: "PAGO",
+            text: "Pago"
+          },
+          {
+            value: "ATRASADO",
+            text: "Atrasado"
+          },
+          {
+            value: "CANCELADO",
+            text: "Cancelado"
+          },
+        ]
+      },
+      {
+        label: 'Dias de atraso',
+        type: 'number',
+        tag: 'input',
+        name: 'dias_atraso',
+        value: formData.dias_atraso,
+        contentClassName: 'col-md-6',
+        onChange: handleChange
+      },
+      {
+        label: 'Valor pago',
+        type: 'number',
+        tag: 'input',
+        name: 'valor_pago',
+        value: formData.valor_pago,
+        contentClassName: 'col-md-6',
+        onChange: handleChange
+      },
+      {
+        label: 'Multa',
+        type: 'number',
+        tag: 'input',
+        name: 'multa',
+        value: formData.multa,
+        contentClassName: 'col-md-6',
+        onChange: handleChange
+      },
+      {
+        label: 'Júros',
+        type: 'number',
+        tag: 'input',
+        name: 'juros',
+        value: formData.juros,
+        contentClassName: 'col-md-6',
+        onChange: handleChange
+      },
+    ]
+  }, [formData, emprestimoOptions, getEmprestimoOptions]);
+
+  const getParcelaEmprestimo = useCallback((id: string) => {
+    dispatch(fetchParcelaEmprestimo(id as string));
+  }, [dispatch]);
+
+  const getParcelasEmprestimos = useCallback((params: PaginationParams) => {
+    dispatch(fetchParcelasEmprestimos(params));
+  }, [dispatch]);
 
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
@@ -81,14 +191,23 @@ const useParcelaEmprestimo = () => {
     dispatch({ type: 'parcelasEmprestimos/clearError' });
   };
 
+  useEffect(() => {
+    if (parcelasEmprestimos.current) {
+      setFormData(parcelasEmprestimos.current);
+    }
+  }, [parcelasEmprestimos, setFormData]);
+
   return {
+    parcelasEmprestimos,
     formData,
-    emprestimoOptions,
     setFormData,
     handleChange,
     handleSubmitNewParcelaEmprestimo,
     handleSubmitEditParcelaEmprestimo,
-    clearParcelaEmprestimoError
+    clearParcelaEmprestimoError,
+    getParcelaEmprestimo,
+    getParcelasEmprestimos,
+    getFieldsProps
   };
 };
 

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import type { Field, FieldChangeEvent } from '@/types/ui/'
+import type { Field, FieldChangeEvent, Option } from '@/types/ui/'
 import type { Emprestimo } from '@/types/app/emprestimo'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
@@ -11,8 +11,9 @@ import { PaginationParams } from '@/types/api';
 const useEmprestimo = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-  const { cooperadoOptions, getCooperadoOptions } = useCooperado();
   const emprestimos = useSelector((state: RootState) => state.emprestimos);
+  const { cooperadoOptions, getCooperadoOptions } = useCooperado();
+  const [emprestimoOptions, setEmprestimoOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<Emprestimo>({
     id: '',
     cooperado_id: '',
@@ -167,6 +168,10 @@ const useEmprestimo = () => {
     dispatch(fetchEmprestimos(params));
   }, [dispatch]);
 
+  const getEmprestimoOptions = useCallback(() => {
+    dispatch(fetchEmprestimos({ per_page: 999999999 }));
+  }, [dispatch]);
+
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -211,7 +216,20 @@ const useEmprestimo = () => {
     }
   }, [emprestimos, setFormData]);
 
+  useEffect(() => {
+    if (emprestimos.list) {
+      const options = emprestimos.list.map(item => ({
+        value: item.id,
+        text: (item.valor_aprovado || item.valor_solicitado).toString()
+      }));
+
+      options.unshift({ value: '', text: 'Selecione um cooperado' });
+      setEmprestimoOptions(options);
+    }
+  }, [emprestimos.list]);
+
   return {
+    emprestimoOptions,
     emprestimos,
     formData,
     setFormData,
@@ -221,7 +239,8 @@ const useEmprestimo = () => {
     clearEmprestimoError,
     getEmprestimo,
     getEmprestimos,
-    getFieldsProps
+    getFieldsProps,
+    getEmprestimoOptions
   };
 };
 
