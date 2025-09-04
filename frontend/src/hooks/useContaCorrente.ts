@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import type { Field, FieldChangeEvent } from '@/types/ui/'
+import type { Field, FieldChangeEvent, Option } from '@/types/ui/'
 import type { ContaCorrente } from '@/types/app/contaCorrente'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
@@ -13,6 +13,7 @@ const useContaCorrente = () => {
   const router = useRouter();
   const { cooperadoOptions, getCooperadoOptions } = useCooperado();
   const contasCorrentes = useSelector((state: RootState) => state.contasCorrentes);
+  const [contaCorrenteOptions, setContaCorrenteOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<ContaCorrente>({
     id: '',
     cooperado_id: '',
@@ -120,6 +121,10 @@ const useContaCorrente = () => {
     dispatch(fetchContasCorrentes(params));
   }, [dispatch]);
 
+  const getContasCorrentesOptions = useCallback(() => {
+      dispatch(fetchContasCorrentes({ per_page: 999999999 }));
+    }, [dispatch]);
+
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -164,7 +169,20 @@ const useContaCorrente = () => {
     }
   }, [contasCorrentes, setFormData]);
 
+  useEffect(() => {
+  if (contasCorrentes.list) {
+    const options = contasCorrentes.list.map(item => ({
+      value: item.id,
+      text: item.numero_conta
+    }));
+
+    options.unshift({ value: '', text: 'Selecione uma conta corrente' });
+    setContaCorrenteOptions(options);
+  }
+}, [contasCorrentes.list]);
+
   return {
+    contaCorrenteOptions,
     contasCorrentes,
     formData,
     setFormData,
@@ -174,7 +192,8 @@ const useContaCorrente = () => {
     clearContaCorrenteError,
     getContaCorrente,
     getContasCorrentes,
-    getFieldsProps
+    getFieldsProps,
+    getContasCorrentesOptions
   };
 };
 

@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch, } from '@/store';
-import { fetchTransacoes, deleteTransacao, } from '@/store/slices/transacoesSlice';
+import { deleteTransacao } from '@/store/slices/transacoesSlice';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { useLayout } from '@/providers/LayoutProvider'
@@ -11,10 +9,11 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Transacao, TransacaoFilters } from '@/types/app/transacao';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import useTransacao from '@/hooks/useTransacao';
 
 export default function Transacoes() {
-  const dispatch: AppDispatch = useDispatch();
-  const { list, pagination, status, error } = useSelector((state: RootState) => state.transacoes);
+  const { transacoes, getTransacoes } = useTransacao();
+  const { list, pagination, status, error } = transacoes;
   const { setListLayout } = useLayout();
   const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<TransacaoFilters>({ searchTerm: '' });
@@ -25,8 +24,8 @@ export default function Transacoes() {
   const { formatCurrency, formatTextToCapitalized, formatDate } = useFormatters();
 
   useEffect(() => {
-      dispatch(fetchTransacoes(params));
-  }, [dispatch, params]);
+      getTransacoes(params);
+  }, [getTransacoes, params]);
 
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
@@ -46,13 +45,6 @@ export default function Transacoes() {
     "Saldo Posterior",
     "Data da Transação",
   ]
-
-  
-  const paginationClickHandler = (link: string | null) => {
-    if (!link) return;
-    const page = new URL(link).searchParams.get('page');
-    setParams({ ...params, page: page ? parseInt(page) : 1 })
-  }
 
   const tableColumns: ColumnType<Transacao>[] = [
     {
@@ -106,7 +98,7 @@ export default function Transacoes() {
       paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '' })}
-      paginationClickHandler={paginationClickHandler}
+      setParams={setParams}
     />
   );
 }

@@ -1,22 +1,21 @@
 'use client'
 
 import React, { useEffect } from 'react';
-import Link from 'next/link';
 import { useParams } from 'next/navigation'; 
-import { useDispatch, useSelector } from 'react-redux';
-import { AppDispatch, RootState } from '@/store';
-import { fetchTransacao, deleteTransacao } from '@/store/slices/transacoesSlice';
+import { deleteTransacao } from '@/store/slices/transacoesSlice';
 import { useLayout } from '@/providers/LayoutProvider';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { NotFoundPage, ErrorAlert, LoadingSpinner, ShowModel } from '@/components';
-import { fetchContaCorrente } from '@/store/slices/contasCorrentesSlice';
+import useTransacao from '@/hooks/useTransacao';
+import useContaCorrente from '@/hooks/useContaCorrente';
 
 export default function Transacao() {
   const { id } = useParams<{ id: string }>();
-  const dispatch = useDispatch<AppDispatch>();
-  const { current, status, error } = useSelector((state: RootState) => state.transacoes);
-  const { current: contasCorrente } = useSelector((state: RootState) => state.contasCorrentes);
+  const { transacoes, getTransacao } = useTransacao();
+  const { contasCorrentes, getContaCorrente } = useContaCorrente();
+  const { current, status, error } = transacoes;
+  const { current: contasCorrente } = contasCorrentes;
   const { handleDelete, deleting } = useDeleteWithConfirmation({
     entityName: 'transacao',
     redirectTo: '/transacoes',
@@ -26,14 +25,14 @@ export default function Transacao() {
   const { formatCurrency, formatDate, formatTextToCapitalized } = useFormatters();
 
   useEffect(() => {
-    dispatch(fetchTransacao(id));
-  }, [dispatch, id]);
+    getTransacao(id);
+  }, [getTransacao, id]);
   
   useEffect(() => {
     if(current && current.contas_corrente_id) {
-      dispatch(fetchContaCorrente(current.contas_corrente_id));
+      getContaCorrente(current.contas_corrente_id);
     }
-  }, [current]);
+  }, [getContaCorrente, current]);
 
   useEffect(() => {
     setShowLayout({ path: `/transacoes`, label: 'Transações', id: typeof id === 'string' ? id : '', dynamicLabel: current?.valor.toString() || 'Transação', onClick: () => current?.id && handleDelete(current.id) });
@@ -42,7 +41,6 @@ export default function Transacao() {
   if (status === 'loading' || status === 'idle' || deleting) return <LoadingSpinner />;
   if (!current) return <NotFoundPage message="Transação não encontrado" />;
   if (error) return <ErrorAlert message={error} />;
-
 
   return (
     <ShowModel
