@@ -1,15 +1,15 @@
 <?php
 
+use App\Http\Controllers\AssembleiaController;
+use App\Http\Controllers\ContasCorrenteController;
+use App\Http\Controllers\CooperadoController;
+use App\Http\Controllers\EmprestimoController;
+use App\Http\Controllers\EnderecoController;
+use App\Http\Controllers\ParcelasEmprestimoController;
+use App\Http\Controllers\TransacaoController;
+use App\Http\Controllers\VotacaoController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\CooperadoController;
-use App\Http\Controllers\EnderecoController;
-use App\Http\Controllers\ContasCorrenteController;
-use App\Http\Controllers\TransacaoController;
-use App\Http\Controllers\EmprestimoController;
-use App\Http\Controllers\ParcelasEmprestimoController;
-use App\Http\Controllers\AssembleiaController;
-use App\Http\Controllers\VotacaoController;
 
 Route::get('/user', function (Request $request) {
     return $request->user();

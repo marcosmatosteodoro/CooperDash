@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Votacao;
+use Illuminate\Database\Seeder;
 
 class VotacaoSeeder extends Seeder
 {

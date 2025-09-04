@@ -2,9 +2,9 @@
 
 namespace Database\Factories;
 
-use App\Models\Votacao;
 use App\Models\Assembleia;
 use App\Models\Cooperado;
+use App\Models\Votacao;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class VotacaoFactory extends Factory

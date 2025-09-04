@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ContasCorrente;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class ContasCorrenteController extends Controller
@@ -17,18 +17,18 @@ class ContasCorrenteController extends Controller
         $filters = $request->validate([
             'q' => 'string|min:1',
         ],
-        [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-        ]);
+            [
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+            ]);
 
         $contas = ContasCorrente::query();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $q = $filters['q'];
 
             $contas->where(function ($query) use ($q) {
-                $query->where(DB::raw('LOWER(numero_conta)'), 'LIKE', '%' . strtolower($q) . '%')
+                $query->where(DB::raw('LOWER(numero_conta)'), 'LIKE', '%'.strtolower($q).'%')
                     ->orWhere('saldo', 'LIKE', "%{$q}%")
                     ->orWhere('limite_credito', 'LIKE', "%{$q}%")
                     ->orWhere('status', 'LIKE', "%{$q}%")
@@ -53,12 +53,12 @@ class ContasCorrenteController extends Controller
         try {
             $validated = $request->validate(ContasCorrente::rules(), ContasCorrente::messages());
             $contas = ContasCorrente::create($validated);
-            
+
             return response()->json($contas, 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
-                'message' => 'Erro ao criar conta corrente', 
-                'errors' => $e->errors()
+                'message' => 'Erro ao criar conta corrente',
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -70,7 +70,7 @@ class ContasCorrenteController extends Controller
     {
         $conta = ContasCorrente::find($id);
 
-        if (!$conta) {
+        if (! $conta) {
             return response()->json(['message' => 'Conta corrente não encontrada'], 404);
         }
 
@@ -85,7 +85,7 @@ class ContasCorrenteController extends Controller
         try {
             $conta = ContasCorrente::find($id);
 
-            if (!$conta) {
+            if (! $conta) {
                 return response()->json(['message' => 'Conta corrente não encontrada'], 404);
             }
 
@@ -96,7 +96,7 @@ class ContasCorrenteController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -108,7 +108,7 @@ class ContasCorrenteController extends Controller
     {
         $conta = ContasCorrente::find($id);
 
-        if (!$conta) {
+        if (! $conta) {
             return response()->json(['message' => 'Conta corrente não encontrada'], 404);
         }
 

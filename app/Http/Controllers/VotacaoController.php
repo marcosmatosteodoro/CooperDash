@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Votacao;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class VotacaoController extends Controller
@@ -17,18 +17,18 @@ class VotacaoController extends Controller
         $filters = $request->validate([
             'q' => 'string|min:1',
         ],
-        [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-        ]);
+            [
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+            ]);
 
         $votacoes = Votacao::query();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $q = $filters['q'];
 
             $votacoes->where(function ($query) use ($q) {
-                $query->where(DB::raw('LOWER(assembleia_id)'), 'LIKE', '%' . strtolower($q) . '%')
+                $query->where(DB::raw('LOWER(assembleia_id)'), 'LIKE', '%'.strtolower($q).'%')
                     ->orWhere('cooperado_id', 'LIKE', "%{$q}%")
                     ->orWhere('voto', 'LIKE', "%{$q}%")
                     ->orWhere('data_voto', 'LIKE', "%{$q}%")
@@ -56,7 +56,7 @@ class VotacaoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Erro ao criar votação',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -68,7 +68,7 @@ class VotacaoController extends Controller
     {
         $votacao = Votacao::find($id);
 
-        if (!$votacao) {
+        if (! $votacao) {
             return response()->json(['message' => 'Votação não encontrada'], 404);
         }
 
@@ -83,7 +83,7 @@ class VotacaoController extends Controller
         try {
             $votacao = Votacao::find($id);
 
-            if (!$votacao) {
+            if (! $votacao) {
                 return response()->json(['message' => 'Votação não encontrada'], 404);
             }
 
@@ -94,7 +94,7 @@ class VotacaoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -106,7 +106,7 @@ class VotacaoController extends Controller
     {
         $votacao = Votacao::find($id);
 
-        if (!$votacao) {
+        if (! $votacao) {
             return response()->json(['message' => 'Votação não encontrada'], 404);
         }
 

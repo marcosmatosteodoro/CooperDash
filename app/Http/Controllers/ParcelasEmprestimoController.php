@@ -2,9 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\ParcelasEmprestimo;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Http\Request;
 
 class ParcelasEmprestimoController extends Controller
 {
@@ -17,14 +16,14 @@ class ParcelasEmprestimoController extends Controller
         $filters = $request->validate([
             'q' => 'string|min:1',
         ],
-        [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-        ]);
+            [
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+            ]);
 
         $parcelas = ParcelasEmprestimo::query();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $q = $filters['q'];
 
             $parcelas->where(function ($query) use ($q) {
@@ -55,8 +54,8 @@ class ParcelasEmprestimoController extends Controller
             return response()->json($parcela, 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
-                'message' => 'Erro ao criar parcela', 
-                'errors' => $e->errors()
+                'message' => 'Erro ao criar parcela',
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -68,7 +67,7 @@ class ParcelasEmprestimoController extends Controller
     {
         $parcela = ParcelasEmprestimo::find($id);
 
-        if (!$parcela) {
+        if (! $parcela) {
             return response()->json(['message' => 'Parcela não encontrada'], 404);
         }
 
@@ -83,7 +82,7 @@ class ParcelasEmprestimoController extends Controller
         try {
             $parcela = ParcelasEmprestimo::find($id);
 
-            if (!$parcela) {
+            if (! $parcela) {
                 return response()->json(['message' => 'Parcela não encontrada'], 404);
             }
 
@@ -94,7 +93,7 @@ class ParcelasEmprestimoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -106,7 +105,7 @@ class ParcelasEmprestimoController extends Controller
     {
         $parcela = ParcelasEmprestimo::find($id);
 
-        if (!$parcela) {
+        if (! $parcela) {
             return response()->json(['message' => 'Parcela não encontrada'], 404);
         }
 

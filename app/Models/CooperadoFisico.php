@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CooperadoFisico extends Cooperado
@@ -25,7 +23,7 @@ class CooperadoFisico extends Cooperado
 
         // Adiciona validação do CPF
         $rules['documento'][] = function ($attribute, $value, $fail) {
-            if (!self::validarCPF($value)) {
+            if (! self::validarCPF($value)) {
                 $fail('CPF inválido.');
             }
         };

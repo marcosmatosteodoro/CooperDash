@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Endereco;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EnderecoController extends Controller
@@ -17,18 +17,18 @@ class EnderecoController extends Controller
         $filters = $request->validate([
             'q' => 'string|min:1',
         ],
-        [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-        ]);
+            [
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+            ]);
 
         $enderecos = Endereco::query();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $q = $filters['q'];
 
             $enderecos->where(function ($query) use ($q) {
-                $query->where(DB::raw('LOWER(logradouro)'), 'LIKE', '%' . strtolower($q) . '%')
+                $query->where(DB::raw('LOWER(logradouro)'), 'LIKE', '%'.strtolower($q).'%')
                     ->orWhere('cep', 'LIKE', "%{$q}%")
                     ->orWhere('bairro', 'LIKE', "%{$q}%")
                     ->orWhere('cidade', 'LIKE', "%{$q}%")
@@ -55,8 +55,8 @@ class EnderecoController extends Controller
             return response()->json($endereco, 201);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
-                'message' => 'Erro ao criar endereço', 
-                'errors' => $e->errors()
+                'message' => 'Erro ao criar endereço',
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -68,7 +68,7 @@ class EnderecoController extends Controller
     {
         $endereco = Endereco::find($id);
 
-        if (!$endereco) {
+        if (! $endereco) {
             return response()->json(['message' => 'Endereço não encontrado'], 404);
         }
 
@@ -83,7 +83,7 @@ class EnderecoController extends Controller
         try {
             $endereco = Endereco::find($id);
 
-            if (!$endereco) {
+            if (! $endereco) {
                 return response()->json(['message' => 'Endereço não encontrado'], 404);
             }
 
@@ -94,7 +94,7 @@ class EnderecoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -106,7 +106,7 @@ class EnderecoController extends Controller
     {
         $endereco = Endereco::find($id);
 
-        if (!$endereco) {
+        if (! $endereco) {
             return response()->json(['message' => 'Endereço não encontrado'], 404);
         }
 

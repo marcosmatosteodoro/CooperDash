@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
 
 class Emprestimo extends Model
 {
@@ -20,7 +20,7 @@ class Emprestimo extends Model
         'data_solicitacao',
         'data_analise',
         'data_liquidacao',
-        'observacao'
+        'observacao',
     ];
 
     public static function rules()

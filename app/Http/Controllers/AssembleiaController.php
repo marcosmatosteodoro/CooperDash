@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Assembleia;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class AssembleiaController extends Controller
@@ -17,20 +17,20 @@ class AssembleiaController extends Controller
         $filters = $request->validate([
             'q' => 'string|min:1',
         ],
-        [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-        ]);
+            [
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+            ]);
 
         $assembleias = Assembleia::query();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $q = $filters['q'];
 
             $assembleias->where(function ($query) use ($q) {
-                $query->where(DB::raw('LOWER(titulo)'), 'LIKE', '%' . strtolower($q) . '%')
-                    ->orWhere(DB::raw('LOWER(descricao)'), 'LIKE', '%' . strtolower($q) . '%')
-                    ->orWhere(DB::raw('LOWER(local)'), 'LIKE', '%' . strtolower($q) . '%');
+                $query->where(DB::raw('LOWER(titulo)'), 'LIKE', '%'.strtolower($q).'%')
+                    ->orWhere(DB::raw('LOWER(descricao)'), 'LIKE', '%'.strtolower($q).'%')
+                    ->orWhere(DB::raw('LOWER(local)'), 'LIKE', '%'.strtolower($q).'%');
             });
         }
 
@@ -54,7 +54,7 @@ class AssembleiaController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Erro ao criar assembleia',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -66,7 +66,7 @@ class AssembleiaController extends Controller
     {
         $assembleia = Assembleia::find($id);
 
-        if (!$assembleia) {
+        if (! $assembleia) {
             return response()->json(['message' => 'Assembleia não encontrada'], 404);
         }
 
@@ -81,7 +81,7 @@ class AssembleiaController extends Controller
         try {
             $assembleia = Assembleia::find($id);
 
-            if (!$assembleia) {
+            if (! $assembleia) {
                 return response()->json(['message' => 'Assembleia não encontrada'], 404);
             }
 
@@ -92,7 +92,7 @@ class AssembleiaController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -104,7 +104,7 @@ class AssembleiaController extends Controller
     {
         $assembleia = Assembleia::find($id);
 
-        if (!$assembleia) {
+        if (! $assembleia) {
             return response()->json(['message' => 'Assembleia não encontrada'], 404);
         }
 

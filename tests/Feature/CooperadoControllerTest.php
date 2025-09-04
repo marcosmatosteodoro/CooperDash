@@ -22,8 +22,8 @@ class CooperadoControllerTest extends TestCase
             ->assertJsonCount(3, 'data')
             ->assertJsonStructure([
                 'data' => [
-                    '*' => ['id', 'nome', 'tipo_pessoa', 'documento', 'data', 'valor', 'telefone']
-                ]
+                    '*' => ['id', 'nome', 'tipo_pessoa', 'documento', 'data', 'valor', 'telefone'],
+                ],
             ]);
     }
 
@@ -38,7 +38,7 @@ class CooperadoControllerTest extends TestCase
             'valor' => 2500.00,
             'codigo_pais' => '+55',
             'telefone' => '11987654321',
-            'email' => $this->faker->safeEmail
+            'email' => $this->faker->safeEmail,
         ];
 
         $response = $this->postJson('/api/cooperados', $data);
@@ -58,7 +58,7 @@ class CooperadoControllerTest extends TestCase
             'valor' => 2500.00,
             'codigo_pais' => '+55',
             'telefone' => '11987654321',
-            'email' => $this->faker->safeEmail
+            'email' => $this->faker->safeEmail,
         ];
 
         $response = $this->postJson('/api/cooperados', $data);
@@ -77,7 +77,7 @@ class CooperadoControllerTest extends TestCase
         $response->assertStatus(200)
             ->assertJson([
                 'id' => $cooperado->id,
-                'nome' => $cooperado->nome
+                'nome' => $cooperado->nome,
             ]);
     }
 
@@ -94,7 +94,7 @@ class CooperadoControllerTest extends TestCase
     {
         $cooperado = Cooperado::factory()->create([
             'tipo_pessoa' => 'FISICA',
-            'documento' => '529.982.247-25'
+            'documento' => '529.982.247-25',
         ]);
 
         $novosDados = [
@@ -105,7 +105,7 @@ class CooperadoControllerTest extends TestCase
             'valor' => 3000.00,
             'codigo_pais' => '+55',
             'telefone' => '11999999999',
-            'email' => 'novo@email.com'
+            'email' => 'novo@email.com',
         ];
 
         $response = $this->putJson("/api/cooperados/{$cooperado->id}", $novosDados);
@@ -121,7 +121,7 @@ class CooperadoControllerTest extends TestCase
         $cooperado2 = Cooperado::factory()->create(['documento' => '222.222.222-22']);
 
         $response = $this->putJson("/api/cooperados/{$cooperado2->id}", [
-            'documento' => '111.111.111-11' // Documento já usado por cooperado1
+            'documento' => '111.111.111-11', // Documento já usado por cooperado1
         ]);
 
         $response->assertStatus(422)
@@ -154,8 +154,8 @@ class CooperadoControllerTest extends TestCase
 
         $response->assertStatus(422)
             ->assertJsonValidationErrors([
-                'nome', 'tipo_pessoa', 'documento', 'data', 
-                'valor', 'codigo_pais', 'telefone'
+                'nome', 'tipo_pessoa', 'documento', 'data',
+                'valor', 'codigo_pais', 'telefone',
             ]);
     }
 }

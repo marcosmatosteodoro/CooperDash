@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Assembleia;
+use Illuminate\Database\Seeder;
 
 class AssembleiaSeeder extends Seeder
 {

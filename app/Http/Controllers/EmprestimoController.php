@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Emprestimo;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
 class EmprestimoController extends Controller
@@ -17,18 +17,18 @@ class EmprestimoController extends Controller
         $filters = $request->validate([
             'q' => 'string|min:1',
         ],
-        [
-            'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-            'q.string' => 'O campo :attribute deve ser um texto.',
-        ]);
+            [
+                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                'q.string' => 'O campo :attribute deve ser um texto.',
+            ]);
 
         $emprestimo = Emprestimo::query();
 
-        if (!empty($filters['q'])) {
+        if (! empty($filters['q'])) {
             $q = $filters['q'];
 
             $emprestimo->where(function ($query) use ($q) {
-                $query->where(DB::raw('LOWER(finalidade)'), 'LIKE', '%' . strtolower($q) . '%')
+                $query->where(DB::raw('LOWER(finalidade)'), 'LIKE', '%'.strtolower($q).'%')
                     ->orWhere('status', 'LIKE', "%{$q}%")
                     ->orWhere('valor_solicitado', 'LIKE', "%{$q}%")
                     ->orWhere('valor_aprovado', 'LIKE', "%{$q}%");
@@ -55,7 +55,7 @@ class EmprestimoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Erro ao criar empréstimo',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -67,7 +67,7 @@ class EmprestimoController extends Controller
     {
         $emprestimo = Emprestimo::find($id);
 
-        if (!$emprestimo) {
+        if (! $emprestimo) {
             return response()->json(['message' => 'Empréstimo não encontrado'], 404);
         }
 
@@ -82,7 +82,7 @@ class EmprestimoController extends Controller
         try {
             $emprestimo = Emprestimo::find($id);
 
-            if (!$emprestimo) {
+            if (! $emprestimo) {
                 return response()->json(['message' => 'Empréstimo não encontrado'], 404);
             }
 
@@ -93,7 +93,7 @@ class EmprestimoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -105,7 +105,7 @@ class EmprestimoController extends Controller
     {
         $emprestimo = Emprestimo::find($id);
 
-        if (!$emprestimo) {
+        if (! $emprestimo) {
             return response()->json(['message' => 'Empréstimo não encontrado'], 404);
         }
 
@@ -114,4 +114,3 @@ class EmprestimoController extends Controller
         return response()->json(null, 204);
     }
 }
-

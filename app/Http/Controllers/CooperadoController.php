@@ -19,28 +19,28 @@ class CooperadoController extends Controller
             $perPage = $request->query('per_page', 10);
             $filters = $request->validate([
                 'q' => 'string|min:1',
-                'tipo_pessoa' => 'in:FISICA,JURIDICA'
+                'tipo_pessoa' => 'in:FISICA,JURIDICA',
             ],
-            [
-                'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
-                'q.string' => 'O campo :attribute deve ser um texto.',
-                'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
-            ]);
+                [
+                    'q.min' => 'A pesquisa deve ter pelo menos 1 caracteres.',
+                    'q.string' => 'O campo :attribute deve ser um texto.',
+                    'tipo_pessoa.in' => 'O tipo de pessoa deve ser FISICA ou JURIDICA.',
+                ]);
 
             $cooperados = Cooperado::query();
 
-            if (!empty($filters['q'])) {
+            if (! empty($filters['q'])) {
                 $q = $filters['q'];
 
                 $cooperados->where(function ($query) use ($q) {
-                    $query->where(DB::raw('LOWER(nome)'), 'LIKE', '%' . strtolower($q) . '%')
+                    $query->where(DB::raw('LOWER(nome)'), 'LIKE', '%'.strtolower($q).'%')
                         ->orWhere('documento', 'LIKE', "%{$q}%")
                         ->orWhere('telefone', 'LIKE', "%{$q}%")
                         ->orWhere('email', 'LIKE', "%{$q}%");
                 });
             }
 
-            if (!empty($filters['tipo_pessoa'])) {
+            if (! empty($filters['tipo_pessoa'])) {
                 $cooperados->where('tipo_pessoa', $filters['tipo_pessoa']);
             }
 
@@ -53,13 +53,13 @@ class CooperadoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
-            
+
         } catch (\Exception $e) {
             return response()->json([
                 'message' => 'Erro ao buscar cooperados',
-                'error' => $e->getMessage()
+                'error' => $e->getMessage(),
             ], 500);
         }
     }
@@ -79,7 +79,7 @@ class CooperadoController extends Controller
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Erro ao criar cooperador',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -91,7 +91,7 @@ class CooperadoController extends Controller
     {
         $cooperado = Cooperado::find($id);
 
-        if (!$cooperado) {
+        if (! $cooperado) {
             return response()->json(['message' => 'Cooperado não encontrado'], 404);
         }
 
@@ -107,19 +107,19 @@ class CooperadoController extends Controller
             $klass = $this->getKlass($request);
             $cooperado = $klass::find($id);
 
-            if (!$cooperado) {
+            if (! $cooperado) {
                 return response()->json(['message' => 'Cooperado não encontrado'], 404);
             }
 
             $validated = $request->validate($klass::rules($id), $klass::messages());
-            
+
             $cooperado->update($validated);
-            
+
             return response()->json($cooperado);
         } catch (\Illuminate\Validation\ValidationException $e) {
             return response()->json([
                 'message' => 'Dados inválidos',
-                'errors' => $e->errors()
+                'errors' => $e->errors(),
             ], 422);
         }
     }
@@ -131,20 +131,21 @@ class CooperadoController extends Controller
     {
         $cooperado = Cooperado::find($id);
 
-        if (!$cooperado) {
+        if (! $cooperado) {
             return response()->json(['message' => 'Cooperado não encontrado'], 404);
         }
 
         $cooperado->delete();
-        
+
         return response()->json(null, 204);
     }
 
-    private function getKlass($request) {
+    private function getKlass($request)
+    {
         $tipo_pessoa = $request->tipo_pessoa;
 
-        return $tipo_pessoa === "FISICA" 
-            ? CooperadoFisico::class 
+        return $tipo_pessoa === 'FISICA'
+            ? CooperadoFisico::class
             : CooperadoJuridico::class;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Emprestimo;
 use App\Models\Cooperado;
+use App\Models\Emprestimo;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class EmprestimoFactory extends Factory

@@ -27,7 +27,7 @@ class CooperadoTest extends TestCase
 
         $this->assertDatabaseHas('cooperados', [
             'id' => $cooperado->id,
-            'documento' => '52998224725'
+            'documento' => '52998224725',
         ]);
     }
 
@@ -181,7 +181,7 @@ class CooperadoTest extends TestCase
     {
         $cooperado = new Cooperado([
             'codigo_pais' => '+55',
-            'telefone' => '11987654321'
+            'telefone' => '11987654321',
         ]);
 
         $this->assertEquals('+5511987654321', $cooperado->telefone_completo);
@@ -191,7 +191,7 @@ class CooperadoTest extends TestCase
     public function deve_garantir_que_documento_e_unico()
     {
         Cooperado::factory()->create([
-            'documento' => '12345678901'
+            'documento' => '12345678901',
         ]);
 
         $validator = Validator::make(

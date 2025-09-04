@@ -2,8 +2,6 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class CooperadoJuridico extends Cooperado
@@ -25,7 +23,7 @@ class CooperadoJuridico extends Cooperado
 
         // Adiciona validação de CNPJ
         $rules['documento'][] = function ($attribute, $value, $fail) {
-            if (!self::validarCNPJ($value)) {
+            if (! self::validarCNPJ($value)) {
                 $fail('CNPJ inválido.');
             }
         };
@@ -46,36 +44,36 @@ class CooperadoJuridico extends Cooperado
         $digitos = substr($cnpj, $tamanho);
         $soma = 0;
         $pos = $tamanho - 7;
-        
+
         for ($i = $tamanho; $i >= 1; $i--) {
             $soma += $numeros[$tamanho - $i] * $pos--;
             if ($pos < 2) {
                 $pos = 9;
             }
         }
-        
+
         $resultado = $soma % 11 < 2 ? 0 : 11 - $soma % 11;
         if ($resultado != $digitos[0]) {
             return false;
         }
-        
+
         $tamanho++;
         $numeros = substr($cnpj, 0, $tamanho);
         $soma = 0;
         $pos = $tamanho - 7;
-        
+
         for ($i = $tamanho; $i >= 1; $i--) {
             $soma += $numeros[$tamanho - $i] * $pos--;
             if ($pos < 2) {
                 $pos = 9;
             }
         }
-        
+
         $resultado = $soma % 11 < 2 ? 0 : 11 - $soma % 11;
         if ($resultado != $digitos[1]) {
             return false;
         }
-        
+
         return true;
     }
 }

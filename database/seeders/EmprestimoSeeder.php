@@ -2,8 +2,8 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Seeder;
 use App\Models\Emprestimo;
+use Illuminate\Database\Seeder;
 
 class EmprestimoSeeder extends Seeder
 {

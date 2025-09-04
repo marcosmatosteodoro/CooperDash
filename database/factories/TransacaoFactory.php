@@ -2,8 +2,8 @@
 
 namespace Database\Factories;
 
-use App\Models\Transacao;
 use App\Models\ContasCorrente;
+use App\Models\Transacao;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class TransacaoFactory extends Factory
