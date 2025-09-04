@@ -27,14 +27,22 @@ jobs:
           cache-dependency-path: package-lock.json
 
       - name: Install root dependencies
-        run: npm ci
+        run: |
+          # Desabilitar Husky durante a instalação
+          npm ci --ignore-scripts
+          # Instalar apenas semantic release e dependências necessárias
+          npm install --no-save semantic-release @semantic-release/git @semantic-release/changelog
 
       - name: Install frontend dependencies
         run: |
           cd frontend
-          npm ci
+          npm ci --ignore-scripts
 
-      - name: Run Semantic Release
-        run: npm run release
+      - name: Run Semantic Release (skip husky)
+        run: |
+          # Desabilitar Husky para o semantic release
+          git config --global core.hooksPath /tmp/no-hooks
+          npm run release -- --no-ci
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HUSKY: "0"  # Desabilita Husky
