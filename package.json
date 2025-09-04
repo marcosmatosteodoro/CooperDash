@@ -1,16 +1,28 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
+    "name": "cooper-dash",
+    "version": "0.1.0",
     "private": true,
     "type": "module",
     "scripts": {
         "build": "vite build",
-        "dev": "vite"
+        "dev": "vite",
+        "release": "semantic-release",
+        "release:dry-run": "semantic-release --dry-run",
+        "release:ci": "semantic-release --ci",
+        "sync-versions": "node sync-versions.js"
     },
     "devDependencies": {
+        "@semantic-release/changelog": "^6.0.3",
+        "@semantic-release/commit-analyzer": "^13.0.1",
+        "@semantic-release/exec": "^7.1.0",
+        "@semantic-release/git": "^10.0.1",
+        "@semantic-release/release-notes-generator": "^14.0.3",
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
         "laravel-vite-plugin": "^1.2.0",
+        "semantic-release": "^24.2.7",
         "tailwindcss": "^4.0.0",
         "vite": "^6.2.4"
     }
