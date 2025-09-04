@@ -1,6 +1,6 @@
 {
     "$schema": "https://json.schemastore.org/package.json",
-    "name": "cooper-dash",
+    "name": "cooperdash",
     "version": "1.0.0",
     "private": true,
     "type": "module",
