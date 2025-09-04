@@ -3,9 +3,6 @@
 
 echo "🚀 Running pre-push checks with Docker..."
 
-# Start database
-docker-compose up -d
-
 echo "📦 Building containers..."
 docker-compose build backend frontend
 
