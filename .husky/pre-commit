@@ -1,0 +1,20 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🚀 Running pre-commit tests with Docker..."
+
+# Start database only
+docker-compose up -d db
+
+# Run PHP tests
+echo "🧪 Testing PHP..."
+docker-compose run --rm backend php artisan test --env=testing --parallel
+
+# Run Node.js tests
+echo "🧪 Testing Node.js..."
+docker-compose run --rm frontend npm test -- --passWithNoTests --watchAll=false
+
+# Stop containers
+docker-compose down
+
+echo "✅ All tests passed!"

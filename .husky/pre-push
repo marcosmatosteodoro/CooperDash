@@ -1,0 +1,31 @@
+#!/bin/sh
+. "$(dirname "$0")/_/husky.sh"
+
+echo "🚀 Running pre-push checks with Docker..."
+
+# Start database
+docker-compose up -d
+
+echo "📦 Building containers..."
+docker-compose build backend frontend
+
+echo "🔍 Running PHP lint checks..."
+docker-compose run --rm backend composer validate --no-check-all --strict
+# docker-compose run --rm backend vendor/bin/pint --test
+
+echo "🔍 Running Node.js lint checks..."
+docker-compose run --rm frontend npm run lint
+
+echo "🧪 Running PHP tests..."
+docker-compose run --rm backend php artisan test --env=testing --parallel
+
+echo "🧪 Running Node.js tests..."
+docker-compose run --rm frontend npm test -- --ci --passWithNoTests
+
+echo "🏗️ Building production frontend..."
+docker-compose run --rm frontend npm run build
+
+echo "✅ All checks passed! Ready to push."
+
+# Stop containers
+docker-compose down

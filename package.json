@@ -10,7 +10,16 @@
         "release": "semantic-release",
         "release:dry-run": "semantic-release --dry-run",
         "release:ci": "semantic-release --ci",
-        "sync-versions": "node sync-versions.js"
+        "sync-versions": "node sync-versions.js",
+        "prepare": "husky install",
+        "test:php": "docker-compose run --rm backend php artisan test --env=testing",
+        "test:node": "docker-compose run --rm frontend npm test -- --passWithNoTests",
+        "test:lint:php": "docker-compose run --rm backend vendor/bin/pint --test || exit 0",
+        "test:lint:node": "docker-compose run --rm frontend npm run lint -- --quiet",
+        "test:all": "npm run test:php && npm run test:node",
+        "test:ci": "npm run test:php -- --ci && npm run test:node -- --ci",
+        "lint:fix:php": "docker-compose run --rm backend vendor/bin/pint",
+        "lint:fix:node": "docker-compose run --rm frontend npm run lint:fix"
     },
     "devDependencies": {
         "@semantic-release/changelog": "^6.0.3",
@@ -21,6 +30,7 @@
         "@tailwindcss/vite": "^4.0.0",
         "axios": "^1.8.2",
         "concurrently": "^9.0.1",
+        "husky": "^9.1.7",
         "laravel-vite-plugin": "^1.2.0",
         "semantic-release": "^24.2.7",
         "tailwindcss": "^4.0.0",
