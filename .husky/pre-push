@@ -3,9 +3,6 @@
 
 echo "🚀 Running pre-push checks with Docker..."
 
-echo "📦 Building containers..."
-docker-compose build backend frontend
-
 echo "🔍 Running PHP lint checks..."
 docker-compose run --rm backend composer validate --no-check-all --strict
 # docker-compose run --rm backend vendor/bin/pint --test
