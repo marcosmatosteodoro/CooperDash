@@ -12,7 +12,7 @@
     [
       "@semantic-release/exec",
       {
-        "successCmd": "node scripts/sync-versions.js"
+        "successCmd": "node sync-versions.js"
       }
     ],
     [
