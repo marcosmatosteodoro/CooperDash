@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import type { Field, FieldChangeEvent } from '@/types/ui/'
+import type { Field, FieldChangeEvent, Option } from '@/types/ui/'
 import type { Assembleia } from '@/types/app/assembleia'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
@@ -10,9 +10,8 @@ import { PaginationParams } from '@/types/api';
 const useAssembleia = () => {
   const dispatch: AppDispatch = useDispatch();
   const router = useRouter();
-
   const assembleias = useSelector((state: RootState) => state.assembleias);
-
+  const [assembleiaOptions, setAssembleiaOptions] = useState<Option[]>([]);
   const [formData, setFormData] = useState<Assembleia>({
     id: '',
     titulo: '',
@@ -140,14 +139,18 @@ const useAssembleia = () => {
     ]
   }, [formData]);
   
-    const getAssembleia = useCallback((id: string) => {
-      dispatch(fetchAssembleia(id as string));
+  const getAssembleia = useCallback((id: string) => {
+    dispatch(fetchAssembleia(id as string));
+  }, [dispatch]);
+
+  const getAssembleias = useCallback((params: PaginationParams) => {
+    dispatch(fetchAssembleias(params));
+  }, [dispatch]);
+
+  const getAssembleiaOptions = useCallback(() => {
+      dispatch(fetchAssembleias({ per_page: 999999999 }));
     }, [dispatch]);
-  
-    const getAssembleias = useCallback((params: PaginationParams) => {
-      dispatch(fetchAssembleias(params));
-    }, [dispatch]);
-  
+
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -192,7 +195,20 @@ const useAssembleia = () => {
     }
   }, [assembleias, setFormData]);
 
+  useEffect(() => {
+    if (assembleias.list) {
+      const options = assembleias.list.map(item => ({
+        value: item.id,
+        text: item.titulo
+      }));
+
+      options.unshift({ value: '', text: 'Selecione uma assembleia' });
+      setAssembleiaOptions(options);
+    }
+  }, [assembleias.list]);
+
   return {
+    assembleiaOptions,
     assembleias,
     formData, 
     setFormData,
@@ -202,7 +218,8 @@ const useAssembleia = () => {
     clearAssembleiaError,
     getFieldsProps,
     getAssembleia,
-    getAssembleias
+    getAssembleias,
+    getAssembleiaOptions
   };
 };
 

@@ -1,9 +1,7 @@
 'use client'
 
 import { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState, AppDispatch, } from '@/store';
-import { fetchVotacoes, deleteVotacao, } from '@/store/slices/votacoesSlice';
+import { deleteVotacao, } from '@/store/slices/votacoesSlice';
 import useFormatters from '@/hooks/useFormatters';
 import { useDeleteWithConfirmation } from '@/hooks/useDeleteWithConfirmation'
 import { useLayout } from '@/providers/LayoutProvider'
@@ -11,12 +9,13 @@ import { Table, LoadingSpinner, ErrorAlert } from '@/components'
 import type { Votacao, VotacaoFilters } from '@/types/app/votacao';
 import type { PaginationParams } from '@/types/api';
 import type { ColumnType, ActionsType } from '@/types/ui';
+import useVotacao from '@/hooks/useVotacao';
 
 export default function Votacoes() {
-  const dispatch: AppDispatch = useDispatch();
-  const { list, pagination, status, error } = useSelector((state: RootState) => state.votacoes);
+  const { votacoes, getVotacoes } = useVotacao();
+  const { list, pagination, status, error } = votacoes;
   const { setListLayout } = useLayout();
-  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined, tipo_pessoa: undefined });
+  const [params, setParams] = useState<PaginationParams>({ per_page: 20, page: 1, q: undefined });
   const [filters, setFilters] = useState<VotacaoFilters>({ searchTerm: '' });
   const { handleDelete } = useDeleteWithConfirmation({
       entityName: 'votacao',
@@ -25,8 +24,8 @@ export default function Votacoes() {
   const { formatDate } = useFormatters();
 
   useEffect(() => {
-      dispatch(fetchVotacoes(params));
-  }, [dispatch, params]);
+      getVotacoes(params);
+  }, [getVotacoes, params]);
 
   useEffect(() => {
     const q = filters.searchTerm.length > 0 ? filters.searchTerm : undefined;
@@ -38,20 +37,12 @@ export default function Votacoes() {
     setListLayout({ path: '/votacoes', label: 'Votações', buttonName: 'Lista de Votações' });
   }, [setListLayout]);
 
-
   const tableHeader = [
     "ID do Cooperado",
     "Voto",
     "Data do Voto",
     "ID da Assembleia",
   ]
-
-  
-  const paginationClickHandler = (link: string | null) => {
-    if (!link) return;
-    const page = new URL(link).searchParams.get('page');
-    setParams({ ...params, page: page ? parseInt(page) : 1 })
-  }
 
   const tableColumns: ColumnType<Votacao>[] = [
     {
@@ -98,7 +89,7 @@ export default function Votacoes() {
       paramsCleaner={(e) => setParams({ ...params, per_page: parseInt(e.target.value), page: 1 })}
       filter={(e) => setFilters({ ...filters, searchTerm: e.target.value })}
       filterCleaner={() => setFilters({ ...filters, searchTerm: '' })}
-      paginationClickHandler={paginationClickHandler}
+      setParams={setParams}
       />
   );
 }

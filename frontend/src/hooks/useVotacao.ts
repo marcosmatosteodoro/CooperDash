@@ -1,19 +1,20 @@
-import React, { useEffect, useState } from 'react';
-import type { FieldChangeEvent, Option } from '@/types/ui/'
+import React, { useCallback, useEffect, useState } from 'react';
+import type { Field, FieldChangeEvent } from '@/types/ui/'
 import type { Votacao } from '@/types/app/votacao'
 import { useDispatch, useSelector } from 'react-redux';
 import { AppDispatch, RootState } from '@/store';
 import { useRouter } from 'next/navigation'; 
-import { createVotacao, updateVotacao } from '@/store/slices/votacoesSlice';
-import { fetchCooperados } from '@/store/slices/cooperadosSlice';
-import { fetchAssembleias } from '@/store/slices/assembleiasSlice';
+import { createVotacao, fetchVotacao, fetchVotacoes, updateVotacao } from '@/store/slices/votacoesSlice';
+import useCooperado from './useCooperado';
+import useAssembleia from './useAssembleia';
+import { PaginationParams } from '@/types/api';
 
 const useVotacao = () => {
   const dispatch: AppDispatch = useDispatch();
-  const { list: cooperado } = useSelector((state: RootState) => state.cooperados);
-  const { list: assembleia } = useSelector((state: RootState) => state.assembleias);
   const router = useRouter();
-
+  const votacoes = useSelector((state: RootState) => state.votacoes);
+  const { cooperadoOptions, getCooperadoOptions } = useCooperado();
+  const { assembleiaOptions, getAssembleiaOptions } = useAssembleia();
   const [formData, setFormData] = useState<Votacao>({
     id: '',
     assembleia_id: '',
@@ -22,38 +23,88 @@ const useVotacao = () => {
     data_voto: '',
     justificativa: ''
   } as Votacao);
-  const [cooperadoOptions, setCooperadoOptions] = useState<Option[]>([]);
-  const [assembleiaOptions, setAssembleiaOptions] = useState<Option[]>([]);
 
-    useEffect(() => {
-      dispatch(fetchCooperados({ per_page: 999999999 }));
-      dispatch(fetchAssembleias({ per_page: 999999999 }));
-    }, [dispatch]);
+  const getFieldsProps = useCallback((): Field[] => {
+    if(!cooperadoOptions || cooperadoOptions.length == 0) {
+      getCooperadoOptions()
+    }
+    if(!assembleiaOptions || assembleiaOptions.length == 0) {
+      getAssembleiaOptions()
+    }
+
+    return [
+      {
+        label: 'Assembleia',
+        type: 'text',
+        tag: 'select',
+        name: 'assembleia_id',
+        contentClassName: 'col-md-6',
+        value: formData.assembleia_id,
+        onChange: handleChange,
+        options: assembleiaOptions
+      },
+      {
+        label: 'Cooperado',
+        type: 'text',
+        tag: 'select',
+        name: 'cooperado_id',
+        contentClassName: 'col-md-6',
+        value: formData.cooperado_id,
+        onChange: handleChange,
+        options: cooperadoOptions
+      },
+      {
+        label: 'Data da votação',
+        type: 'date',
+        tag: 'input',
+        name: 'data_voto',
+        value: formData.data_voto,
+        contentClassName: 'col-md-6',
+        onChange: handleChange
+      },
+      {
+        label: 'Voto',
+        type: 'text',
+        tag: 'select',
+        name: 'voto',
+        contentClassName: 'col-md-6',
+        value: formData.voto,
+        onChange: handleChange,
+        options: [
+          {
+            value: "FAVOR",
+            text: "Favor"
+          },
+          {
+            value: "CONTRA",
+            text: "Contra"
+          },
+          {
+            value: "ABSTENCAO",
+            text: "Abstenção"
+          },
+        ]
+      },
+      {
+        label: 'Justificativa',
+        type: 'text',
+        tag: 'textarea',
+        name: 'justificativa',
+        value: formData.justificativa,
+        contentClassName: 'col-12',
+        onChange: handleChange
+      },
+    ]
+  }, [formData, cooperadoOptions, assembleiaOptions, getCooperadoOptions, getAssembleiaOptions]);
+
+  const getVotacao = useCallback((id: string) => {
+    dispatch(fetchVotacao(id as string));
+  }, [dispatch]);
+
+  const getVotacoes = useCallback((params: PaginationParams) => {
+    dispatch(fetchVotacoes(params));
+  }, [dispatch]);
   
-    useEffect(() => {
-      if (cooperado) {
-        const options = cooperado.map(item => ({
-          value: item.id,
-          text: item.nome
-        }));
-  
-        options.unshift({ value: '', text: 'Selecione um cooperado' });
-        setCooperadoOptions(options);
-      }
-    }, [cooperado]);
-    
-    useEffect(() => {
-      if (assembleia) {
-        const options = assembleia.map(item => ({
-          value: item.id,
-          text: item.titulo
-        }));
-
-        options.unshift({ value: '', text: 'Selecione uma assembleia' });
-        setAssembleiaOptions(options);
-      }
-    }, [assembleia]);
-
   const handleChange = (e: FieldChangeEvent) => {
     const { name, value } = e.target;
     setFormData(prev => ({
@@ -110,17 +161,25 @@ const useVotacao = () => {
     dispatch({ type: 'votacoes/clearError' });
   };
 
+  useEffect(() => {
+    if (votacoes.current) {
+      setFormData(votacoes.current);
+    }
+  }, [votacoes, setFormData]);
+
   return {
+    votacoes,
     formData,
-    cooperadoOptions,
-    assembleiaOptions,
     setFormData,
     handleChange,
     handleDocumentChange,
     handleValueChange,
     handleSubmitNewVotacao,
     handleSubmitEditVotacao,
-    clearVotacaoError
+    clearVotacaoError,
+    getFieldsProps,
+    getVotacao,
+    getVotacoes
   };
 };
 
