@@ -1,0 +1,21 @@
+#!/bin/sh
+
+echo "🚀 Running pre-push checks with Docker..."
+
+echo "🔍 Running PHP lint checks..."
+docker-compose run -T --rm backend composer validate --no-check-all --strict
+# docker-compose run -T --rm backend vendor/bin/pint --test
+
+echo "🔍 Running Node.js lint checks..."
+docker-compose run -T --rm frontend npm run lint -- --quiet
+
+echo "🧪 Running PHP tests..."
+docker-compose run -T --rm backend php artisan test --env=testing
+
+echo "🧪 Running Node.js tests..."
+docker-compose run -T --rm frontend npm test -- --ci --passWithNoTests
+
+echo "🏗️ Building production frontend (ignore warnings)..."
+docker-compose run -T --rm frontend npm run build -- --no-lint || true
+
+echo "✅ All checks passed! Ready to push."

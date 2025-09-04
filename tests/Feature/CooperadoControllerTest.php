@@ -19,9 +19,11 @@ class CooperadoControllerTest extends TestCase
         $response = $this->getJson('/api/cooperados');
 
         $response->assertStatus(200)
-            ->assertJsonCount(3)
+            ->assertJsonCount(3, 'data')
             ->assertJsonStructure([
-                '*' => ['id', 'nome', 'tipo_pessoa', 'documento', 'data', 'valor', 'telefone']
+                'data' => [
+                    '*' => ['id', 'nome', 'tipo_pessoa', 'documento', 'data', 'valor', 'telefone']
+                ]
             ]);
     }
 

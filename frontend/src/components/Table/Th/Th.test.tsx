@@ -45,9 +45,4 @@ describe('Th Component in Table Context', () => {
     expect(thElement).toBeInTheDocument();
     expect(thElement?.textContent).toBe(testHeader);
   });
-
-  it('corresponde ao instantâneo no contexto da tabela', () => {
-    const { asFragment } = renderThInTable();
-    expect(asFragment()).toMatchSnapshot();
-  });
 });

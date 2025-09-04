@@ -1,0 +1,13 @@
+#!/bin/sh
+
+echo "🚀 Running pre-commit tests with Docker..."
+
+# Run PHP tests (sem parallel)
+echo "🧪 Testing PHP..."
+docker-compose run -T --rm backend php artisan test --env=testing
+
+# Run Node.js tests  
+echo "🧪 Testing Node.js..."
+docker-compose run -T --rm frontend npm test -- --passWithNoTests --watchAll=false
+
+echo "✅ All tests passed!"
