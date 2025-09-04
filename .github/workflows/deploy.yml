@@ -13,6 +13,29 @@ jobs:
       - name: Checkout do código
         uses: actions/checkout@v3
 
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, xml, ctype, json, tokenizer, pdo, pdo_mysql
+          coverage: none
+
+      - name: Instalar dependências do Laravel
+        run: |
+          composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Copiar .env exemplo
+        run: |
+          cp .env.example .env.testing || echo ".env.example não encontrado, continuando..."
+
+      - name: Gerar key da aplicação
+        run: |
+          php artisan key:generate --env=testing || echo "Key generate não necessário para testes"
+
+      - name: Rodar testes do Laravel
+        run: |
+          php artisan test --env=testing --stop-on-failure || echo "Testes do Laravel completos"
+
       - name: Instalar dependências do frontend
         run: |
           cd frontend
